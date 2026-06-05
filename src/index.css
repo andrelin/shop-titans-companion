@@ -339,9 +339,10 @@ th.col-center,
 td.col-center {
   text-align: center;
 }
-th.col-num,
-td.col-num {
+th.num,
+td.num {
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 th {
@@ -389,14 +390,12 @@ tbody tr:last-child td {
 }
 
 td.num {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12.5px;
+  font-size: 13px;
 }
 
 td.num.base {
   color: var(--muted);
+  font-weight: 400;
 }
 td.num.enchanted {
   color: var(--text);
@@ -432,8 +431,7 @@ td.num.enchanted {
 
 .delta {
   font-variant-numeric: tabular-nums;
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--good);
   font-weight: 500;
 }
