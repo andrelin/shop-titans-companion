@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Blueprint, GameData, Quality } from "../../data/types";
-import { QUALITY_ORDER } from "../../data/types";
+import { QUALITY_COLOR, QUALITY_ORDER } from "../../data/types";
 import {
   computePower,
   hasAffinity,
@@ -271,7 +271,11 @@ export function DragonInvasion({ data }: { data: GameData }) {
                   <label
                     key={q}
                     className="toggle"
-                    style={{ fontSize: 13 }}
+                    style={{
+                      fontSize: 13,
+                      color: QUALITY_COLOR[q],
+                      fontWeight: 500,
+                    }}
                   >
                     <input
                       type="checkbox"
@@ -455,7 +459,14 @@ export function DragonInvasion({ data }: { data: GameData }) {
                         <td>{r.bp.name}</td>
                         <td>{r.bp.type}</td>
                         <td className="num">{r.bp.tier}</td>
-                        <td>{r.quality}</td>
+                        <td
+                          style={{
+                            color: QUALITY_COLOR[r.quality],
+                            fontWeight: 500,
+                          }}
+                        >
+                          {r.quality}
+                        </td>
                         <td className="num">{formatNumber(r.basePower)}</td>
                         <td className="num">
                           {formatNumber(r.enchantedPower)}

@@ -22,6 +22,16 @@ export const QUALITY_MULTIPLIER: Record<Quality, number> = {
   Legendary: 3,
 };
 
+// Standard Shop Titans quality tier colours (white/green/blue/purple/gold),
+// matched to the in-game item-rarity palette.
+export const QUALITY_COLOR: Record<Quality, string> = {
+  Common: "#d8dde6",
+  Superior: "#4ade80",
+  Flawless: "#60a5fa",
+  Epic: "#c084fc",
+  Legendary: "#fbbf24",
+};
+
 export interface Blueprint {
   name: string;
   type: string;
