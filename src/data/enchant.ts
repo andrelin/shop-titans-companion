@@ -133,22 +133,50 @@ function powerAtQuality(b: Blueprint, q: number): number {
   return basePower(b) * q;
 }
 
+interface EnchantStatAdd {
+  atk: number;
+  def: number;
+  hp: number;
+}
+
+// Stat addition an enchant of the given tier contributes for the present
+// stats on the item. Stats not on the item (e.g. atk on a def-only armor)
+// receive 0 — enchants only boost what's already there.
+function enchantStatsAt(
+  b: Blueprint,
+  tier: number,
+  match: boolean,
+): EnchantStatAdd {
+  const pick = (row: EnchantRow) => (match ? row.match : row.base);
+  return {
+    atk: b.atk > 0 ? pick(ENCHANT_TABLE.atk[tier]) : 0,
+    def: b.def > 0 ? pick(ENCHANT_TABLE.def[tier]) : 0,
+    hp: b.hp > 0 ? pick(ENCHANT_TABLE.hp[tier]) : 0,
+  };
+}
+
+// AP airship-power gain from adding a flat stat boost on top of the base
+// stats. The game adds enchant stats into the underlying atk/def/hp and then
+// runs the full formula, which gives slightly different (1-2 AP) values than
+// "power-gain × multipliers" because of rounding through the chain.
+function powerFromStats(b: Blueprint, add: EnchantStatAdd, q: number): number {
+  const atk = b.atk * q + add.atk;
+  const def = b.def * q + add.def;
+  const hp = b.hp * q + add.hp;
+  const crit = b.crit * q;
+  const eva = b.eva * q;
+  return (0.8 * atk + 1.2 * def + 5 * hp) * (1 + 10 * crit) * (1 + 10 * eva);
+}
+
+// Convenience for callers that need the raw gain of an enchant choice.
 function enchantGainAt(
   b: Blueprint,
   q: number,
   tier: number,
   match: boolean,
 ): number {
-  // Dragon-sheet table values are the per-stat power-point gain at Common
-  // quality assuming crit=0 and eva=0. For items with crit or eva, the same
-  // (1 + 10·crit)·(1 + 10·eva) multiplier from the base formula applies, and
-  // quality scales the gain linearly along with the base.
-  const pick = (row: EnchantRow) => (match ? row.match : row.base);
-  let flat = 0;
-  if (b.atk > 0) flat += pick(ENCHANT_TABLE.atk[tier]);
-  if (b.def > 0) flat += pick(ENCHANT_TABLE.def[tier]);
-  if (b.hp > 0) flat += pick(ENCHANT_TABLE.hp[tier]);
-  return flat * (1 + 10 * b.crit) * (1 + 10 * b.eva) * q;
+  const add = enchantStatsAt(b, tier, match);
+  return powerFromStats(b, add, q) - powerAtQuality(b, q);
 }
 
 export interface SlotChoice {
@@ -156,7 +184,8 @@ export interface SlotChoice {
   match: boolean; // whether the chosen enchant matches an affinity on the item
   family: string | null; // spirit family name when applicable
   targets: string[]; // elements when applicable (one of these matches)
-  gain: number; // airship-power gain at the given quality
+  gain: number; // airship-power gain at the given quality (for ranking only)
+  statsAdded: EnchantStatAdd; // raw stats the enchant adds to the item
   // Locked = the item ships with this enchant pre-installed (built-in element
   // or built-in spirit, e.g. all Mundra items have Mundra Spirit baked in).
   // The player can't swap it for anything else, so we don't show skill-
@@ -192,6 +221,8 @@ export function bestEnchantPlan(
   }
   const q = QUALITY_MULTIPLIER[quality];
 
+  const zeroStats: EnchantStatAdd = { atk: 0, def: 0, hp: 0 };
+
   // Element slot
   // Built-in element enchants are already baked into the item's listed
   // Airship Power in the Blueprints sheet — the element slot is locked and
@@ -204,6 +235,7 @@ export function bestEnchantPlan(
       family: null,
       targets: b.builtInElement,
       gain: 0,
+      statsAdded: zeroStats,
       locked: true,
     };
   } else {
@@ -215,6 +247,7 @@ export function bestEnchantPlan(
       family: null,
       targets: b.elementalAffinity,
       gain: enchantGainAt(b, q, itemTier, elementMatch),
+      statsAdded: enchantStatsAt(b, itemTier, elementMatch),
       locked: false,
     };
   }
@@ -233,6 +266,7 @@ export function bestEnchantPlan(
       family: spiritFamily(s),
       targets: [],
       gain: 0,
+      statsAdded: zeroStats,
       locked: true,
     };
   } else {
@@ -243,6 +277,7 @@ export function bestEnchantPlan(
       family: null,
       targets: [],
       gain: enchantGainAt(b, q, itemTier, false),
+      statsAdded: enchantStatsAt(b, itemTier, false),
       locked: false,
     };
     if (affinityMatched) {
@@ -257,6 +292,7 @@ export function bestEnchantPlan(
               family: spiritFamily(s),
               targets: [],
               gain,
+              statsAdded: enchantStatsAt(b, sTier, true),
               locked: false,
             };
           }
@@ -280,12 +316,22 @@ export function hasAnyAffinity(b: Blueprint): boolean {
 
 export function computePower(b: Blueprint, opts: PowerOptions): number {
   const q = QUALITY_MULTIPLIER[opts.quality];
-  let p = powerAtQuality(b, q);
+  let p: number;
   if (opts.enchanted) {
-    p += bestEnchantPlan(b, opts.quality, opts.affinityMatched).totalGain;
+    // Run the full base-AP formula on (item stats × quality + enchant stats),
+    // floor at the end to match the in-game integer readout.
+    const plan = bestEnchantPlan(b, opts.quality, opts.affinityMatched);
+    const add: EnchantStatAdd = {
+      atk: (plan.element?.statsAdded.atk ?? 0) + (plan.spirit?.statsAdded.atk ?? 0),
+      def: (plan.element?.statsAdded.def ?? 0) + (plan.spirit?.statsAdded.def ?? 0),
+      hp: (plan.element?.statsAdded.hp ?? 0) + (plan.spirit?.statsAdded.hp ?? 0),
+    };
+    p = Math.floor(powerFromStats(b, add, q));
+  } else {
+    p = Math.floor(powerAtQuality(b, q));
   }
   if (opts.includeAirshipUpgrade && b.airshipPowerUpgradeBonus > 0) {
-    p *= 1 + b.airshipPowerUpgradeBonus;
+    p = Math.floor(p * (1 + b.airshipPowerUpgradeBonus));
   }
   return p;
 }
