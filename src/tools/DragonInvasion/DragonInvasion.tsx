@@ -309,13 +309,21 @@ export function DragonInvasion({ data }: { data: GameData }) {
         </div>
         <div className="control">
           <label>&nbsp;</label>
-          <label style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 0" }}>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "6px 0",
+            }}
+            title="A handful of items have a crafting/Starforged upgrade called '+20% Bonus Airship Power' or '+25% Bonus Airship Power'. Tick this to assume you've unlocked that upgrade on those items; every other item is unaffected."
+          >
             <input
               type="checkbox"
               checked={includeAirshipUpgrade}
               onChange={(e) => setIncludeAirshipUpgrade(e.target.checked)}
             />
-            Apply Airship Power upgrade
+            Apply +20/25% Bonus Airship Power upgrade (10 items)
           </label>
         </div>
       </div>
