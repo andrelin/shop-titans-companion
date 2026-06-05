@@ -271,9 +271,15 @@ footer {
 }
 
 .tier-range input {
-  width: 46px;
+  width: 52px;
   text-align: center;
   font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+}
+.tier-range input::-webkit-outer-spin-button,
+.tier-range input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 section.category-section {
