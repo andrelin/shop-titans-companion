@@ -150,6 +150,11 @@ export interface SlotChoice {
   family: string | null; // spirit family name when applicable
   targets: string[]; // elements when applicable (one of these matches)
   gain: number; // airship-power gain at the given quality
+  // Locked = the item ships with this enchant pre-installed (built-in element
+  // or built-in spirit, e.g. all Mundra items have Mundra Spirit baked in).
+  // The player can't swap it for anything else, so we don't show skill-
+  // alternative notes for locked slots.
+  locked: boolean;
 }
 
 export interface BestEnchantPlan {
@@ -161,12 +166,14 @@ export interface BestEnchantPlan {
 }
 
 // Compute the best enchant *pair* for an item (one element + one spirit).
-// Element slot: always at the item's tier; match if any elemental affinity.
-// Spirit slot: try every matching spirit affinity at its own tier; compare
-// against a generic non-matching spirit at the item's tier; pick whichever
-// yields the most airship power. A low-tier spirit (e.g. Bear T9) on a
-// high-tier item often loses to a generic T14 spirit because the T14 flat
-// boost outweighs the affinity multiplier on a T9 boost.
+// Element slot: locked to the built-in if any; otherwise at the item's tier,
+//   matched if any elemental affinity.
+// Spirit slot: locked to the built-in if any; otherwise try every matching
+//   spirit affinity at its own tier, compare against a generic non-matching
+//   spirit at the item's tier, pick whichever yields the most airship power.
+// A low-tier spirit (e.g. Bear T9) on a high-tier item often loses to a
+// generic T14 spirit because the T14 flat boost outweighs the affinity
+// multiplier on a T9 boost.
 export function bestEnchantPlan(
   b: Blueprint,
   quality: Quality,
@@ -179,38 +186,75 @@ export function bestEnchantPlan(
   const q = QUALITY_MULTIPLIER[quality];
 
   // Element slot
-  const elementTargets = [...b.elementalAffinity, ...b.builtInElement];
-  const elementMatch = affinityMatched && elementTargets.length > 0;
-  const element: SlotChoice = {
-    tier: itemTier,
-    match: elementMatch,
-    family: null,
-    targets: elementTargets,
-    gain: enchantGainAt(b, q, itemTier, elementMatch),
-  };
+  let element: SlotChoice;
+  if (b.builtInElement.length > 0) {
+    // Locked to the built-in element. Treat as match at item tier — the
+    // dev presumably scaled the built-in enchant's stat boost to the item's
+    // tier, so use the item's tier row from the enchant table.
+    element = {
+      tier: itemTier,
+      match: true,
+      family: null,
+      targets: b.builtInElement,
+      gain: enchantGainAt(b, q, itemTier, true),
+      locked: true,
+    };
+  } else {
+    const elementMatch =
+      affinityMatched && b.elementalAffinity.length > 0;
+    element = {
+      tier: itemTier,
+      match: elementMatch,
+      family: null,
+      targets: b.elementalAffinity,
+      gain: enchantGainAt(b, q, itemTier, elementMatch),
+      locked: false,
+    };
+  }
 
-  // Spirit slot — start with the "any spirit at the item's tier" baseline.
-  let spirit: SlotChoice = {
-    tier: itemTier,
-    match: false,
-    family: null,
-    targets: [],
-    gain: enchantGainAt(b, q, itemTier, false),
-  };
-
-  if (affinityMatched) {
-    for (const s of [...b.spiritAffinity, ...b.builtInSpirit]) {
-      const sTier = spiritTierFor(s);
-      if (sTier !== null && sTier <= itemTier) {
-        const gain = enchantGainAt(b, q, sTier, true);
-        if (gain > spirit.gain) {
-          spirit = {
-            tier: sTier,
-            match: true,
-            family: spiritFamily(s),
-            targets: [],
-            gain,
-          };
+  // Spirit slot
+  let spirit: SlotChoice;
+  if (b.builtInSpirit.length > 0) {
+    // Locked to the built-in spirit. Cap the effective tier at the item's
+    // tier so a T14 family on a T4 item doesn't get T14 stat values.
+    const s = b.builtInSpirit[0];
+    const fam = spiritFamily(s);
+    const familyTier = spiritTierFor(s);
+    const effTier =
+      familyTier !== null ? Math.min(familyTier, itemTier) : itemTier;
+    spirit = {
+      tier: effTier,
+      match: true,
+      family: fam,
+      targets: [],
+      gain: enchantGainAt(b, q, effTier, true),
+      locked: true,
+    };
+  } else {
+    // Start with the "any spirit at the item's tier" baseline.
+    spirit = {
+      tier: itemTier,
+      match: false,
+      family: null,
+      targets: [],
+      gain: enchantGainAt(b, q, itemTier, false),
+      locked: false,
+    };
+    if (affinityMatched) {
+      for (const s of b.spiritAffinity) {
+        const sTier = spiritTierFor(s);
+        if (sTier !== null && sTier <= itemTier) {
+          const gain = enchantGainAt(b, q, sTier, true);
+          if (gain > spirit.gain) {
+            spirit = {
+              tier: sTier,
+              match: true,
+              family: spiritFamily(s),
+              targets: [],
+              gain,
+              locked: false,
+            };
+          }
         }
       }
     }
@@ -274,8 +318,10 @@ export function recommendEnchant(b: Blueprint): EnchantRecommendation {
 
   const spiritAffinityAlternatives: SpiritAffinityNote[] = [];
   const itemTier = enchantTierFor(b.tier);
-  if (itemTier !== null && plan.spirit) {
-    for (const s of [...b.spiritAffinity, ...b.builtInSpirit]) {
+  // No alternatives shown for locked (built-in) slots — the player can't
+  // swap to anything else, so listing alternatives would be confusing.
+  if (itemTier !== null && plan.spirit && !plan.spirit.locked) {
+    for (const s of b.spiritAffinity) {
       const sTier = spiritTierFor(s);
       const applicable = sTier !== null && sTier <= itemTier;
       const family = spiritFamily(s);

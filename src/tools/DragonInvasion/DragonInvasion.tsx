@@ -478,6 +478,14 @@ export function DragonInvasion({ data }: { data: GameData }) {
                                   ) : (
                                     <strong className="generic">any</strong>
                                   )}
+                                  {rec.element.locked ? (
+                                    <span
+                                      className="locked-badge"
+                                      title="Built-in: this element enchant is baked into the blueprint and can't be swapped."
+                                    >
+                                      built-in
+                                    </span>
+                                  ) : null}
                                 </span>
                               ) : null}
                               {/* Spirit slot — always applied */}
@@ -491,6 +499,14 @@ export function DragonInvasion({ data }: { data: GameData }) {
                                   ) : (
                                     <strong className="generic">any</strong>
                                   )}
+                                  {rec.spirit.locked ? (
+                                    <span
+                                      className="locked-badge"
+                                      title="Built-in: this spirit enchant is baked into the blueprint and can't be swapped."
+                                    >
+                                      built-in
+                                    </span>
+                                  ) : null}
                                 </span>
                               ) : null}
                               {/* Skill-effect-only spirit affinities — these
@@ -736,14 +752,28 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           items are unaffected by the toggle.
         </p>
 
-        <h3>8. Familiars</h3>
+        <h3>8. Built-in enchants</h3>
+        <p>
+          Some blueprints ship with an enchant already baked in that can't be
+          swapped. Every Mundra item, for example, comes with Mundra Spirit
+          pre-installed in its spirit slot; a number of named items also have
+          a fixed element enchant like Inferno or Blistering in their element
+          slot. The ranker locks those slots to the built-in choice, marks the
+          line with a small "built-in" badge, and suppresses the skill-effect
+          alternatives below (since you can't pick anything else there
+          anyway). For Mundra items below T14, the built-in Mundra Spirit's
+          effective tier is capped at the item's own enchant tier so we don't
+          credit a T4 item with T14 spirit stats.
+        </p>
+
+        <h3>9. Familiars</h3>
         <p>
           The canonical data sheet lists airship-power values for familiars,
           but in-game familiars don't actually contribute to the airship. The
           ranker excludes them from every category.
         </p>
 
-        <h3>9. Top N per category</h3>
+        <h3>10. Top N per category</h3>
         <p>
           Each item is bucketed into one of four categories — Weapons, Body
           Armor, Misc Armor, Accessories — following the Dragon Invasion
@@ -753,7 +783,7 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           filter.
         </p>
 
-        <h3>10. Spirit families by tier</h3>
+        <h3>11. Spirit families by tier</h3>
         <p>
           Quick reference: which tier each spirit family lives at. Some are
           inferred from in-game ordering rather than the verified reference
