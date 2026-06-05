@@ -31,13 +31,20 @@ export const ENCHANT_TABLE: Record<"atk" | "def" | "hp", Record<number, EnchantR
     14: { base: 131, match: 196 },
   },
   hp: {
-    4: { base: 15, match: 20 },
-    5: { base: 25, match: 38 },
-    7: { base: 40, match: 60 },
-    9: { base: 50, match: 75 },
-    10: { base: 65, match: 95 },
-    12: { base: 90, match: 135 },
-    14: { base: 165, match: 245 },
+    // HP-enchant gains verified in-game against Malady's Robe (T15 Clothes,
+    // def 630 + hp 39, Common + Apotheosis + Ouroboros = 1732). The stale ST
+    // Central Dragon-sheet HP row (15/20, 25/38, … 165/245) systematically
+    // overstates HP enchant gains by ~25% — the actual values track the
+    // atk/def pattern. T14 is empirically dialed in; the lower tiers are
+    // extrapolated from atk/def parity and need verification if you craft an
+    // HP-bearing item at those tiers.
+    4: { base: 13, match: 19 },
+    5: { base: 22, match: 32 },
+    7: { base: 30, match: 45 },
+    9: { base: 38, match: 58 },
+    10: { base: 50, match: 75 },
+    12: { base: 71, match: 106 },
+    14: { base: 130, match: 195 },
   },
 };
 
@@ -186,17 +193,17 @@ export function bestEnchantPlan(
   const q = QUALITY_MULTIPLIER[quality];
 
   // Element slot
+  // Built-in element enchants are already baked into the item's listed
+  // Airship Power in the Blueprints sheet — the element slot is locked and
+  // contributes no *additional* AP, so its gain is 0.
   let element: SlotChoice;
   if (b.builtInElement.length > 0) {
-    // Locked to the built-in element. Treat as match at item tier — the
-    // dev presumably scaled the built-in enchant's stat boost to the item's
-    // tier, so use the item's tier row from the enchant table.
     element = {
       tier: itemTier,
       match: true,
       family: null,
       targets: b.builtInElement,
-      gain: enchantGainAt(b, q, itemTier, true),
+      gain: 0,
       locked: true,
     };
   } else {
@@ -212,22 +219,20 @@ export function bestEnchantPlan(
     };
   }
 
-  // Spirit slot
+  // Spirit slot — same idea: built-in spirits (e.g. Mundra Spirit on every
+  // Mundra item) are already accounted for in the base Airship Power value
+  // from the Blueprints sheet. Verified in-game against Mundra's Decree:
+  // base 2334 + Oblivion non-match 262 = 2596 in-game, with no extra
+  // contribution from the Mundra spirit. So the locked spirit slot adds 0.
   let spirit: SlotChoice;
   if (b.builtInSpirit.length > 0) {
-    // Locked to the built-in spirit. Cap the effective tier at the item's
-    // tier so a T14 family on a T4 item doesn't get T14 stat values.
     const s = b.builtInSpirit[0];
-    const fam = spiritFamily(s);
-    const familyTier = spiritTierFor(s);
-    const effTier =
-      familyTier !== null ? Math.min(familyTier, itemTier) : itemTier;
     spirit = {
-      tier: effTier,
+      tier: itemTier,
       match: true,
-      family: fam,
+      family: spiritFamily(s),
       targets: [],
-      gain: enchantGainAt(b, q, effTier, true),
+      gain: 0,
       locked: true,
     };
   } else {

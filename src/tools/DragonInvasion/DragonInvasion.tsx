@@ -481,9 +481,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
                                   {rec.element.locked ? (
                                     <span
                                       className="locked-badge"
-                                      title="Built-in: this element enchant is baked into the blueprint and can't be swapped."
+                                      title="Built-in: this element enchant is baked into the blueprint and is already included in the base AP — the slot can't be re-enchanted for extra power."
                                     >
-                                      built-in
+                                      built-in · in base AP
                                     </span>
                                   ) : null}
                                 </span>
@@ -492,7 +492,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
                               {rec.spirit ? (
                                 <span className="enchant-opt">
                                   <span className="label">
-                                    T{rec.spirit.tier} spirit
+                                    {rec.spirit.locked
+                                      ? "spirit"
+                                      : `T${rec.spirit.tier} spirit`}
                                   </span>{" "}
                                   {rec.spirit.match && rec.spirit.family ? (
                                     <strong>{rec.spirit.family}</strong>
@@ -502,9 +504,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
                                   {rec.spirit.locked ? (
                                     <span
                                       className="locked-badge"
-                                      title="Built-in: this spirit enchant is baked into the blueprint and can't be swapped."
+                                      title="Built-in spirit: locked into the slot, already included in the base AP. The named skill effect (e.g. Mundra's Spirit) is granted but adds no extra airship power on top of the base."
                                     >
-                                      built-in
+                                      built-in · in base AP
                                     </span>
                                   ) : null}
                                 </span>
@@ -754,16 +756,18 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
 
         <h3>8. Built-in enchants</h3>
         <p>
-          Some blueprints ship with an enchant already baked in that can't be
-          swapped. Every Mundra item, for example, comes with Mundra Spirit
-          pre-installed in its spirit slot; a number of named items also have
-          a fixed element enchant like Inferno or Blistering in their element
-          slot. The ranker locks those slots to the built-in choice, marks the
-          line with a small "built-in" badge, and suppresses the skill-effect
-          alternatives below (since you can't pick anything else there
-          anyway). For Mundra items below T14, the built-in Mundra Spirit's
-          effective tier is capped at the item's own enchant tier so we don't
-          credit a T4 item with T14 spirit stats.
+          Some blueprints ship with an enchant baked into one of their slots
+          that can't be swapped — Mundra items always carry Mundra Spirit,
+          Succubus Martyr ships with Oblivion Element, and so on. The stat
+          contribution of those built-in enchants is{" "}
+          <em>already folded into the item's listed base airship power</em>{" "}
+          in the canonical data sheet, so the locked slot is worth 0
+          additional AP. (Verified in-game against Mundra's Decree: base
+          2334 + Oblivion non-match 262 = 2596 in-game, with no extra
+          contribution from the Mundra spirit.) The ranker locks the
+          affected slot, labels it{" "}
+          <code>built-in · in base AP</code>, and only the un-locked slot
+          can be enchanted for further gain.
         </p>
 
         <h3>9. Familiars</h3>
