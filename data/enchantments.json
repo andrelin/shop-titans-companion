@@ -1,0 +1,294 @@
+[
+  {
+    "name": "Ember Element",
+    "type": "Element"
+  },
+  {
+    "name": "Flame Element",
+    "type": "Element"
+  },
+  {
+    "name": "Blaze Element",
+    "type": "Element"
+  },
+  {
+    "name": "Inferno Element",
+    "type": "Element"
+  },
+  {
+    "name": "Blistering Element",
+    "type": "Element"
+  },
+  {
+    "name": "Bubble Element",
+    "type": "Element"
+  },
+  {
+    "name": "Tide Element",
+    "type": "Element"
+  },
+  {
+    "name": "Flood Element",
+    "type": "Element"
+  },
+  {
+    "name": "Torrent Element",
+    "type": "Element"
+  },
+  {
+    "name": "Maelstrom Element",
+    "type": "Element"
+  },
+  {
+    "name": "Breeze Element",
+    "type": "Element"
+  },
+  {
+    "name": "Gale Element",
+    "type": "Element"
+  },
+  {
+    "name": "Tempest Element",
+    "type": "Element"
+  },
+  {
+    "name": "Hurricane Element",
+    "type": "Element"
+  },
+  {
+    "name": "Tornado Element",
+    "type": "Element"
+  },
+  {
+    "name": "Nature Element",
+    "type": "Element"
+  },
+  {
+    "name": "Wild Element",
+    "type": "Element"
+  },
+  {
+    "name": "Primal Element",
+    "type": "Element"
+  },
+  {
+    "name": "Primeval Element",
+    "type": "Element"
+  },
+  {
+    "name": "Gaia Element",
+    "type": "Element"
+  },
+  {
+    "name": "Light Element",
+    "type": "Element"
+  },
+  {
+    "name": "Holy Element",
+    "type": "Element"
+  },
+  {
+    "name": "Sacred Element",
+    "type": "Element"
+  },
+  {
+    "name": "Divine Element",
+    "type": "Element"
+  },
+  {
+    "name": "Apotheosis Element",
+    "type": "Element"
+  },
+  {
+    "name": "Corrupted Element",
+    "type": "Element"
+  },
+  {
+    "name": "Unholy Element",
+    "type": "Element"
+  },
+  {
+    "name": "Nightmare Element",
+    "type": "Element"
+  },
+  {
+    "name": "Abyssal Element",
+    "type": "Element"
+  },
+  {
+    "name": "Oblivion Element",
+    "type": "Element"
+  },
+  {
+    "name": "Luxurious Element",
+    "type": "Element"
+  },
+  {
+    "name": "Opulent Element",
+    "type": "Element"
+  },
+  {
+    "name": "Platinum Element",
+    "type": "Element"
+  },
+  {
+    "name": "Ram Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Wolf Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Ox Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Eagle Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Viper Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Cat Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Bunny Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Goose Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Xolotl Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Rhino Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Owl Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Armadillo Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Lizard Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Horse Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Hippo Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Squirrel Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Shark Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Walrus Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Lion Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Bear Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Mammoth Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Dinosaur Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Tiger Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Quetzalcoatl Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Phoenix Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Hydra Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Tarrasque Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Carbuncle Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Chimera Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Kraken Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Christmas Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Krampus Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Kirin Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Behemoth Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Ouroboros Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Bahamut Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Leviathan Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Griffin Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Titan Spirit",
+    "type": "Spirit"
+  },
+  {
+    "name": "Ancestor Spirit",
+    "type": "Spirit"
+  }
+]
