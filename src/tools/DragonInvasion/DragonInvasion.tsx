@@ -364,16 +364,13 @@ export function DragonInvasion({ data }: { data: GameData }) {
       {filteredByCategory.map(({ category, rows: catRows }) => {
         const visible = localSort(catRows).slice(0, topPerCategory);
         return (
-          <section key={category} style={{ marginBottom: 32 }}>
-            <h2 style={{ margin: "12px 0 8px", fontSize: 15 }}>
-              {category}
-              <span
-                className="tag"
-                style={{ marginLeft: 10, verticalAlign: "middle" }}
-              >
-                {catRows.length} items
+          <section key={category} className="category-section">
+            <div className="category-header">
+              <h2>{category}</h2>
+              <span className="count">
+                {catRows.length} item{catRows.length === 1 ? "" : "s"}
               </span>
-            </h2>
+            </div>
             <div style={{ overflowX: "auto" }}>
               <table>
                 <thead>
@@ -419,22 +416,19 @@ export function DragonInvasion({ data }: { data: GameData }) {
                   {visible.map((r) => {
                     const rec = recommendEnchant(r.bp);
                     const hasMatch = hasAffinity(rec);
+                    const rankClass =
+                      r.categoryRank === 1
+                        ? "rank rank-1"
+                        : r.categoryRank === 2
+                          ? "rank rank-2"
+                          : r.categoryRank === 3
+                            ? "rank rank-3"
+                            : "rank rank-other";
                     return (
                       <tr key={`${r.bp.name}::${r.quality}`}>
-                        <td
-                          className="num"
-                          style={{
-                            color:
-                              r.categoryRank <= 3
-                                ? "var(--accent)"
-                                : "var(--muted)",
-                            fontWeight: r.categoryRank <= 3 ? 600 : 400,
-                          }}
-                        >
-                          {r.categoryRank}
-                        </td>
-                        <td>{r.bp.name}</td>
-                        <td>{r.bp.type}</td>
+                        <td className={rankClass}>{r.categoryRank}</td>
+                        <td className="item-name">{r.bp.name}</td>
+                        <td style={{ color: "var(--muted)" }}>{r.bp.type}</td>
                         <td className="num">{r.bp.tier}</td>
                         <td
                           style={{
@@ -457,37 +451,30 @@ export function DragonInvasion({ data }: { data: GameData }) {
                           {rec.tier === null ? (
                             <span className="tag">no enchant available</span>
                           ) : !hasMatch ? (
-                            <span>
-                              <span style={{ color: "var(--muted)" }}>
-                                T{rec.tier}
-                              </span>{" "}
-                              <strong>any</strong>{" "}
-                              <span className="tag">no affinity bonus</span>
-                            </span>
+                            <div className="enchant-cell">
+                              <span>
+                                <span className="label">T{rec.tier} —</span>{" "}
+                                any (no affinity bonus)
+                              </span>
+                            </div>
                           ) : (
-                            <div
-                              style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: 2,
-                              }}
-                            >
+                            <div className="enchant-cell">
                               {rec.elementTargets.length > 0 ? (
                                 <span>
-                                  <span style={{ color: "var(--muted)" }}>
-                                    T{rec.tier} element:
+                                  <span className="label">
+                                    T{rec.tier} element
                                   </span>{" "}
-                                  <strong style={{ color: "var(--accent)" }}>
+                                  <strong>
                                     {rec.elementTargets.join(" or ")}
                                   </strong>
                                 </span>
                               ) : null}
                               {rec.spiritTargets.length > 0 ? (
                                 <span>
-                                  <span style={{ color: "var(--muted)" }}>
-                                    T{rec.tier} spirit:
+                                  <span className="label">
+                                    T{rec.tier} spirit
                                   </span>{" "}
-                                  <strong style={{ color: "var(--accent)" }}>
+                                  <strong>
                                     {rec.spiritTargets.join(" or ")}
                                   </strong>
                                 </span>
@@ -502,13 +489,13 @@ export function DragonInvasion({ data }: { data: GameData }) {
               </table>
             </div>
             {visible.length === 0 ? (
-              <p style={{ color: "var(--muted)" }}>
+              <div className="category-footnote">
                 No items match the current filters in {category}.
-              </p>
+              </div>
             ) : catRows.length > visible.length ? (
-              <p style={{ color: "var(--muted)", fontSize: 12 }}>
+              <div className="category-footnote">
                 Showing top {visible.length} of {catRows.length}.
-              </p>
+              </div>
             ) : null}
           </section>
         );
