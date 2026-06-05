@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
 import type { Blueprint, GameData, Quality } from "../../data/types";
 import { QUALITY_ORDER } from "../../data/types";
-import { computePower, recommendEnchant } from "../../data/enchant";
+import {
+  computePower,
+  hasAffinity,
+  recommendEnchant,
+} from "../../data/enchant";
 
 type SortKey =
   | "rankedPower"
@@ -433,7 +437,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 <tbody>
                   {visible.map((r) => {
                     const rec = recommendEnchant(r.bp);
-                    const hasMatch = rec.affinityTargets.length > 0;
+                    const hasMatch = hasAffinity(rec);
                     return (
                       <tr key={`${r.bp.name}::${r.quality}`}>
                         <td
@@ -464,39 +468,43 @@ export function DragonInvasion({ data }: { data: GameData }) {
                         <td>
                           {rec.tier === null ? (
                             <span className="tag">no enchant available</span>
-                          ) : (
-                            <>
+                          ) : !hasMatch ? (
+                            <span>
                               <span style={{ color: "var(--muted)" }}>
                                 T{rec.tier}
                               </span>{" "}
-                              <strong
-                                style={{
-                                  color: hasMatch ? "var(--accent)" : undefined,
-                                }}
-                              >
-                                {hasMatch
-                                  ? rec.affinityTargets.join(" or ")
-                                  : "any"}
-                              </strong>
-                              {hasMatch ? (
-                                <span
-                                  className="tag gain"
-                                  style={{ marginLeft: 6 }}
-                                >
-                                  {rec.source === "spirit" ||
-                                  rec.source === "built-in spirit"
-                                    ? "spirit match"
-                                    : "affinity match"}
+                              <strong>any</strong>{" "}
+                              <span className="tag">no affinity bonus</span>
+                            </span>
+                          ) : (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 2,
+                              }}
+                            >
+                              {rec.elementTargets.length > 0 ? (
+                                <span>
+                                  <span style={{ color: "var(--muted)" }}>
+                                    T{rec.tier} element:
+                                  </span>{" "}
+                                  <strong style={{ color: "var(--accent)" }}>
+                                    {rec.elementTargets.join(" or ")}
+                                  </strong>
                                 </span>
-                              ) : (
-                                <span
-                                  className="tag"
-                                  style={{ marginLeft: 6 }}
-                                >
-                                  no affinity bonus
+                              ) : null}
+                              {rec.spiritTargets.length > 0 ? (
+                                <span>
+                                  <span style={{ color: "var(--muted)" }}>
+                                    T{rec.tier} spirit:
+                                  </span>{" "}
+                                  <strong style={{ color: "var(--accent)" }}>
+                                    {rec.spiritTargets.join(" or ")}
+                                  </strong>
                                 </span>
-                              )}
-                            </>
+                              ) : null}
+                            </div>
                           )}
                         </td>
                       </tr>
