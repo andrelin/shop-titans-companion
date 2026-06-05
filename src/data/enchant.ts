@@ -61,6 +61,49 @@ export interface PowerOptions {
   includeAirshipUpgrade: boolean; // apply +X% Bonus Airship Power milestone if present
 }
 
+// Spirit enchant tiers, keyed by the spirit *family* (first word of the
+// affinity name, e.g. "Bahamut Sovereignty" → "Bahamut"). Verified families
+// come from the ST Central Dragon Affinities sheet; unverified ones are
+// inferred from the in-game spirit list ordering and are marked below.
+const SPIRIT_TIERS: Record<string, number> = {
+  // Tier 4 (verified from Dragon Affinities)
+  Ram: 4, Wolf: 4, Ox: 4, Eagle: 4, Viper: 4, Cat: 4, Bunny: 4,
+  // Tier 4 (inferred — early-game spirits not in the verified list)
+  Goose: 4, Armadillo: 4, Hippo: 4,
+  // Tier 5
+  Xolotl: 5,
+  Squirrel: 5, // inferred
+  // Tier 7
+  Owl: 7, Lizard: 7, Horse: 7,
+  Rhino: 7, // inferred
+  // Tier 9
+  Bear: 9, Dinosaur: 9, Lion: 9, Mammoth: 9, Shark: 9, Tiger: 9, Walrus: 9,
+  Hydra: 9, Tarrasque: 9, // inferred
+  // Tier 10
+  Quetzalcoatl: 10,
+  // Tier 12
+  Carbuncle: 12, Chimera: 12, Christmas: 12, Kraken: 12, Phoenix: 12,
+  Krampus: 12, Kirin: 12, // inferred
+  // Tier 14
+  Bahamut: 14, Behemoth: 14, Griffin: 14, Leviathan: 14, Ouroboros: 14, Titan: 14,
+  Ancestor: 14, // inferred (recent high-tier spirit)
+  Mundra: 14, // inferred (event spirit)
+};
+
+// Extract the spirit family name from an affinity string. The data uses
+// "Bear Vitality", "Bahamut Sovereignty", "Mundra's Spirit", "Christmas Spirit",
+// "Quetzalcoatl Spirit", etc. — the family is always the first whitespace token
+// with a trailing apostrophe-s stripped.
+export function spiritFamily(affinity: string): string {
+  const first = affinity.trim().split(/\s+/)[0] ?? "";
+  return first.replace(/'s$/, "");
+}
+
+export function spiritTierFor(affinity: string): number | null {
+  const fam = spiritFamily(affinity);
+  return SPIRIT_TIERS[fam] ?? null;
+}
+
 // BasePower at Common quality, no enchant, no APU.
 // Verified against the canonical sheet's "Airship Power" column for sample items
 // (Squire Sword, Frogsong Gong, Wyrmbane Cannon, Sia's Fancy Outfit, Twin Fangs).
@@ -123,28 +166,36 @@ export function maxEnchantTierFor(itemTier: number): number | null {
   return enchantTierFor(itemTier);
 }
 
+export interface SpiritOption {
+  family: string; // e.g. "Bahamut"
+  tier: number | null; // spirit enchant tier
+  fullAffinityName: string; // e.g. "Bahamut Sovereignty"
+}
+
 export interface EnchantRecommendation {
-  tier: number | null; // enchant tier to use, or null if item is too low tier
-  elementTargets: string[]; // elemental affinities (incl. built-in)
-  spiritTargets: string[]; // spirit affinities (incl. built-in)
+  // Element enchant — tier is derived from the item tier (Dragon sheet table).
+  elementTier: number | null;
+  elementTargets: string[]; // empty = use any element, no affinity bonus
+  // Spirit enchant — tier comes from the spirit family itself, not the item.
+  spirits: SpiritOption[]; // empty = use any spirit, no affinity bonus
 }
 
 // Suggest the enchant(s) a player should consider applying. An item can have
-// both an elemental and a spirit affinity simultaneously; both are listed so
-// the player can pick whichever enchant they have on hand. Either choice
-// yields the same affinity bonus on airship power.
+// both an elemental affinity *and* a spirit affinity, so we always return both
+// recommendations side by side. Either choice grants the affinity bonus on
+// airship power — the user picks whichever enchant they have on hand.
 export function recommendEnchant(b: Blueprint): EnchantRecommendation {
-  const tier = enchantTierFor(b.tier);
-  if (tier === null) {
-    return { tier: null, elementTargets: [], spiritTargets: [] };
-  }
-  return {
-    tier,
-    elementTargets: [...b.elementalAffinity, ...b.builtInElement],
-    spiritTargets: [...b.spiritAffinity, ...b.builtInSpirit],
-  };
+  const elementTier = enchantTierFor(b.tier);
+  const elementTargets = [...b.elementalAffinity, ...b.builtInElement];
+  const rawSpirits = [...b.spiritAffinity, ...b.builtInSpirit];
+  const spirits: SpiritOption[] = rawSpirits.map((s) => ({
+    family: spiritFamily(s),
+    tier: spiritTierFor(s),
+    fullAffinityName: s,
+  }));
+  return { elementTier, elementTargets, spirits };
 }
 
 export function hasAffinity(rec: EnchantRecommendation): boolean {
-  return rec.elementTargets.length > 0 || rec.spiritTargets.length > 0;
+  return rec.elementTargets.length > 0 || rec.spirits.length > 0;
 }

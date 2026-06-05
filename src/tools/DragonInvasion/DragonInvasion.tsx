@@ -1,11 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Blueprint, GameData, Quality } from "../../data/types";
 import { QUALITY_COLOR, QUALITY_ORDER } from "../../data/types";
-import {
-  computePower,
-  hasAffinity,
-  recommendEnchant,
-} from "../../data/enchant";
+import { computePower, recommendEnchant } from "../../data/enchant";
 
 type SortKey =
   | "rankedPower"
@@ -123,6 +119,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
     const out: Row[] = [];
     for (const bp of data.blueprints) {
       if (bp.atk === 0 && bp.def === 0 && bp.hp === 0) continue;
+      // Familiars don't contribute to airship power in-game, despite the
+      // canonical sheet listing AP values for them — exclude from rankings.
+      if (bp.type === "Familiar") continue;
       for (const quality of qualitiesInOrder) {
         const opts = {
           quality,
@@ -421,7 +420,6 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 <tbody>
                   {visible.map((r) => {
                     const rec = recommendEnchant(r.bp);
-                    const hasMatch = hasAffinity(rec);
                     const rankClass =
                       r.categoryRank === 1
                         ? "rank rank-1"
@@ -456,37 +454,48 @@ export function DragonInvasion({ data }: { data: GameData }) {
                           </span>
                         </td>
                         <td>
-                          {rec.tier === null ? (
+                          {rec.elementTier === null &&
+                          rec.spirits.length === 0 ? (
                             <span className="tag">no enchant available</span>
-                          ) : !hasMatch ? (
-                            <div className="enchant-cell">
-                              <span>
-                                <span className="label">T{rec.tier} —</span>{" "}
-                                any (no affinity bonus)
-                              </span>
-                            </div>
                           ) : (
                             <div className="enchant-cell">
-                              {rec.elementTargets.length > 0 ? (
+                              {/* Element line — always shown */}
+                              {rec.elementTier !== null ? (
                                 <span>
                                   <span className="label">
-                                    T{rec.tier} element
+                                    T{rec.elementTier} element
                                   </span>{" "}
-                                  <strong>
-                                    {rec.elementTargets.join(" or ")}
-                                  </strong>
+                                  {rec.elementTargets.length > 0 ? (
+                                    <strong>
+                                      {rec.elementTargets.join(" or ")}
+                                    </strong>
+                                  ) : (
+                                    <span className="enchant-any">
+                                      any (no affinity)
+                                    </span>
+                                  )}
                                 </span>
                               ) : null}
-                              {rec.spiritTargets.length > 0 ? (
+                              {/* Spirit line — always shown */}
+                              {rec.spirits.length > 0 ? (
+                                rec.spirits.map((sp, i) => (
+                                  <span key={i}>
+                                    <span className="label">
+                                      {sp.tier !== null
+                                        ? `T${sp.tier} spirit`
+                                        : "spirit"}
+                                    </span>{" "}
+                                    <strong>{sp.family}</strong>
+                                  </span>
+                                ))
+                              ) : (
                                 <span>
-                                  <span className="label">
-                                    T{rec.tier} spirit
-                                  </span>{" "}
-                                  <strong>
-                                    {rec.spiritTargets.join(" or ")}
-                                  </strong>
+                                  <span className="label">spirit</span>{" "}
+                                  <span className="enchant-any">
+                                    any (no affinity)
+                                  </span>
                                 </span>
-                              ) : null}
+                              )}
                             </div>
                           )}
                         </td>

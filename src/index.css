@@ -466,3 +466,6 @@ td.num.enchanted {
   color: var(--accent);
   font-weight: 600;
 }
+.enchant-cell .enchant-any {
+  color: var(--muted);
+}
