@@ -371,7 +371,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 {catRows.length} item{catRows.length === 1 ? "" : "s"}
               </span>
             </div>
-            <div style={{ overflowX: "auto" }}>
+            <div className="table-wrap">
               <table>
                 <thead>
                   <tr>
@@ -438,12 +438,14 @@ export function DragonInvasion({ data }: { data: GameData }) {
                         >
                           {r.quality}
                         </td>
-                        <td className="num">{formatNumber(r.basePower)}</td>
-                        <td className="num">
+                        <td className="num base">
+                          {formatNumber(r.basePower)}
+                        </td>
+                        <td className="num enchanted">
                           {formatNumber(r.enchantedPower)}
                         </td>
                         <td className="num">
-                          <span className={r.delta > 0 ? "tag gain" : "tag"}>
+                          <span className={r.delta > 0 ? "delta" : "delta zero"}>
                             +{formatNumber(r.delta)}
                           </span>
                         </td>
