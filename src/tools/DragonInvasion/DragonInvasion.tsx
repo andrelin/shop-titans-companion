@@ -1,7 +1,12 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type { Blueprint, GameData, Quality } from "../../data/types";
-import { QUALITY_COLOR, QUALITY_ORDER } from "../../data/types";
-import { computePower, recommendEnchant } from "../../data/enchant";
+import { QUALITY_COLOR, QUALITY_MULTIPLIER, QUALITY_ORDER } from "../../data/types";
+import {
+  computePower,
+  ENCHANT_TABLE,
+  recommendEnchant,
+  SPIRIT_TIERS,
+} from "../../data/enchant";
 
 type SortKey =
   | "rankedPower"
@@ -360,6 +365,8 @@ export function DragonInvasion({ data }: { data: GameData }) {
         </div>
       </div>
 
+      <ExplainPanel blueprints={data.blueprints} />
+
       {filteredByCategory.map(({ category, rows: catRows }) => {
         const visible = localSort(catRows).slice(0, topPerCategory);
         return (
@@ -545,5 +552,254 @@ export function DragonInvasion({ data }: { data: GameData }) {
         );
       })}
     </>
+  );
+}
+
+// Tier columns in the enchant table. Items between columns step down to the
+// next-lower column (the convention from the Dragon Invasion reference sheet).
+const ENCHANT_TIER_COLS = [4, 5, 7, 9, 10, 12, 14] as const;
+
+function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
+  const upgradeCount = useMemo(
+    () => blueprints.filter((b) => b.airshipPowerUpgradeBonus > 0).length,
+    [blueprints],
+  );
+
+  // Group spirit families by their tier so the user can quickly scan them.
+  const spiritsByTier = useMemo(() => {
+    const grouped = new Map<number, string[]>();
+    for (const [family, tier] of Object.entries(SPIRIT_TIERS)) {
+      if (!grouped.has(tier)) grouped.set(tier, []);
+      grouped.get(tier)!.push(family);
+    }
+    for (const list of grouped.values()) list.sort();
+    return [...grouped.entries()].sort((a, b) => a[0] - b[0]);
+  }, []);
+
+  return (
+    <details className="explain">
+      <summary>How airship power is calculated</summary>
+      <div className="explain-body">
+        <p>
+          The Dragon Invasion airship ranks items by their{" "}
+          <em>airship power</em> (AP) — a single number combining a blueprint's
+          stats, quality, and the enchant you place on it. Everything below is
+          how the ranker computes those numbers.
+        </p>
+
+        <h3>1. Base formula</h3>
+        <p>
+          Every craftable item's AP at Common quality, with no enchant, is:
+        </p>
+        <pre className="explain-formula">
+          AP = (0.8·atk + 1.2·def + 5·hp) × (1 + 10·crit) × (1 + 10·eva)
+        </pre>
+        <p>
+          Crit and evasion both scale the entire stat sum, so a small amount of
+          either is worth a lot. Note that crit and eva are stored as decimals
+          (0.05 = 5%), which is why the multiplier is{" "}
+          <code>1 + 10·crit</code> rather than <code>1 + crit</code>.
+        </p>
+
+        <h3>2. Quality</h3>
+        <p>
+          Quality scales the final AP value linearly — it does not compound
+          with crit or evasion.
+        </p>
+        <table className="explain-table">
+          <thead>
+            <tr>
+              <th>Quality</th>
+              {QUALITY_ORDER.map((q) => (
+                <th key={q} className="num" style={{ color: QUALITY_COLOR[q] }}>
+                  {q}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Multiplier</td>
+              {QUALITY_ORDER.map((q) => (
+                <td key={q} className="num">
+                  {QUALITY_MULTIPLIER[q]}×
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3. Enchantments</h3>
+        <p>
+          There are two enchant <em>families</em>: <strong>elements</strong>{" "}
+          (Fire, Water, Air, Earth, Light, Dark, plus "All" and Gold variants)
+          and <strong>spirits</strong> (Bear, Wolf, Bahamut, Ouroboros, and so
+          on). You apply one enchant per item.
+        </p>
+        <p>
+          Each enchant adds a flat number of airship-power points{" "}
+          <em>per stat the item already has</em> (atk, def, or hp). The amount
+          depends on tier and whether the enchant matches the item's affinity.
+          An item with both atk and def gets the gain for each present stat.
+          The flat gain is then multiplied through the same{" "}
+          <code>(1 + 10·crit) × (1 + 10·eva)</code> factor and the quality
+          multiplier as the base.
+        </p>
+
+        <h3>4. Per-tier enchant points</h3>
+        <p>
+          Values are airship-power points added per stat at Common quality with
+          crit/eva = 0. The "(match)" column is the affinity-matched value —
+          roughly 1.5× the base.
+        </p>
+        <div className="explain-table-wrap">
+          <table className="explain-table">
+            <thead>
+              <tr>
+                <th>Stat</th>
+                {ENCHANT_TIER_COLS.map((t) => (
+                  <th key={t} className="num" colSpan={2}>
+                    T{t}
+                  </th>
+                ))}
+              </tr>
+              <tr>
+                <th></th>
+                {ENCHANT_TIER_COLS.map((t) => (
+                  <Fragment key={t}>
+                    <th className="num explain-sub">base</th>
+                    <th className="num explain-sub">match</th>
+                  </Fragment>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {(["atk", "def", "hp"] as const).map((stat) => (
+                <tr key={stat}>
+                  <td>{stat.toUpperCase()}</td>
+                  {ENCHANT_TIER_COLS.map((t) => {
+                    const row = ENCHANT_TABLE[stat][t];
+                    return (
+                      <Fragment key={t}>
+                        <td className="num">{row.base}</td>
+                        <td className="num explain-match">{row.match}</td>
+                      </Fragment>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Item tiers between columns step down to the next-lower column. So a
+          T15 or T16 item uses the T14 column, a T13 item uses T12, T11 uses
+          T10, T8 uses T7, T6 uses T5, and so on. Items below T4 cannot be
+          enchanted.
+        </p>
+
+        <h3>5. Element vs spirit tier mismatch</h3>
+        <p>
+          An element enchant is always available at the item's own enchant
+          tier. A spirit enchant only exists at its family's fixed tier — Bear
+          Spirit is T9, Bahamut Spirit is T14, and so on. So on a T14 item
+          whose only spirit affinity is a low-tier one (e.g. Bear), applying a
+          non-matching T14 element enchant usually beats applying the matching
+          but lower-tier Bear spirit, because the T14 flat boost outweighs the
+          affinity multiplier on a T9 boost. The ranker computes both options
+          and picks whichever yields more airship power.
+        </p>
+
+        <h3>6. Affinity match bonus</h3>
+        <p>
+          The "(match)" values above are roughly 1.5× the base values — that's
+          the bonus you get from matching the item's element or spirit. Items
+          can have one elemental affinity, one spirit affinity, both, or
+          neither. The "Match affinity" toggle on the controls bar assumes you
+          pick the matching enchant whenever possible.
+        </p>
+
+        <h3>7. +20/25% Bonus Airship Power upgrade</h3>
+        <p>
+          A small number of items ({upgradeCount} in the current data) have a
+          crafting recipe upgrade or Starforged Milestone called{" "}
+          <em>+20% Bonus Airship Power</em> or <em>+25% Bonus Airship Power</em>
+          . Toggling this on multiplies that specific item's total AP by the
+          listed percentage after the enchant gain has been added. All other
+          items are unaffected by the toggle.
+        </p>
+
+        <h3>8. Familiars</h3>
+        <p>
+          The canonical data sheet lists airship-power values for familiars,
+          but in-game familiars don't actually contribute to the airship. The
+          ranker excludes them from every category.
+        </p>
+
+        <h3>9. Top N per category</h3>
+        <p>
+          Each item is bucketed into one of four categories — Weapons, Body
+          Armor, Misc Armor, Accessories — following the Dragon Invasion
+          event's slot system, and ranked independently within its bucket. The
+          "Top" control caps how many rows you see per category; ranks are
+          stamped on the full bucket so they don't change when you scroll or
+          filter.
+        </p>
+
+        <h3>10. Spirit families by tier</h3>
+        <p>
+          Quick reference: which tier each spirit family lives at. Some are
+          inferred from in-game ordering rather than the verified reference
+          list.
+        </p>
+        <ul className="explain-spirits">
+          {spiritsByTier.map(([tier, families]) => (
+            <li key={tier}>
+              <span className="explain-spirit-tier">T{tier}:</span>{" "}
+              {families.join(", ")}
+            </li>
+          ))}
+        </ul>
+
+        <h3>Data sources</h3>
+        <p>
+          Blueprints, enchant names, and affinities are synced daily from the
+          community-maintained{" "}
+          <a
+            href="https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Shop Titans data spreadsheet
+          </a>
+          . The base airship power formula above is verified against{" "}
+          <a
+            href="https://st-central.net/displayed-stat-calculations/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            ST Central's displayed-stat reference
+          </a>
+          , and the per-tier enchant-power table comes from the{" "}
+          <a
+            href="https://st-central.net/dragon-invasion/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            ST Central Dragon Invasion guide
+          </a>{" "}
+          (and its{" "}
+          <a
+            href="https://docs.google.com/spreadsheets/d/1eWZQ4SSqbMc0xLqDQQZwzZg5fU19Se8XnDdvdcMO3Aw"
+            target="_blank"
+            rel="noreferrer"
+          >
+            companion sheet
+          </a>
+          ), which are no longer being kept current — but the underlying values
+          reflect stable game mechanics.
+        </p>
+      </div>
+    </details>
   );
 }

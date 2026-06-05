@@ -479,3 +479,182 @@ td.num.enchanted {
   color: var(--muted);
   font-weight: 500;
 }
+
+/* Collapsible "how airship power is calculated" explanation. Styled to match
+ * the controls card: soft border, panel-2 tint, generous padding. */
+.explain {
+  margin-bottom: 20px;
+  background: linear-gradient(
+    180deg,
+    rgba(29, 34, 44, 0.5) 0%,
+    rgba(22, 26, 34, 0.35) 100%
+  );
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.explain summary {
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-weight: 500;
+  border-radius: 12px;
+  transition: background 120ms ease, color 120ms ease;
+}
+.explain summary::-webkit-details-marker {
+  display: none;
+}
+.explain summary::before {
+  content: "▸";
+  display: inline-block;
+  color: var(--muted-2);
+  font-size: 11px;
+  transition: transform 150ms ease, color 120ms ease;
+}
+.explain[open] > summary::before {
+  content: "▾";
+  color: var(--accent);
+}
+.explain summary:hover {
+  background: rgba(122, 169, 255, 0.05);
+}
+.explain summary:hover::before {
+  color: var(--text);
+}
+.explain[open] > summary {
+  border-bottom: 1px solid var(--border-soft);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.explain-body {
+  padding: 14px 20px 20px;
+}
+
+.explain h3 {
+  margin: 18px 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.explain h3:first-child {
+  margin-top: 4px;
+}
+
+.explain p {
+  margin: 6px 0;
+  color: var(--muted);
+}
+
+.explain p em {
+  color: var(--text);
+  font-style: normal;
+  font-weight: 500;
+}
+.explain p strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.explain a {
+  color: var(--accent-2);
+}
+
+.explain code,
+.explain-formula {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  font-size: 12.5px;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.explain-formula {
+  display: block;
+  padding: 10px 14px;
+  margin: 8px 0 10px;
+  white-space: pre-wrap;
+  color: var(--accent);
+  background: rgba(255, 181, 71, 0.06);
+  border-color: rgba(255, 181, 71, 0.18);
+}
+
+.explain-table-wrap {
+  overflow-x: auto;
+  margin: 8px 0 4px;
+}
+
+.explain table.explain-table {
+  border-collapse: collapse;
+  width: auto;
+  font-size: 12.5px;
+  margin: 8px 0 4px;
+}
+
+.explain table.explain-table th,
+.explain table.explain-table td {
+  position: static;
+  background: transparent;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--muted);
+  cursor: default;
+  white-space: nowrap;
+}
+.explain table.explain-table th {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.explain table.explain-table th.explain-sub {
+  color: var(--muted-2);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 10.5px;
+  border-bottom-color: var(--border-soft);
+}
+.explain table.explain-table td.explain-match {
+  color: var(--accent);
+  font-weight: 500;
+}
+.explain table.explain-table tbody tr:hover {
+  background: transparent;
+}
+
+.explain ul.explain-spirits {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.explain ul.explain-spirits li {
+  color: var(--muted);
+}
+.explain .explain-spirit-tier {
+  display: inline-block;
+  min-width: 36px;
+  color: var(--accent);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}

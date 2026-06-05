@@ -9,9 +9,9 @@ import { QUALITY_MULTIPLIER } from "./types";
 // Source: Dragon Invasion Item Power tab of
 // https://docs.google.com/spreadsheets/d/1eWZQ4SSqbMc0xLqDQQZwzZg5fU19Se8XnDdvdcMO3Aw
 // (sheet last refreshed 2025-05-28; the table itself is stable).
-type EnchantRow = { base: number; match: number };
+export type EnchantRow = { base: number; match: number };
 
-const ENCHANT_TABLE: Record<"atk" | "def" | "hp", Record<number, EnchantRow>> = {
+export const ENCHANT_TABLE: Record<"atk" | "def" | "hp", Record<number, EnchantRow>> = {
   atk: {
     4: { base: 13, match: 19 },
     5: { base: 21, match: 31 },
@@ -65,7 +65,7 @@ export interface PowerOptions {
 // affinity name, e.g. "Bahamut Sovereignty" → "Bahamut"). Verified families
 // come from the ST Central Dragon Affinities sheet; unverified ones are
 // inferred from the in-game spirit list ordering and are marked below.
-const SPIRIT_TIERS: Record<string, number> = {
+export const SPIRIT_TIERS: Record<string, number> = {
   // Tier 4 (verified from Dragon Affinities)
   Ram: 4, Wolf: 4, Ox: 4, Eagle: 4, Viper: 4, Cat: 4, Bunny: 4,
   // Tier 4 (inferred — early-game spirits not in the verified list)
