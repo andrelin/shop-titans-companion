@@ -96,8 +96,14 @@ export function DragonInvasion({ data }: { data: GameData }) {
   const [affinityMatched, setAffinityMatched] = useState(true);
   const [includeAirshipUpgrade, setIncludeAirshipUpgrade] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState<"All" | Category>("All");
+  // Default the upper bound to whatever the latest tier in the data is, so
+  // new tiers don't get silently hidden when the game adds them.
+  const dataMaxTier = useMemo(
+    () => data.blueprints.reduce((m, b) => (b.tier > m ? b.tier : m), 1),
+    [data.blueprints],
+  );
   const [minTier, setMinTier] = useState<number>(4);
-  const [maxTier, setMaxTier] = useState<number>(15);
+  const [maxTier, setMaxTier] = useState<number>(dataMaxTier);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({
     key: "rankedPower",
@@ -310,7 +316,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
           <input
             type="number"
             min={1}
-            max={15}
+            max={Math.max(20, dataMaxTier)}
             value={minTier}
             onChange={(e) => setMinTier(Number(e.target.value))}
             style={{ width: 56 }}
@@ -320,7 +326,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
           <input
             type="number"
             min={1}
-            max={15}
+            max={Math.max(20, dataMaxTier)}
             value={maxTier}
             onChange={(e) => setMaxTier(Number(e.target.value))}
             style={{ width: 56 }}
