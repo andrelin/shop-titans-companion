@@ -119,10 +119,24 @@ footer {
 
 .controls {
   display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.controls-row {
+  display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 14px;
   align-items: end;
-  margin-bottom: 16px;
+}
+
+.controls-row.toggles {
+  align-items: center;
+  gap: 18px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--border);
+  padding-top: 12px;
 }
 
 .control {
@@ -131,11 +145,21 @@ footer {
   gap: 4px;
 }
 
-.control label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+.control > label.field-label {
+  font-size: 12px;
   color: var(--muted);
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.toggle input {
+  margin: 0;
 }
 
 table {

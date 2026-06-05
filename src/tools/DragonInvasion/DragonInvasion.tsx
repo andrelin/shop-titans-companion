@@ -215,108 +215,107 @@ export function DragonInvasion({ data }: { data: GameData }) {
       </p>
 
       <div className="controls">
-        <div className="control">
-          <label>Rank by</label>
-          <select
-            value={rankedMode}
-            onChange={(e) =>
-              setRankedMode(e.target.value as "enchanted" | "base")
-            }
-          >
-            <option value="enchanted">Enchanted power</option>
-            <option value="base">Unenchanted power</option>
-          </select>
-        </div>
-        <div className="control">
-          <label>Quality</label>
-          <select value={quality} onChange={(e) => setQuality(e.target.value as Quality)}>
-            {QUALITY_ORDER.map((q) => (
-              <option key={q} value={q}>
-                {q}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="control">
-          <label>Category</label>
-          <select
-            value={categoryFilter}
-            onChange={(e) =>
-              setCategoryFilter(e.target.value as "All" | Category)
-            }
-          >
-            <option value="All">All categories</option>
-            {CATEGORY_ORDER.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="control">
-          <label>Top per category</label>
-          <select
-            value={topPerCategory}
-            onChange={(e) => setTopPerCategory(Number(e.target.value))}
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-            <option value={9999}>All</option>
-          </select>
-        </div>
-        <div className="control">
-          <label>Tier range</label>
-          <div style={{ display: "flex", gap: 6 }}>
+        <div className="controls-row">
+          <div className="control">
+            <label className="field-label">Rank by</label>
+            <select
+              value={rankedMode}
+              onChange={(e) =>
+                setRankedMode(e.target.value as "enchanted" | "base")
+              }
+            >
+              <option value="enchanted">Enchanted power</option>
+              <option value="base">Unenchanted power</option>
+            </select>
+          </div>
+          <div className="control">
+            <label className="field-label">Quality</label>
+            <select
+              value={quality}
+              onChange={(e) => setQuality(e.target.value as Quality)}
+            >
+              {QUALITY_ORDER.map((q) => (
+                <option key={q} value={q}>
+                  {q}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="control">
+            <label className="field-label">Category</label>
+            <select
+              value={categoryFilter}
+              onChange={(e) =>
+                setCategoryFilter(e.target.value as "All" | Category)
+              }
+            >
+              <option value="All">All categories</option>
+              {CATEGORY_ORDER.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="control">
+            <label className="field-label">Top per category</label>
+            <select
+              value={topPerCategory}
+              onChange={(e) => setTopPerCategory(Number(e.target.value))}
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+              <option value={9999}>All</option>
+            </select>
+          </div>
+          <div className="control">
+            <label className="field-label">Tier range</label>
+            <div style={{ display: "flex", gap: 6 }}>
+              <input
+                type="number"
+                min={1}
+                max={15}
+                value={minTier}
+                onChange={(e) => setMinTier(Number(e.target.value))}
+                style={{ width: 60 }}
+              />
+              <span style={{ alignSelf: "center", color: "var(--muted)" }}>
+                –
+              </span>
+              <input
+                type="number"
+                min={1}
+                max={15}
+                value={maxTier}
+                onChange={(e) => setMaxTier(Number(e.target.value))}
+                style={{ width: 60 }}
+              />
+            </div>
+          </div>
+          <div className="control" style={{ flex: 1, minWidth: 200 }}>
+            <label className="field-label">Search</label>
             <input
-              type="number"
-              min={1}
-              max={15}
-              value={minTier}
-              onChange={(e) => setMinTier(Number(e.target.value))}
-              style={{ width: 60 }}
-            />
-            <span style={{ alignSelf: "center", color: "var(--muted)" }}>–</span>
-            <input
-              type="number"
-              min={1}
-              max={15}
-              value={maxTier}
-              onChange={(e) => setMaxTier(Number(e.target.value))}
-              style={{ width: 60 }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Item or type…"
             />
           </div>
         </div>
-        <div className="control" style={{ flex: 1, minWidth: 200 }}>
-          <label>Search</label>
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Item or type…"
-          />
-        </div>
-        <div className="control">
-          <label>&nbsp;</label>
-          <label style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 0" }}>
+
+        <div className="controls-row toggles">
+          <label className="toggle">
             <input
               type="checkbox"
               checked={affinityMatched}
               onChange={(e) => setAffinityMatched(e.target.checked)}
             />
-            Match affinity enchant
+            Match the affinity enchant when an item has one
           </label>
-        </div>
-        <div className="control">
-          <label>&nbsp;</label>
           <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "6px 0",
-            }}
-            title="A handful of items have a crafting/Starforged upgrade called '+20% Bonus Airship Power' or '+25% Bonus Airship Power'. Tick this to assume you've unlocked that upgrade on those items; every other item is unaffected."
+            className="toggle"
+            title="A handful of items have a crafting or Starforged upgrade called '+20% Bonus Airship Power' or '+25% Bonus Airship Power'. Tick this to assume you've unlocked it on those items; every other item is unaffected."
           >
             <input
               type="checkbox"
