@@ -11,40 +11,48 @@ import { QUALITY_MULTIPLIER } from "./types";
 // (sheet last refreshed 2025-05-28; the table itself is stable).
 export type EnchantRow = { base: number; match: number };
 
+// Stat additions an enchant of the given tier adds to the item (NOT power
+// gains — the power contribution is derived by running these stat additions
+// through the base AP formula).
+//
+// T14 row verified in-game against Sia's Fancy Outfit, Frogsong Gong,
+// Mundra's Decree, and Titan Admiral Arms (Titan: def 1630 + hp 51 +
+// Apotheosis match + Titan match = 2443). The atk/def stat values are
+// derived as (Dragon-sheet power value ÷ stat weight) rounded to nearest.
+//
+// Lower-tier rows are derived from the Dragon-sheet's per-tier base power
+// the same way and are flagged as unverified — Sky Pirate Outfit (T5 +
+// Gale + Xolotl + 25% Bonus AP upgrade = 317 in-game) currently disagrees
+// with the derived T5 def stats (model says 293; if def_base/match scale
+// up by ~25% the model fits). Treat lower tiers as approximate until each
+// is confirmed with an in-game reading.
 export const ENCHANT_TABLE: Record<"atk" | "def" | "hp", Record<number, EnchantRow>> = {
   atk: {
-    4: { base: 13, match: 19 },
-    5: { base: 21, match: 31 },
-    7: { base: 30, match: 46 },
-    9: { base: 38, match: 58 },
-    10: { base: 50, match: 75 },
-    12: { base: 71, match: 106 },
-    14: { base: 131, match: 197 },
+    4: { base: 16, match: 24 },
+    5: { base: 26, match: 39 },
+    7: { base: 38, match: 58 },
+    9: { base: 48, match: 73 },
+    10: { base: 63, match: 94 },
+    12: { base: 89, match: 133 },
+    14: { base: 164, match: 246 },
   },
   def: {
-    4: { base: 13, match: 19 },
-    5: { base: 22, match: 32 },
-    7: { base: 30, match: 45 },
-    9: { base: 38, match: 58 },
-    10: { base: 50, match: 76 },
-    12: { base: 71, match: 106 },
-    14: { base: 131, match: 196 },
+    4: { base: 11, match: 16 },
+    5: { base: 18, match: 27 },
+    7: { base: 25, match: 38 },
+    9: { base: 32, match: 48 },
+    10: { base: 42, match: 63 },
+    12: { base: 59, match: 88 },
+    14: { base: 109, match: 163 },
   },
   hp: {
-    // HP-enchant gains verified in-game against Malady's Robe (T15 Clothes,
-    // def 630 + hp 39, Common + Apotheosis + Ouroboros = 1732). The stale ST
-    // Central Dragon-sheet HP row (15/20, 25/38, … 165/245) systematically
-    // overstates HP enchant gains by ~25% — the actual values track the
-    // atk/def pattern. T14 is empirically dialed in; the lower tiers are
-    // extrapolated from atk/def parity and need verification if you craft an
-    // HP-bearing item at those tiers.
-    4: { base: 13, match: 19 },
-    5: { base: 22, match: 32 },
-    7: { base: 30, match: 45 },
-    9: { base: 38, match: 58 },
-    10: { base: 50, match: 75 },
-    12: { base: 71, match: 106 },
-    14: { base: 130, match: 195 },
+    4: { base: 3, match: 4 },
+    5: { base: 5, match: 8 },
+    7: { base: 8, match: 12 },
+    9: { base: 10, match: 15 },
+    10: { base: 13, match: 19 },
+    12: { base: 18, match: 27 },
+    14: { base: 33, match: 49 },
   },
 };
 
