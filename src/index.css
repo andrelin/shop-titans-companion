@@ -335,6 +335,15 @@ td {
   vertical-align: middle;
 }
 
+th.col-center,
+td.col-center {
+  text-align: center;
+}
+th.col-num,
+td.col-num {
+  text-align: right;
+}
+
 th {
   position: sticky;
   top: 0;
@@ -397,9 +406,8 @@ td.num.enchanted {
 .rank {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
-  text-align: right;
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 13px;
+  text-align: center;
+  font-size: 14px;
 }
 .rank.rank-1 {
   color: var(--gold);

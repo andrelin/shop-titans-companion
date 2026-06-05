@@ -375,14 +375,20 @@ export function DragonInvasion({ data }: { data: GameData }) {
               <table>
                 <thead>
                   <tr>
-                    <th style={{ width: 50 }}>#</th>
+                    <th className="col-center" style={{ width: 56 }}>
+                      #
+                    </th>
                     <th aria-sort={ariaSort("name")} onClick={() => setSortKey("name")}>
                       Item
                     </th>
                     <th aria-sort={ariaSort("type")} onClick={() => setSortKey("type")}>
                       Type
                     </th>
-                    <th aria-sort={ariaSort("tier")} onClick={() => setSortKey("tier")}>
+                    <th
+                      className="col-center"
+                      aria-sort={ariaSort("tier")}
+                      onClick={() => setSortKey("tier")}
+                    >
                       Tier
                     </th>
                     <th aria-sort={ariaSort("quality")} onClick={() => setSortKey("quality")}>
@@ -429,7 +435,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
                         <td className={rankClass}>{r.categoryRank}</td>
                         <td className="item-name">{r.bp.name}</td>
                         <td style={{ color: "var(--muted)" }}>{r.bp.type}</td>
-                        <td className="num">{r.bp.tier}</td>
+                        <td className="col-center">{r.bp.tier}</td>
                         <td
                           style={{
                             color: QUALITY_COLOR[r.quality],
