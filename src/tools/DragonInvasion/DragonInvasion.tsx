@@ -454,20 +454,26 @@ export function DragonInvasion({ data }: { data: GameData }) {
                           </span>
                         </td>
                         <td>
-                          {rec.elementTier === null &&
+                          {rec.element.tier === null &&
                           rec.spirits.length === 0 ? (
                             <span className="tag">no enchant available</span>
                           ) : (
                             <div className="enchant-cell">
                               {/* Element line — always shown */}
-                              {rec.elementTier !== null ? (
-                                <span>
+                              {rec.element.tier !== null ? (
+                                <span
+                                  className={
+                                    rec.optimal === "element"
+                                      ? "enchant-opt"
+                                      : "enchant-alt"
+                                  }
+                                >
                                   <span className="label">
-                                    T{rec.elementTier} element
+                                    T{rec.element.tier} element
                                   </span>{" "}
-                                  {rec.elementTargets.length > 0 ? (
+                                  {rec.element.targets.length > 0 ? (
                                     <strong>
-                                      {rec.elementTargets.join(" or ")}
+                                      {rec.element.targets.join(" or ")}
                                     </strong>
                                   ) : (
                                     <span className="enchant-any">
@@ -476,20 +482,41 @@ export function DragonInvasion({ data }: { data: GameData }) {
                                   )}
                                 </span>
                               ) : null}
-                              {/* Spirit line — always shown */}
+                              {/* Spirit line(s) — always at least one shown */}
                               {rec.spirits.length > 0 ? (
-                                rec.spirits.map((sp, i) => (
-                                  <span key={i}>
-                                    <span className="label">
-                                      {sp.tier !== null
-                                        ? `T${sp.tier} spirit`
-                                        : "spirit"}
-                                    </span>{" "}
-                                    <strong>{sp.family}</strong>
-                                  </span>
-                                ))
+                                rec.spirits.map((sp, i) => {
+                                  const isOpt =
+                                    rec.optimal === "spirit" &&
+                                    rec.optimalSpiritFamily === sp.family;
+                                  return (
+                                    <span
+                                      key={i}
+                                      className={
+                                        isOpt ? "enchant-opt" : "enchant-alt"
+                                      }
+                                      title={
+                                        sp.applicable
+                                          ? undefined
+                                          : "Spirit tier exceeds the item's enchant tier — can't apply this spirit enchant to this item."
+                                      }
+                                    >
+                                      <span className="label">
+                                        {sp.tier !== null
+                                          ? `T${sp.tier} spirit`
+                                          : "spirit"}
+                                      </span>{" "}
+                                      <strong>{sp.family}</strong>
+                                      {!sp.applicable ? (
+                                        <span className="enchant-any">
+                                          {" "}
+                                          (tier too high)
+                                        </span>
+                                      ) : null}
+                                    </span>
+                                  );
+                                })
                               ) : (
-                                <span>
+                                <span className="enchant-alt">
                                   <span className="label">spirit</span>{" "}
                                   <span className="enchant-any">
                                     any (no affinity)

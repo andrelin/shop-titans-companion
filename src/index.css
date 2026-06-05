@@ -463,9 +463,19 @@ td.num.enchanted {
   letter-spacing: 0.02em;
 }
 .enchant-cell strong {
-  color: var(--accent);
   font-weight: 600;
 }
 .enchant-cell .enchant-any {
+  color: var(--muted-2);
+  font-weight: 400;
+}
+.enchant-cell .enchant-opt strong {
+  color: var(--accent);
+}
+.enchant-cell .enchant-alt {
+  color: var(--muted-2);
+}
+.enchant-cell .enchant-alt strong {
   color: var(--muted);
+  font-weight: 500;
 }
