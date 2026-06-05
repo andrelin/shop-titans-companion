@@ -1,11 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Blueprint, GameData, Quality } from "../../data/types";
 import { QUALITY_ORDER } from "../../data/types";
-import {
-  computePower,
-  hasAnyAffinity,
-  maxEnchantTierFor,
-} from "../../data/enchant";
+import { computePower, recommendEnchant } from "../../data/enchant";
 
 type SortKey =
   | "rankedPower"
@@ -102,7 +98,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
   const [rankedMode, setRankedMode] = useState<"enchanted" | "base">(
     "enchanted",
   );
-  const [topPerCategory, setTopPerCategory] = useState<number>(50);
+  const [topPerCategory, setTopPerCategory] = useState<number>(20);
 
   // Compute power for every blueprint once per options change.
   const rows = useMemo<Row[]>(() => {
@@ -263,6 +259,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
             value={topPerCategory}
             onChange={(e) => setTopPerCategory(Number(e.target.value))}
           >
+            <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
@@ -371,18 +368,13 @@ export function DragonInvasion({ data }: { data: GameData }) {
                     >
                       +Enchant
                     </th>
-                    <th>Affinity</th>
+                    <th>Enchant to use</th>
                   </tr>
                 </thead>
                 <tbody>
                   {visible.map((r) => {
-                    const aff = [
-                      ...r.bp.elementalAffinity,
-                      ...r.bp.spiritAffinity.map((s) => `${s} (spirit)`),
-                      ...r.bp.builtInElement.map((s) => `${s} (built-in)`),
-                      ...r.bp.builtInSpirit.map((s) => `${s} (built-in)`),
-                    ].join(", ");
-                    const enchantTier = maxEnchantTierFor(r.bp.tier);
+                    const rec = recommendEnchant(r.bp);
+                    const hasMatch = rec.affinityTargets.length > 0;
                     return (
                       <tr key={r.bp.name}>
                         <td
@@ -403,19 +395,49 @@ export function DragonInvasion({ data }: { data: GameData }) {
                         <td className="num">{formatNumber(r.basePower)}</td>
                         <td className="num">
                           {formatNumber(r.enchantedPower)}
-                          {enchantTier == null ? (
-                            <span className="tag" style={{ marginLeft: 6 }}>
-                              no enchant
-                            </span>
-                          ) : null}
                         </td>
                         <td className="num">
                           <span className={r.delta > 0 ? "tag gain" : "tag"}>
                             +{formatNumber(r.delta)}
                           </span>
                         </td>
-                        <td style={{ color: "var(--muted)" }}>
-                          {aff || (hasAnyAffinity(r.bp) ? "" : "—")}
+                        <td>
+                          {rec.tier === null ? (
+                            <span className="tag">no enchant available</span>
+                          ) : (
+                            <>
+                              <span style={{ color: "var(--muted)" }}>
+                                T{rec.tier}
+                              </span>{" "}
+                              <strong
+                                style={{
+                                  color: hasMatch ? "var(--accent)" : undefined,
+                                }}
+                              >
+                                {hasMatch
+                                  ? rec.affinityTargets.join(" or ")
+                                  : "any"}
+                              </strong>
+                              {hasMatch ? (
+                                <span
+                                  className="tag gain"
+                                  style={{ marginLeft: 6 }}
+                                >
+                                  {rec.source === "spirit" ||
+                                  rec.source === "built-in spirit"
+                                    ? "spirit match"
+                                    : "affinity match"}
+                                </span>
+                              ) : (
+                                <span
+                                  className="tag"
+                                  style={{ marginLeft: 6 }}
+                                >
+                                  no affinity bonus
+                                </span>
+                              )}
+                            </>
+                          )}
                         </td>
                       </tr>
                     );

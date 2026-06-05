@@ -122,3 +122,46 @@ export function computePower(b: Blueprint, opts: PowerOptions): number {
 export function maxEnchantTierFor(itemTier: number): number | null {
   return enchantTierFor(itemTier);
 }
+
+export interface EnchantRecommendation {
+  tier: number | null; // enchant tier to use, or null if item is too low tier
+  affinityTargets: string[]; // element/spirit names that grant the affinity bonus
+  source: "element" | "spirit" | "built-in element" | "built-in spirit" | "none";
+  // Human-readable label like "T14 Fire" or "T14 (any)" or "—".
+  label: string;
+}
+
+// Suggest the enchant a player should actually apply to maximise airship
+// power. Falls through element → built-in element → spirit → built-in spirit;
+// if none match, any enchant of the right tier works at the base (non-affinity)
+// value.
+export function recommendEnchant(b: Blueprint): EnchantRecommendation {
+  const tier = enchantTierFor(b.tier);
+  if (tier === null) {
+    return { tier: null, affinityTargets: [], source: "none", label: "—" };
+  }
+
+  let targets: string[] = [];
+  let source: EnchantRecommendation["source"] = "none";
+  if (b.elementalAffinity.length > 0) {
+    targets = b.elementalAffinity;
+    source = "element";
+  } else if (b.builtInElement.length > 0) {
+    targets = b.builtInElement;
+    source = "built-in element";
+  } else if (b.spiritAffinity.length > 0) {
+    targets = b.spiritAffinity;
+    source = "spirit";
+  } else if (b.builtInSpirit.length > 0) {
+    targets = b.builtInSpirit;
+    source = "built-in spirit";
+  }
+
+  const tierLabel = `T${tier}`;
+  const label =
+    targets.length === 0
+      ? `${tierLabel} (any — no affinity)`
+      : `${tierLabel} ${targets.join(" or ")}`;
+
+  return { tier, affinityTargets: targets, source, label };
+}
