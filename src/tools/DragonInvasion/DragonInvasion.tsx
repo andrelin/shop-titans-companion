@@ -229,159 +229,133 @@ export function DragonInvasion({ data }: { data: GameData }) {
 
   return (
     <>
-      <p style={{ color: "var(--muted)", marginTop: 0 }}>
-        Ranks every craftable item by airship power, with and without
-        enchantments, applying the affinity bonus when the item has one. Each
-        category (weapons, body armor, misc armor, accessories) is ranked
-        independently so you can see how good an item is in its own slot.
-      </p>
-
       <div className="controls">
-        <div className="controls-row">
-          <div className="control">
-            <label className="field-label">Rank by</label>
-            <select
-              value={rankedMode}
-              onChange={(e) =>
-                setRankedMode(e.target.value as "enchanted" | "base")
-              }
-            >
-              <option value="enchanted">Enchanted power</option>
-              <option value="base">Unenchanted power</option>
-            </select>
-          </div>
-          <div className="control">
-            <label className="field-label">Qualities</label>
-            <div
-              role="group"
-              aria-label="Qualities to include"
-              style={{
-                display: "flex",
-                gap: 10,
-                alignItems: "center",
-                background: "var(--panel-2)",
-                border: "1px solid var(--border)",
-                borderRadius: 6,
-                padding: "6px 10px",
-              }}
-            >
-              {QUALITY_ORDER.map((q) => {
-                const checked = selectedQualities.includes(q);
-                return (
-                  <label
-                    key={q}
-                    className="toggle"
-                    style={{
-                      fontSize: 13,
-                      color: QUALITY_COLOR[q],
-                      fontWeight: 500,
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={(e) =>
-                        setSelectedQualities((prev) => {
-                          if (e.target.checked) {
-                            return prev.includes(q) ? prev : [...prev, q];
-                          }
-                          const next = prev.filter((p) => p !== q);
-                          // Always keep at least one quality selected so the
-                          // table isn't empty.
-                          return next.length === 0 ? prev : next;
-                        })
+        <div
+          className="quality-picker"
+          role="group"
+          aria-label="Qualities to include"
+        >
+          {QUALITY_ORDER.map((q) => {
+            const checked = selectedQualities.includes(q);
+            return (
+              <label
+                key={q}
+                className="toggle"
+                style={{ color: QUALITY_COLOR[q] }}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={(e) =>
+                    setSelectedQualities((prev) => {
+                      if (e.target.checked) {
+                        return prev.includes(q) ? prev : [...prev, q];
                       }
-                    />
-                    {q}
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-          <div className="control">
-            <label className="field-label">Category</label>
-            <select
-              value={categoryFilter}
-              onChange={(e) =>
-                setCategoryFilter(e.target.value as "All" | Category)
-              }
-            >
-              <option value="All">All categories</option>
-              {CATEGORY_ORDER.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="control">
-            <label className="field-label">Top per category</label>
-            <select
-              value={topPerCategory}
-              onChange={(e) => setTopPerCategory(Number(e.target.value))}
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-              <option value={9999}>All</option>
-            </select>
-          </div>
-          <div className="control">
-            <label className="field-label">Tier range</label>
-            <div style={{ display: "flex", gap: 6 }}>
-              <input
-                type="number"
-                min={1}
-                max={15}
-                value={minTier}
-                onChange={(e) => setMinTier(Number(e.target.value))}
-                style={{ width: 60 }}
-              />
-              <span style={{ alignSelf: "center", color: "var(--muted)" }}>
-                –
-              </span>
-              <input
-                type="number"
-                min={1}
-                max={15}
-                value={maxTier}
-                onChange={(e) => setMaxTier(Number(e.target.value))}
-                style={{ width: 60 }}
-              />
-            </div>
-          </div>
-          <div className="control" style={{ flex: 1, minWidth: 200 }}>
-            <label className="field-label">Search</label>
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Item or type…"
-            />
-          </div>
+                      const next = prev.filter((p) => p !== q);
+                      // Always keep at least one quality selected so the table
+                      // isn't empty.
+                      return next.length === 0 ? prev : next;
+                    })
+                  }
+                />
+                {q}
+              </label>
+            );
+          })}
         </div>
 
-        <div className="controls-row toggles">
-          <label className="toggle">
-            <input
-              type="checkbox"
-              checked={affinityMatched}
-              onChange={(e) => setAffinityMatched(e.target.checked)}
-            />
-            Match the affinity enchant when an item has one
-          </label>
-          <label
-            className="toggle"
-            title="A handful of items have a crafting or Starforged upgrade called '+20% Bonus Airship Power' or '+25% Bonus Airship Power'. Tick this to assume you've unlocked it on those items; every other item is unaffected."
+        <select
+          value={categoryFilter}
+          onChange={(e) =>
+            setCategoryFilter(e.target.value as "All" | Category)
+          }
+          aria-label="Category filter"
+        >
+          <option value="All">All categories</option>
+          {CATEGORY_ORDER.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={rankedMode}
+          onChange={(e) =>
+            setRankedMode(e.target.value as "enchanted" | "base")
+          }
+          aria-label="Rank by"
+        >
+          <option value="enchanted">Rank by enchanted</option>
+          <option value="base">Rank by unenchanted</option>
+        </select>
+
+        <div className="control">
+          <label className="field-label">Top</label>
+          <select
+            value={topPerCategory}
+            onChange={(e) => setTopPerCategory(Number(e.target.value))}
+            aria-label="Top per category"
           >
-            <input
-              type="checkbox"
-              checked={includeAirshipUpgrade}
-              onChange={(e) => setIncludeAirshipUpgrade(e.target.checked)}
-            />
-            Apply +20/25% Bonus Airship Power upgrade (10 items)
-          </label>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={9999}>All</option>
+          </select>
         </div>
+
+        <div className="control">
+          <label className="field-label">Tier</label>
+          <input
+            type="number"
+            min={1}
+            max={15}
+            value={minTier}
+            onChange={(e) => setMinTier(Number(e.target.value))}
+            style={{ width: 56 }}
+            aria-label="Min tier"
+          />
+          <span style={{ color: "var(--muted)" }}>–</span>
+          <input
+            type="number"
+            min={1}
+            max={15}
+            value={maxTier}
+            onChange={(e) => setMaxTier(Number(e.target.value))}
+            style={{ width: 56 }}
+            aria-label="Max tier"
+          />
+        </div>
+
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search…"
+          style={{ flex: "1 1 160px", minWidth: 140 }}
+        />
+
+        <span className="divider" />
+
+        <label className="toggle">
+          <input
+            type="checkbox"
+            checked={affinityMatched}
+            onChange={(e) => setAffinityMatched(e.target.checked)}
+          />
+          Match affinity
+        </label>
+        <label
+          className="toggle"
+          title="A handful of items have a crafting or Starforged upgrade called '+20% Bonus Airship Power' or '+25% Bonus Airship Power'. Tick this to assume you've unlocked it on those items; every other item is unaffected."
+        >
+          <input
+            type="checkbox"
+            checked={includeAirshipUpgrade}
+            onChange={(e) => setIncludeAirshipUpgrade(e.target.checked)}
+          />
+          +20/25% Airship upgrade
+        </label>
       </div>
 
       {filteredByCategory.map(({ category, rows: catRows }) => {

@@ -119,30 +119,16 @@ footer {
 
 .controls {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
-.controls-row {
-  display: flex;
   flex-wrap: wrap;
-  gap: 14px;
-  align-items: end;
-}
-
-.controls-row.toggles {
   align-items: center;
-  gap: 18px;
-  padding-top: 4px;
-  border-top: 1px dashed var(--border);
-  padding-top: 12px;
+  gap: 10px 14px;
+  margin-bottom: 14px;
 }
 
 .control {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .control > label.field-label {
@@ -155,11 +141,33 @@ footer {
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  color: var(--text);
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .toggle input {
   margin: 0;
+}
+
+.quality-picker {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+.quality-picker .toggle {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--border);
+  margin: 0 2px;
 }
 
 table {
