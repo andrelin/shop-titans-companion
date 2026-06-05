@@ -461,20 +461,13 @@ export function DragonInvasion({ data }: { data: GameData }) {
                           </span>
                         </td>
                         <td>
-                          {rec.element.tier === null &&
-                          rec.spirits.length === 0 ? (
+                          {rec.element === null && rec.spirit === null ? (
                             <span className="tag">no enchant available</span>
                           ) : (
                             <div className="enchant-cell">
-                              {/* Element line — always shown */}
-                              {rec.element.tier !== null ? (
-                                <span
-                                  className={
-                                    rec.optimal === "element"
-                                      ? "enchant-opt"
-                                      : "enchant-alt"
-                                  }
-                                >
+                              {/* Element slot — always applied */}
+                              {rec.element ? (
+                                <span className="enchant-opt">
                                   <span className="label">
                                     T{rec.element.tier} element
                                   </span>{" "}
@@ -483,53 +476,55 @@ export function DragonInvasion({ data }: { data: GameData }) {
                                       {rec.element.targets.join(" or ")}
                                     </strong>
                                   ) : (
-                                    <span className="enchant-any">
-                                      any (no affinity)
-                                    </span>
+                                    <strong className="generic">any</strong>
                                   )}
                                 </span>
                               ) : null}
-                              {/* Spirit line(s) — always at least one shown */}
-                              {rec.spirits.length > 0 ? (
-                                rec.spirits.map((sp, i) => {
-                                  const isOpt =
-                                    rec.optimal === "spirit" &&
-                                    rec.optimalSpiritFamily === sp.family;
-                                  return (
-                                    <span
-                                      key={i}
-                                      className={
-                                        isOpt ? "enchant-opt" : "enchant-alt"
-                                      }
-                                      title={
-                                        sp.applicable
-                                          ? undefined
-                                          : "Spirit tier exceeds the item's enchant tier — can't apply this spirit enchant to this item."
-                                      }
-                                    >
-                                      <span className="label">
-                                        {sp.tier !== null
-                                          ? `T${sp.tier} spirit`
-                                          : "spirit"}
-                                      </span>{" "}
-                                      <strong>{sp.family}</strong>
-                                      {!sp.applicable ? (
-                                        <span className="enchant-any">
-                                          {" "}
-                                          (tier too high)
-                                        </span>
-                                      ) : null}
-                                    </span>
-                                  );
-                                })
-                              ) : (
-                                <span className="enchant-alt">
-                                  <span className="label">spirit</span>{" "}
-                                  <span className="enchant-any">
-                                    any (no affinity)
-                                  </span>
+                              {/* Spirit slot — always applied */}
+                              {rec.spirit ? (
+                                <span className="enchant-opt">
+                                  <span className="label">
+                                    T{rec.spirit.tier} spirit
+                                  </span>{" "}
+                                  {rec.spirit.match && rec.spirit.family ? (
+                                    <strong>{rec.spirit.family}</strong>
+                                  ) : (
+                                    <strong className="generic">any</strong>
+                                  )}
                                 </span>
-                              )}
+                              ) : null}
+                              {/* Skill-effect-only spirit affinities — these
+                                  exist on the item but the matching enchant is
+                                  weaker for AP than what the spirit slot
+                                  already takes. We list them so the player
+                                  can choose them for the skill effect at a
+                                  documented AP cost. */}
+                              {rec.spiritAffinityAlternatives.map((alt) => (
+                                <span
+                                  key={alt.family}
+                                  className="enchant-aside"
+                                  title={
+                                    alt.applicable
+                                      ? `Apply the matching ${alt.family} spirit for its skill effect, at a ${formatNumber(alt.apCostVsBest)} AP cost vs the best spirit choice.`
+                                      : `${alt.family} Spirit is T${alt.tier ?? "?"}, higher than this item's enchant tier — can't be applied here.`
+                                  }
+                                >
+                                  <span className="label">
+                                    or for the {alt.family} skill
+                                  </span>
+                                  {alt.applicable ? (
+                                    <span className="ap-cost">
+                                      {" "}
+                                      (−{formatNumber(alt.apCostVsBest)} AP)
+                                    </span>
+                                  ) : (
+                                    <span className="ap-cost">
+                                      {" "}
+                                      (tier too high)
+                                    </span>
+                                  )}
+                                </span>
+                              ))}
                             </div>
                           )}
                         </td>
@@ -631,17 +626,19 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
 
         <h3>3. Enchantments</h3>
         <p>
-          There are two enchant <em>families</em>: <strong>elements</strong>{" "}
-          (Fire, Water, Air, Earth, Light, Dark, plus "All" and Gold variants)
-          and <strong>spirits</strong> (Bear, Wolf, Bahamut, Ouroboros, and so
-          on). You apply one enchant per item.
+          Every item has <strong>two enchant slots</strong>: an{" "}
+          <em>element</em> slot (Fire, Water, Air, Earth, Light, Dark, plus
+          "All" and Gold variants) and a <em>spirit</em> slot (Bear, Wolf,
+          Bahamut, Ouroboros, and so on). You apply one of each — they stack,
+          so the airship power gain from enchanting is the{" "}
+          <strong>sum of both slots</strong>.
         </p>
         <p>
           Each enchant adds a flat number of airship-power points{" "}
           <em>per stat the item already has</em> (atk, def, or hp). The amount
           depends on tier and whether the enchant matches the item's affinity.
-          An item with both atk and def gets the gain for each present stat.
-          The flat gain is then multiplied through the same{" "}
+          An item with both atk and def gets the gain for each present stat,
+          for each slot. The flat gain is then multiplied through the same{" "}
           <code>(1 + 10·crit) × (1 + 10·eva)</code> factor and the quality
           multiplier as the base.
         </p>
@@ -698,16 +695,26 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           enchanted.
         </p>
 
-        <h3>5. Element vs spirit tier mismatch</h3>
+        <h3>5. Spirit-slot tier tradeoff</h3>
         <p>
-          An element enchant is always available at the item's own enchant
-          tier. A spirit enchant only exists at its family's fixed tier — Bear
-          Spirit is T9, Bahamut Spirit is T14, and so on. So on a T14 item
-          whose only spirit affinity is a low-tier one (e.g. Bear), applying a
-          non-matching T14 element enchant usually beats applying the matching
-          but lower-tier Bear spirit, because the T14 flat boost outweighs the
-          affinity multiplier on a T9 boost. The ranker computes both options
-          and picks whichever yields more airship power.
+          A spirit enchant only exists at its family's fixed tier — Bear Spirit
+          is T9, Bahamut Spirit is T14, and so on. The spirit slot is always
+          filled (you can always apply a generic non-matching spirit at the
+          item's tier for its base value), so the question is whether the{" "}
+          <em>matching</em> spirit gives more or less AP than a non-matching
+          one at the item's tier.
+        </p>
+        <p>
+          For a T14 item whose only spirit affinity is a low-tier one (e.g.
+          Bear T9), the spirit slot is better filled with a generic T14 spirit
+          like Bahamut or Behemoth (131 atk-points, no affinity) than with the
+          matching T9 Bear (58 atk-points × 1.5 affinity = 87). The ranker
+          picks the higher-AP option. When the matching spirit is at the same
+          tier as the item (e.g. Bahamut Sovereignty on a T14 weapon), the
+          match always wins. Items whose spirit affinity is suboptimal still
+          have the matching spirit listed as a small "or for the X skill"
+          note, with the AP cost quoted — you may want it for the skill effect
+          even when it's not BiS for airship power.
         </p>
 
         <h3>6. Affinity match bonus</h3>

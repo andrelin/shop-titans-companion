@@ -144,25 +144,29 @@ function enchantGainAt(
   return flat * (1 + 10 * b.crit) * (1 + 10 * b.eva) * q;
 }
 
-export interface BestEnchantPlan {
-  gain: number;
-  source: "element" | "spirit" | "none";
-  tier: number | null;
-  // For element source: the elements that matched (one of them). For spirit:
-  // the spirit family that matched. Empty when source === "none".
-  targets: string[];
+export interface SlotChoice {
+  tier: number;
+  match: boolean; // whether the chosen enchant matches an affinity on the item
+  family: string | null; // spirit family name when applicable
+  targets: string[]; // elements when applicable (one of these matches)
+  gain: number; // airship-power gain at the given quality
 }
 
-// Pick the enchant that gives the most airship-power gain for this item.
-// Three candidate paths:
-//   - non-matching enchant at the item's tier (always available, no affinity)
-//   - matching element enchant at the item's tier (if item has elemental affinity)
-//   - matching spirit enchant at the *spirit's* tier (if item has spirit affinity
-//     AND the spirit's tier ≤ the item's enchant tier — you can't apply a spirit
-//     enchant higher than what the item supports)
-// We return the highest-gain option. A low-tier spirit (e.g. Bear T9) on a high-
-// tier item (T14) usually loses to a non-matching T14 enchant, because the T14
-// flat stat boost outweighs the affinity multiplier on a T9 boost.
+export interface BestEnchantPlan {
+  // Each item has two slots — an element slot and a spirit slot — and both
+  // can be filled simultaneously. The total airship-power gain is the sum.
+  element: SlotChoice | null;
+  spirit: SlotChoice | null;
+  totalGain: number;
+}
+
+// Compute the best enchant *pair* for an item (one element + one spirit).
+// Element slot: always at the item's tier; match if any elemental affinity.
+// Spirit slot: try every matching spirit affinity at its own tier; compare
+// against a generic non-matching spirit at the item's tier; pick whichever
+// yields the most airship power. A low-tier spirit (e.g. Bear T9) on a
+// high-tier item often loses to a generic T14 spirit because the T14 flat
+// boost outweighs the affinity multiplier on a T9 boost.
 export function bestEnchantPlan(
   b: Blueprint,
   quality: Quality,
@@ -170,43 +174,49 @@ export function bestEnchantPlan(
 ): BestEnchantPlan {
   const itemTier = enchantTierFor(b.tier);
   if (itemTier === null) {
-    return { gain: 0, source: "none", tier: null, targets: [] };
+    return { element: null, spirit: null, totalGain: 0 };
   }
   const q = QUALITY_MULTIPLIER[quality];
 
-  const candidates: BestEnchantPlan[] = [
-    {
-      gain: enchantGainAt(b, q, itemTier, false),
-      source: "none",
-      tier: itemTier,
-      targets: [],
-    },
-  ];
+  // Element slot
+  const elementTargets = [...b.elementalAffinity, ...b.builtInElement];
+  const elementMatch = affinityMatched && elementTargets.length > 0;
+  const element: SlotChoice = {
+    tier: itemTier,
+    match: elementMatch,
+    family: null,
+    targets: elementTargets,
+    gain: enchantGainAt(b, q, itemTier, elementMatch),
+  };
+
+  // Spirit slot — start with the "any spirit at the item's tier" baseline.
+  let spirit: SlotChoice = {
+    tier: itemTier,
+    match: false,
+    family: null,
+    targets: [],
+    gain: enchantGainAt(b, q, itemTier, false),
+  };
 
   if (affinityMatched) {
-    const elementTargets = [...b.elementalAffinity, ...b.builtInElement];
-    if (elementTargets.length > 0) {
-      candidates.push({
-        gain: enchantGainAt(b, q, itemTier, true),
-        source: "element",
-        tier: itemTier,
-        targets: elementTargets,
-      });
-    }
     for (const s of [...b.spiritAffinity, ...b.builtInSpirit]) {
       const sTier = spiritTierFor(s);
       if (sTier !== null && sTier <= itemTier) {
-        candidates.push({
-          gain: enchantGainAt(b, q, sTier, true),
-          source: "spirit",
-          tier: sTier,
-          targets: [spiritFamily(s)],
-        });
+        const gain = enchantGainAt(b, q, sTier, true);
+        if (gain > spirit.gain) {
+          spirit = {
+            tier: sTier,
+            match: true,
+            family: spiritFamily(s),
+            targets: [],
+            gain,
+          };
+        }
       }
     }
   }
 
-  return candidates.reduce((best, cur) => (cur.gain > best.gain ? cur : best));
+  return { element, spirit, totalGain: element.gain + spirit.gain };
 }
 
 // Whether the item has any affinity that can be matched by an enchant.
@@ -223,7 +233,7 @@ export function computePower(b: Blueprint, opts: PowerOptions): number {
   const q = QUALITY_MULTIPLIER[opts.quality];
   let p = powerAtQuality(b, q);
   if (opts.enchanted) {
-    p += bestEnchantPlan(b, opts.quality, opts.affinityMatched).gain;
+    p += bestEnchantPlan(b, opts.quality, opts.affinityMatched).totalGain;
   }
   if (opts.includeAirshipUpgrade && b.airshipPowerUpgradeBonus > 0) {
     p *= 1 + b.airshipPowerUpgradeBonus;
@@ -235,86 +245,59 @@ export function maxEnchantTierFor(itemTier: number): number | null {
   return enchantTierFor(itemTier);
 }
 
-export interface SpiritOption {
-  family: string; // e.g. "Bahamut"
-  tier: number | null; // spirit enchant tier
-  fullAffinityName: string; // e.g. "Bahamut Sovereignty"
-  applicable: boolean; // tier ≤ item's enchant tier
-  gain: number; // airship-power gain at Common quality with affinity match
-}
-
-export interface ElementOption {
+export interface SpiritAffinityNote {
+  family: string;
+  fullAffinityName: string;
   tier: number | null;
-  targets: string[]; // empty = no affinity, recommend any element
-  gain: number; // airship-power gain at Common quality
+  applicable: boolean; // tier ≤ item's enchant tier
+  matchGain: number; // gain you'd get applying the matching spirit at Common quality
+  apCostVsBest: number; // how much AP you give up vs the spirit-slot optimum (≥0)
 }
 
 export interface EnchantRecommendation {
-  element: ElementOption;
-  spirits: SpiritOption[];
-  // Which source the optimal enchant plan picked at Common quality. The UI
-  // uses this to highlight the winning option.
-  optimal: "element" | "spirit" | "none";
-  optimalSpiritFamily: string | null; // when optimal === "spirit"
+  // The recommended enchant *pair* — apply both. Either can be null when the
+  // item is too low-tier to enchant.
+  element: SlotChoice | null;
+  spirit: SlotChoice | null;
+  // For items whose spirit affinity is suboptimal (i.e. the spirit slot's
+  // optimum is a non-matching spirit at the item's tier), we still list the
+  // matching affinity here so the player can choose to apply it for the skill
+  // effect, at the cost of `apCostVsBest` airship power.
+  spiritAffinityAlternatives: SpiritAffinityNote[];
 }
 
-// Build the full recommendation. We compute per-option gains at Common quality
-// so the relative ordering is stable regardless of the quality the user picks
-// in the UI; quality only scales the underlying stats, so the winner doesn't
-// flip between qualities.
+// Build the recommendation the UI renders. Computed at Common quality — the
+// element/spirit choice is invariant under the quality multiplier since the
+// quality scales everything linearly.
 export function recommendEnchant(b: Blueprint): EnchantRecommendation {
-  const elementTier = enchantTierFor(b.tier);
-  const elementTargets = [...b.elementalAffinity, ...b.builtInElement];
+  const plan = bestEnchantPlan(b, "Common", true);
 
-  const q = 1; // Common
-  const elementGain =
-    elementTier === null
-      ? 0
-      : enchantGainAt(b, q, elementTier, elementTargets.length > 0);
-  const element: ElementOption = {
-    tier: elementTier,
-    targets: elementTargets,
-    gain: elementGain,
-  };
-
-  const spirits: SpiritOption[] = [
-    ...b.spiritAffinity,
-    ...b.builtInSpirit,
-  ].map((s) => {
-    const sTier = spiritTierFor(s);
-    const applicable =
-      sTier !== null && elementTier !== null && sTier <= elementTier;
-    return {
-      family: spiritFamily(s),
-      tier: sTier,
-      fullAffinityName: s,
-      applicable,
-      gain: applicable && sTier !== null ? enchantGainAt(b, q, sTier, true) : 0,
-    };
-  });
-
-  // The "non-matching at item tier" baseline equals the element option when
-  // the item has no elemental affinity. Optimal = whichever has the highest
-  // gain among {element, every applicable spirit}.
-  const bestSpirit = spirits.reduce<SpiritOption | null>(
-    (best, cur) => (cur.gain > (best?.gain ?? -1) ? cur : best),
-    null,
-  );
-
-  let optimal: EnchantRecommendation["optimal"] = "none";
-  let optimalSpiritFamily: string | null = null;
-  if (elementTier === null && spirits.length === 0) {
-    optimal = "none";
-  } else if (bestSpirit && bestSpirit.gain > elementGain) {
-    optimal = "spirit";
-    optimalSpiritFamily = bestSpirit.family;
-  } else if (elementTargets.length > 0) {
-    optimal = "element";
-  } else {
-    // element line wins but with no affinity bonus — still call it "element"
-    // because that's where the suggested generic enchant goes.
-    optimal = "element";
+  const spiritAffinityAlternatives: SpiritAffinityNote[] = [];
+  const itemTier = enchantTierFor(b.tier);
+  if (itemTier !== null && plan.spirit) {
+    for (const s of [...b.spiritAffinity, ...b.builtInSpirit]) {
+      const sTier = spiritTierFor(s);
+      const applicable = sTier !== null && sTier <= itemTier;
+      const family = spiritFamily(s);
+      const matchGain = applicable
+        ? enchantGainAt(b, 1, sTier!, true)
+        : 0;
+      // Skip the line if it IS the optimal spirit choice (no useful note).
+      if (plan.spirit.match && plan.spirit.family === family) continue;
+      spiritAffinityAlternatives.push({
+        family,
+        fullAffinityName: s,
+        tier: sTier,
+        applicable,
+        matchGain,
+        apCostVsBest: Math.max(0, plan.spirit.gain - matchGain),
+      });
+    }
   }
 
-  return { element, spirits, optimal, optimalSpiritFamily };
+  return {
+    element: plan.element,
+    spirit: plan.spirit,
+    spiritAffinityAlternatives,
+  };
 }

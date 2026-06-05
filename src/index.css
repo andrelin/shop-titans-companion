@@ -465,19 +465,24 @@ td.num.enchanted {
 .enchant-cell strong {
   font-weight: 600;
 }
-.enchant-cell .enchant-any {
-  color: var(--muted-2);
-  font-weight: 400;
-}
 .enchant-cell .enchant-opt strong {
   color: var(--accent);
 }
-.enchant-cell .enchant-alt {
+.enchant-cell .enchant-opt strong.generic {
+  color: var(--text);
+  font-weight: 500;
+}
+.enchant-cell .enchant-aside {
+  color: var(--muted-2);
+  font-size: 11.5px;
+  font-style: italic;
+  margin-top: 1px;
+}
+.enchant-cell .enchant-aside .label {
   color: var(--muted-2);
 }
-.enchant-cell .enchant-alt strong {
+.enchant-cell .enchant-aside .ap-cost {
   color: var(--muted);
-  font-weight: 500;
 }
 
 /* Collapsible "how airship power is calculated" explanation. Styled to match
