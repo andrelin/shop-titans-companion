@@ -236,132 +236,129 @@ export function DragonInvasion({ data }: { data: GameData }) {
   return (
     <>
       <div className="controls">
-        <div
-          className="quality-picker"
-          role="group"
-          aria-label="Qualities to include"
-        >
-          {QUALITY_ORDER.map((q) => {
-            const checked = selectedQualities.includes(q);
-            return (
-              <label
-                key={q}
-                className="toggle"
-                style={{ color: QUALITY_COLOR[q] }}
-              >
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={(e) =>
-                    setSelectedQualities((prev) => {
-                      if (e.target.checked) {
-                        return prev.includes(q) ? prev : [...prev, q];
-                      }
-                      const next = prev.filter((p) => p !== q);
-                      // Always keep at least one quality selected so the table
-                      // isn't empty.
-                      return next.length === 0 ? prev : next;
-                    })
-                  }
-                />
-                {q}
-              </label>
-            );
-          })}
-        </div>
+        <div className="controls-row">
+          <div
+            className="quality-picker"
+            role="group"
+            aria-label="Qualities to include"
+          >
+            {QUALITY_ORDER.map((q) => {
+              const checked = selectedQualities.includes(q);
+              return (
+                <label
+                  key={q}
+                  className="toggle"
+                  style={{ color: QUALITY_COLOR[q] }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) =>
+                      setSelectedQualities((prev) => {
+                        if (e.target.checked) {
+                          return prev.includes(q) ? prev : [...prev, q];
+                        }
+                        const next = prev.filter((p) => p !== q);
+                        // Always keep at least one quality selected so the
+                        // table isn't empty.
+                        return next.length === 0 ? prev : next;
+                      })
+                    }
+                  />
+                  {q}
+                </label>
+              );
+            })}
+          </div>
 
-        <select
-          value={categoryFilter}
-          onChange={(e) =>
-            setCategoryFilter(e.target.value as "All" | Category)
-          }
-          aria-label="Category filter"
-        >
-          <option value="All">All categories</option>
-          {CATEGORY_ORDER.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+          <select
+            value={categoryFilter}
+            onChange={(e) =>
+              setCategoryFilter(e.target.value as "All" | Category)
+            }
+            aria-label="Category filter"
+          >
+            <option value="All">All categories</option>
+            {CATEGORY_ORDER.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
 
-        <select
-          value={rankedMode}
-          onChange={(e) =>
-            setRankedMode(e.target.value as "enchanted" | "base")
-          }
-          aria-label="Rank by"
-        >
-          <option value="enchanted">Rank by enchanted</option>
-          <option value="base">Rank by unenchanted</option>
-        </select>
+          <select
+            value={rankedMode}
+            onChange={(e) =>
+              setRankedMode(e.target.value as "enchanted" | "base")
+            }
+            aria-label="Rank by"
+          >
+            <option value="enchanted">Rank by enchanted</option>
+            <option value="base">Rank by unenchanted</option>
+          </select>
 
-        <div className="control">
-          <label className="field-label">Top</label>
           <select
             value={topPerCategory}
             onChange={(e) => setTopPerCategory(Number(e.target.value))}
             aria-label="Top per category"
           >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
+            <option value={10}>Top 10</option>
+            <option value={20}>Top 20</option>
+            <option value={50}>Top 50</option>
+            <option value={100}>Top 100</option>
             <option value={9999}>All</option>
           </select>
         </div>
 
-        <div className="control">
-          <label className="field-label">Tier</label>
+        <div className="controls-row secondary">
+          <span className="tier-range">
+            <span>Tier</span>
+            <input
+              type="number"
+              min={1}
+              max={Math.max(20, dataMaxTier)}
+              value={minTier}
+              onChange={(e) => setMinTier(Number(e.target.value))}
+              aria-label="Min tier"
+            />
+            <span>–</span>
+            <input
+              type="number"
+              min={1}
+              max={Math.max(20, dataMaxTier)}
+              value={maxTier}
+              onChange={(e) => setMaxTier(Number(e.target.value))}
+              aria-label="Max tier"
+            />
+          </span>
+
           <input
-            type="number"
-            min={1}
-            max={Math.max(20, dataMaxTier)}
-            value={minTier}
-            onChange={(e) => setMinTier(Number(e.target.value))}
-            style={{ width: 56 }}
-            aria-label="Min tier"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search items…"
+            style={{ width: 220 }}
           />
-          <span style={{ color: "var(--muted)" }}>–</span>
-          <input
-            type="number"
-            min={1}
-            max={Math.max(20, dataMaxTier)}
-            value={maxTier}
-            onChange={(e) => setMaxTier(Number(e.target.value))}
-            style={{ width: 56 }}
-            aria-label="Max tier"
-          />
+
+          <label className="toggle">
+            <input
+              type="checkbox"
+              checked={affinityMatched}
+              onChange={(e) => setAffinityMatched(e.target.checked)}
+            />
+            <span>Match affinity</span>
+          </label>
+          <label
+            className="toggle"
+            title="A handful of items have a crafting or Starforged upgrade called '+20% Bonus Airship Power' or '+25% Bonus Airship Power'. Tick this to assume you've unlocked it on those items; every other item is unaffected."
+          >
+            <input
+              type="checkbox"
+              checked={includeAirshipUpgrade}
+              onChange={(e) => setIncludeAirshipUpgrade(e.target.checked)}
+            />
+            <span>+20/25% Airship upgrade</span>
+          </label>
         </div>
-
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search…"
-          style={{ flex: "1 1 160px", minWidth: 140 }}
-        />
-
-        <span className="divider" />
-
-        <label className="toggle">
-          <input
-            type="checkbox"
-            checked={affinityMatched}
-            onChange={(e) => setAffinityMatched(e.target.checked)}
-          />
-          Match affinity
-        </label>
-        <label
-          className="toggle"
-          title="A handful of items have a crafting or Starforged upgrade called '+20% Bonus Airship Power' or '+25% Bonus Airship Power'. Tick this to assume you've unlocked it on those items; every other item is unaffected."
-        >
-          <input
-            type="checkbox"
-            checked={includeAirshipUpgrade}
-            onChange={(e) => setIncludeAirshipUpgrade(e.target.checked)}
-          />
-          +20/25% Airship upgrade
-        </label>
       </div>
 
       {filteredByCategory.map(({ category, rows: catRows }) => {

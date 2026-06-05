@@ -119,21 +119,36 @@ footer {
 
 .controls {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.controls-row {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 14px;
-  margin-bottom: 14px;
+  gap: 8px 12px;
 }
 
-.control {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.control > label.field-label {
+.controls-row.secondary {
   font-size: 12px;
   color: var(--muted);
+}
+
+.controls-row.secondary input,
+.controls-row.secondary select {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.controls-row.secondary .toggle {
+  color: var(--muted);
+}
+
+.controls-row.secondary .toggle input:checked + span,
+.controls-row.secondary .toggle:hover {
+  color: var(--text);
 }
 
 .toggle {
@@ -141,8 +156,6 @@ footer {
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  color: var(--muted);
-  font-size: 13px;
 }
 
 .toggle input {
@@ -151,23 +164,26 @@ footer {
 
 .quality-picker {
   display: inline-flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
   background: var(--panel-2);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 5px 10px;
 }
 .quality-picker .toggle {
-  font-size: 13px;
   font-weight: 500;
 }
 
-.divider {
-  width: 1px;
-  align-self: stretch;
-  background: var(--border);
-  margin: 0 2px;
+.tier-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tier-range input {
+  width: 44px;
+  text-align: center;
 }
 
 table {
