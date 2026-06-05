@@ -9,6 +9,7 @@ type SortKey =
   | "enchantedPower"
   | "delta"
   | "tier"
+  | "quality"
   | "name"
   | "type";
 
@@ -72,6 +73,7 @@ function categoryOf(type: string): Category {
 
 interface Row {
   bp: Blueprint;
+  quality: Quality;
   basePower: number;
   enchantedPower: number;
   rankedPower: number;
@@ -84,7 +86,9 @@ function formatNumber(n: number): string {
 }
 
 export function DragonInvasion({ data }: { data: GameData }) {
-  const [quality, setQuality] = useState<Quality>("Legendary");
+  const [selectedQualities, setSelectedQualities] = useState<Quality[]>([
+    "Common",
+  ]);
   const [affinityMatched, setAffinityMatched] = useState(true);
   const [includeAirshipUpgrade, setIncludeAirshipUpgrade] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState<"All" | Category>("All");
@@ -100,31 +104,39 @@ export function DragonInvasion({ data }: { data: GameData }) {
   );
   const [topPerCategory, setTopPerCategory] = useState<number>(20);
 
-  // Compute power for every blueprint once per options change.
+  // One row per (blueprint, selected quality). Sorted in the QUALITY_ORDER
+  // sequence so Common rows precede Superior etc. when other keys tie.
   const rows = useMemo<Row[]>(() => {
-    const opts = {
-      quality,
-      affinityMatched,
-      includeAirshipUpgrade,
-    } as const;
-    return data.blueprints
-      .filter((b) => !(b.atk === 0 && b.def === 0 && b.hp === 0))
-      .map((bp) => {
+    const qualitiesInOrder = QUALITY_ORDER.filter((q) =>
+      selectedQualities.includes(q),
+    );
+    const out: Row[] = [];
+    for (const bp of data.blueprints) {
+      if (bp.atk === 0 && bp.def === 0 && bp.hp === 0) continue;
+      for (const quality of qualitiesInOrder) {
+        const opts = {
+          quality,
+          affinityMatched,
+          includeAirshipUpgrade,
+        } as const;
         const basePower = computePower(bp, { ...opts, enchanted: false });
         const enchantedPower = computePower(bp, { ...opts, enchanted: true });
         const rankedPower =
           rankedMode === "enchanted" ? enchantedPower : basePower;
-        return {
+        out.push({
           bp,
+          quality,
           basePower,
           enchantedPower,
           rankedPower,
           delta: enchantedPower - basePower,
-        };
-      });
+        });
+      }
+    }
+    return out;
   }, [
     data.blueprints,
-    quality,
+    selectedQualities,
     affinityMatched,
     includeAirshipUpgrade,
     rankedMode,
@@ -192,6 +204,12 @@ export function DragonInvasion({ data }: { data: GameData }) {
           return a.bp.type.localeCompare(b.bp.type) * dir;
         case "tier":
           return (a.bp.tier - b.bp.tier) * dir;
+        case "quality":
+          return (
+            (QUALITY_ORDER.indexOf(a.quality) -
+              QUALITY_ORDER.indexOf(b.quality)) *
+            dir
+          );
         case "basePower":
           return (a.basePower - b.basePower) * dir;
         case "enchantedPower":
@@ -229,17 +247,48 @@ export function DragonInvasion({ data }: { data: GameData }) {
             </select>
           </div>
           <div className="control">
-            <label className="field-label">Quality</label>
-            <select
-              value={quality}
-              onChange={(e) => setQuality(e.target.value as Quality)}
+            <label className="field-label">Qualities</label>
+            <div
+              role="group"
+              aria-label="Qualities to include"
+              style={{
+                display: "flex",
+                gap: 10,
+                alignItems: "center",
+                background: "var(--panel-2)",
+                border: "1px solid var(--border)",
+                borderRadius: 6,
+                padding: "6px 10px",
+              }}
             >
-              {QUALITY_ORDER.map((q) => (
-                <option key={q} value={q}>
-                  {q}
-                </option>
-              ))}
-            </select>
+              {QUALITY_ORDER.map((q) => {
+                const checked = selectedQualities.includes(q);
+                return (
+                  <label
+                    key={q}
+                    className="toggle"
+                    style={{ fontSize: 13 }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) =>
+                        setSelectedQualities((prev) => {
+                          if (e.target.checked) {
+                            return prev.includes(q) ? prev : [...prev, q];
+                          }
+                          const next = prev.filter((p) => p !== q);
+                          // Always keep at least one quality selected so the
+                          // table isn't empty.
+                          return next.length === 0 ? prev : next;
+                        })
+                      }
+                    />
+                    {q}
+                  </label>
+                );
+              })}
+            </div>
           </div>
           <div className="control">
             <label className="field-label">Category</label>
@@ -354,6 +403,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
                     <th aria-sort={ariaSort("tier")} onClick={() => setSortKey("tier")}>
                       Tier
                     </th>
+                    <th aria-sort={ariaSort("quality")} onClick={() => setSortKey("quality")}>
+                      Quality
+                    </th>
                     <th
                       className="num"
                       aria-sort={ariaSort("basePower")}
@@ -383,7 +435,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
                     const rec = recommendEnchant(r.bp);
                     const hasMatch = rec.affinityTargets.length > 0;
                     return (
-                      <tr key={r.bp.name}>
+                      <tr key={`${r.bp.name}::${r.quality}`}>
                         <td
                           className="num"
                           style={{
@@ -399,6 +451,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
                         <td>{r.bp.name}</td>
                         <td>{r.bp.type}</td>
                         <td className="num">{r.bp.tier}</td>
+                        <td>{r.quality}</td>
                         <td className="num">{formatNumber(r.basePower)}</td>
                         <td className="num">
                           {formatNumber(r.enchantedPower)}
