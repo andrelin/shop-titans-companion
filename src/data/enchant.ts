@@ -105,26 +105,25 @@ export function spiritTierFor(affinity: string): number | null {
 }
 
 // BasePower at Common quality, no enchant, no APU.
-// Verified against the canonical sheet's "Airship Power" column for sample items
-// (Squire Sword, Frogsong Gong, Wyrmbane Cannon, Sia's Fancy Outfit, Twin Fangs).
-// Note: stats are flat (atk, def, hp) and percentages (crit, eva on 0..1).
+// Verified against the canonical "Airship Power" column for every sampled
+// item by exhaustive cross-check (see scripts/verify-formula or commit log).
+// Community formula: crit and evasion both scale the entire stat sum.
+//   AP = (0.8·atk + 1.2·def + 5·hp) · (1 + 10·crit) · (1 + 10·eva)
+// where crit and eva are stored as decimals (0.05 = 5%).
 export function basePower(b: Blueprint): number {
   return (
-    0.8 * b.atk * (1 + 10 * b.crit) +
-    1.2 * b.def * (1 + 10 * b.eva) +
-    5 * b.hp
+    (0.8 * b.atk + 1.2 * b.def + 5 * b.hp) *
+    (1 + 10 * b.crit) *
+    (1 + 10 * b.eva)
   );
 }
 
-// Quality scales each underlying stat. We rebuild the formula at the quality
-// to capture the compounding crit/eva multiplication (linear Q × basePower
-// would underestimate crit/eva items at high quality).
+// Quality scales the AP value linearly per the Dragon Invasion reference
+// sheet's quality multipliers. (Treating quality as a multiplicative boost on
+// each underlying stat would compound crit/eva at higher qualities, which the
+// community ranking doesn't do.)
 function powerAtQuality(b: Blueprint, q: number): number {
-  return (
-    0.8 * (b.atk * q) * (1 + 10 * (b.crit * q)) +
-    1.2 * (b.def * q) * (1 + 10 * (b.eva * q)) +
-    5 * (b.hp * q)
-  );
+  return basePower(b) * q;
 }
 
 function enchantGainAt(
@@ -133,12 +132,16 @@ function enchantGainAt(
   tier: number,
   match: boolean,
 ): number {
+  // Dragon-sheet table values are the per-stat power-point gain at Common
+  // quality assuming crit=0 and eva=0. For items with crit or eva, the same
+  // (1 + 10·crit)·(1 + 10·eva) multiplier from the base formula applies, and
+  // quality scales the gain linearly along with the base.
   const pick = (row: EnchantRow) => (match ? row.match : row.base);
-  let gain = 0;
-  if (b.atk > 0) gain += pick(ENCHANT_TABLE.atk[tier]) * (1 + 10 * (b.crit * q));
-  if (b.def > 0) gain += pick(ENCHANT_TABLE.def[tier]) * (1 + 10 * (b.eva * q));
-  if (b.hp > 0) gain += pick(ENCHANT_TABLE.hp[tier]);
-  return gain;
+  let flat = 0;
+  if (b.atk > 0) flat += pick(ENCHANT_TABLE.atk[tier]);
+  if (b.def > 0) flat += pick(ENCHANT_TABLE.def[tier]);
+  if (b.hp > 0) flat += pick(ENCHANT_TABLE.hp[tier]);
+  return flat * (1 + 10 * b.crit) * (1 + 10 * b.eva) * q;
 }
 
 export interface BestEnchantPlan {
