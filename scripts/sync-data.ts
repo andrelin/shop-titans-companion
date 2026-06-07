@@ -268,17 +268,39 @@ function parseBlueprints(rows: string[][]): ParsedBlueprint[] {
 
 interface ParsedEnchantment {
   name: string;
-  type: string;
+  type: string; // "Element" | "Spirit"
+  tier: number;
+  atk: number;
+  def: number;
+  hp: number;
 }
 
-function parseEnchantments(rows: string[][]): ParsedEnchantment[] {
+// Enchants are themselves craftable blueprints — every "<X> Element" / "<X>
+// Spirit" appears in the Blueprints tab (Type = "Enchantment") with its own
+// Tier and base ATK/DEF/HP. We source enchants from there so their tier and
+// base stats are authoritative (the affinity-match value is floor(1.5 × base),
+// derived in the app). The element/spirit kind comes from the name suffix.
+function parseEnchantments(blueprintRows: string[][]): ParsedEnchantment[] {
   const out: ParsedEnchantment[] = [];
-  for (let i = 1; i < rows.length; i++) {
-    const r = rows[i];
-    const name = (r?.[0] ?? "").trim();
+  for (let i = 1; i < blueprintRows.length; i++) {
+    const r = blueprintRows[i];
+    if (!r) continue;
+    const name = (r[COL.name] ?? "").trim();
     if (!name) continue;
-    const type = (r?.[1] ?? "").trim();
-    out.push({ name, type });
+    if ((r[COL.type] ?? "").trim() !== "Enchantment") continue;
+    const type = name.endsWith("Element")
+      ? "Element"
+      : name.endsWith("Spirit")
+        ? "Spirit"
+        : "Other";
+    out.push({
+      name,
+      type,
+      tier: toNumber(r[COL.tier]),
+      atk: toNumber(r[COL.atk]),
+      def: toNumber(r[COL.def]),
+      hp: toNumber(r[COL.hp]),
+    });
   }
   return out;
 }
@@ -305,14 +327,16 @@ async function main() {
   console.log("Syncing Shop Titans game data…");
   await mkdir(DATA_DIR, { recursive: true });
 
-  const [blueprintRows, enchantRows, version] = await Promise.all([
+  const [blueprintRows, version] = await Promise.all([
     fetchCsv(TABS.blueprints),
-    fetchCsv(TABS.enchantments),
     readSheetVersion(),
   ]);
 
   const blueprints = parseBlueprints(blueprintRows);
-  const enchantments = parseEnchantments(enchantRows);
+  // Enchants live in the Blueprints tab too (Type = "Enchantment"), with their
+  // tier and base stats — that's our authoritative source, so we no longer need
+  // the separate Enchantments tab.
+  const enchantments = parseEnchantments(blueprintRows);
 
   const meta = {
     syncedAt: new Date().toISOString(),

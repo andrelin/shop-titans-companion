@@ -1,60 +1,129 @@
-import type { Blueprint, Quality } from "./types";
+import type { Blueprint, Enchantment, Quality } from "./types";
 import { QUALITY_MULTIPLIER } from "./types";
+import enchantmentsJson from "../../data/enchantments.json";
 
-// Enchant point gains per item tier — copied from the Dragon Invasion reference
-// sheet's Key. Each row is the Points added to an enchanted item per stat.
-// The "match" variant is used when the enchant's element/spirit matches the item's
-// affinity. The table only goes up to T14; T15 items are assumed to use T14 enchants.
+// ---------------------------------------------------------------------------
+// Enchant stats — derived from the authoritative Blueprints-tab data.
 //
-// Source: Dragon Invasion Item Power tab of
-// https://docs.google.com/spreadsheets/d/1eWZQ4SSqbMc0xLqDQQZwzZg5fU19Se8XnDdvdcMO3Aw
-// (sheet last refreshed 2025-05-28; the table itself is stable).
+// Every enchant ("<X> Element" / "<X> Spirit") is itself a craftable blueprint
+// with a Tier and base ATK/DEF/HP. `scripts/sync-data.ts` writes those into
+// `data/enchantments.json`, and we build the per-tier tables from them at module
+// load — so the values stay authoritative and self-updating, never hand-edited.
+//
+// Two facts the data encodes:
+//   • Elements and spirits have *different* base stats at the low tiers
+//     (T4 element 16/11/3 vs spirit 19/12/4; T7 element 38/25/8 vs spirit
+//     41/27/8), and a few event spirits are buffed one notch (Tiger T9,
+//     Christmas/Krampus/Kirin T12). So the element slot and the spirit slot
+//     read from separate tables, and matched spirits use their own family stats.
+//   • The affinity-match value for any stat is floor(1.5 × base) — verified
+//     across every matched in-game reading (T14 def 109→163, hp 33→49; T12 atk
+//     99→148; T4 spirit def 12→18, hp 4→6 from the Lone Wolf Cowl reading).
+// ---------------------------------------------------------------------------
 export type EnchantRow = { base: number; match: number };
+type Stat = "atk" | "def" | "hp";
+type StatTriple = { atk: number; def: number; hp: number };
 
-// Stat additions an enchant of the given tier adds to the item (NOT power
-// gains — the power contribution is derived by running these stat additions
-// through the base AP formula).
-//
-// T14 row verified in-game against Sia's Fancy Outfit, Frogsong Gong,
-// Mundra's Decree, and Titan Admiral Arms (Titan: def 1630 + hp 51 +
-// Apotheosis match + Titan match = 2443). The atk/def stat values are
-// derived as (Dragon-sheet power value ÷ stat weight) rounded to nearest.
-//
-// Lower-tier rows are derived from the Dragon-sheet's per-tier base power
-// the same way and are flagged as unverified — Sky Pirate Outfit (T5 +
-// Gale + Xolotl + 25% Bonus AP upgrade = 317 in-game) currently disagrees
-// with the derived T5 def stats (model says 293; if def_base/match scale
-// up by ~25% the model fits). Treat lower tiers as approximate until each
-// is confirmed with an in-game reading.
-export const ENCHANT_TABLE: Record<"atk" | "def" | "hp", Record<number, EnchantRow>> = {
-  atk: {
-    4: { base: 16, match: 24 },
-    5: { base: 26, match: 39 },
-    7: { base: 38, match: 58 },
-    9: { base: 48, match: 73 },
-    10: { base: 63, match: 94 },
-    12: { base: 99, match: 148 },
-    14: { base: 164, match: 246 },
-  },
-  def: {
-    4: { base: 11, match: 16 },
-    5: { base: 18, match: 27 },
-    7: { base: 25, match: 38 },
-    9: { base: 32, match: 48 },
-    10: { base: 42, match: 63 },
-    12: { base: 66, match: 99 },
-    14: { base: 109, match: 163 },
-  },
-  hp: {
-    4: { base: 3, match: 4 },
-    5: { base: 5, match: 8 },
-    7: { base: 8, match: 12 },
-    9: { base: 10, match: 15 },
-    10: { base: 13, match: 19 },
-    12: { base: 18, match: 27 },
-    14: { base: 33, match: 49 },
-  },
-};
+const matchValue = (base: number): number => Math.floor(1.5 * base);
+const rowOf = (base: number): EnchantRow => ({ base, match: matchValue(base) });
+
+const ENCHANTS = enchantmentsJson as Enchantment[];
+
+// Spirit family from an enchant or affinity name: first whitespace token with a
+// trailing "'s" stripped. "Bahamut Sovereignty" → "Bahamut", "Mundra's Spirit"
+// → "Mundra", "Christmas Spirit" → "Christmas".
+export function spiritFamily(affinity: string): string {
+  const first = affinity.trim().split(/\s+/)[0] ?? "";
+  return first.replace(/'s$/, "");
+}
+
+// Element base stats per tier (all elements of a tier share one base).
+const ELEMENT_BASE_BY_TIER: Record<number, StatTriple> = {};
+// Standard (modal) spirit base per tier — the value most spirits of that tier
+// share; used for a generic non-matching spirit in the spirit slot.
+const SPIRIT_STD_BY_TIER: Record<number, StatTriple> = {};
+// Per-family spirit stats (tier + base), used when a spirit affinity is matched
+// — this is where the event-spirit buffs live.
+export const SPIRIT_STATS: Record<string, { tier: number } & StatTriple> = {};
+
+(() => {
+  const spiritTriplesByTier: Record<number, StatTriple[]> = {};
+  for (const e of ENCHANTS) {
+    const triple: StatTriple = { atk: e.atk, def: e.def, hp: e.hp };
+    if (e.type === "Element") {
+      ELEMENT_BASE_BY_TIER[e.tier] = triple;
+    } else if (e.type === "Spirit") {
+      SPIRIT_STATS[spiritFamily(e.name)] = { tier: e.tier, ...triple };
+      (spiritTriplesByTier[e.tier] ||= []).push(triple);
+    }
+  }
+  // Standard spirit base = the most common triple among spirits of each tier.
+  for (const [tier, triples] of Object.entries(spiritTriplesByTier)) {
+    const counts = new Map<string, { triple: StatTriple; n: number }>();
+    for (const t of triples) {
+      const k = `${t.atk},${t.def},${t.hp}`;
+      const c = counts.get(k) ?? { triple: t, n: 0 };
+      c.n += 1;
+      counts.set(k, c);
+    }
+    let best: { triple: StatTriple; n: number } | null = null;
+    for (const c of counts.values()) if (!best || c.n > best.n) best = c;
+    SPIRIT_STD_BY_TIER[Number(tier)] = best!.triple;
+  }
+})();
+
+// Discrete enchant tiers available in the game (sorted), derived from the data.
+export const ENCHANT_TIERS: readonly number[] = Object.keys(ELEMENT_BASE_BY_TIER)
+  .map(Number)
+  .sort((a, b) => a - b);
+
+// Spirit enchant tiers, keyed by family — derived from each spirit's blueprint
+// tier. Mundra is intentionally absent: it's always a built-in (locked) spirit,
+// so it has no craftable tier and is never chosen as a matchable affinity.
+export const SPIRIT_TIERS: Record<string, number> = Object.fromEntries(
+  Object.entries(SPIRIT_STATS).map(([fam, s]) => [fam, s.tier]),
+);
+
+export function spiritTierFor(affinity: string): number | null {
+  const fam = spiritFamily(affinity);
+  return SPIRIT_TIERS[fam] ?? null;
+}
+
+// Base stats for an element enchant at a given tier.
+function elementBaseAt(tier: number): StatTriple {
+  return ELEMENT_BASE_BY_TIER[tier] ?? { atk: 0, def: 0, hp: 0 };
+}
+
+// Base stats for a spirit enchant: a specific family when matched (so event
+// buffs apply), otherwise the standard spirit base for that tier.
+function spiritBaseAt(tier: number, family: string | null): StatTriple {
+  if (family && SPIRIT_STATS[family]) {
+    const s = SPIRIT_STATS[family];
+    return { atk: s.atk, def: s.def, hp: s.hp };
+  }
+  return SPIRIT_STD_BY_TIER[tier] ?? { atk: 0, def: 0, hp: 0 };
+}
+
+// Element-base and standard-spirit-base tables in {base, match} form, exposed
+// for the UI's "per-tier enchant points" reference. match = floor(1.5 × base).
+function toRowTable(
+  byTier: Record<number, StatTriple>,
+): Record<Stat, Record<number, EnchantRow>> {
+  const out: Record<Stat, Record<number, EnchantRow>> = {
+    atk: {},
+    def: {},
+    hp: {},
+  };
+  for (const [tier, t] of Object.entries(byTier)) {
+    const n = Number(tier);
+    out.atk[n] = rowOf(t.atk);
+    out.def[n] = rowOf(t.def);
+    out.hp[n] = rowOf(t.hp);
+  }
+  return out;
+}
+export const ELEMENT_TABLE = toRowTable(ELEMENT_BASE_BY_TIER);
+export const SPIRIT_TABLE = toRowTable(SPIRIT_STD_BY_TIER);
 
 // Item tier -> the enchant tier column to use. Item tiers between the column
 // breakpoints fall to the lower available column (Dragon sheet convention).
@@ -68,9 +137,6 @@ function enchantTierFor(itemTier: number): number | null {
   if (itemTier <= 13) return 12;
   return 14; // T14+
 }
-
-// Discrete enchant tiers available in the game.
-export const ENCHANT_TIERS: readonly number[] = [4, 5, 7, 9, 10, 12, 14];
 
 // Snap an arbitrary tier value down to the closest discrete enchant tier ≤ it.
 function snapToEnchantTier(tier: number): number | null {
@@ -89,59 +155,17 @@ export interface PowerOptions {
   affinityMatched: boolean; // assume the player picks the matching enchant
   includeAirshipUpgrade: boolean; // apply +X% Bonus Airship Power milestone if present
   // Apply stat-boosting Starforged Milestones (e.g. "+25% Base ATK, DEF and
-  // HP") to the item's base stats before the AP formula. Verified against
-  // Lone Wolf Cowl (Common + Oblivion + Bahamut = 1027 with the milestone
-  // applied). Default off, since the player has to unlock the starforged
-  // version of the recipe for the boost to actually apply in-game.
+  // HP") before the AP formula. The boost multiplies the base+enchant stat
+  // total (not just the base) — verified against the Ghostbusters Suit
+  // (un-starforged 1634 → starforged 2043, exactly ×1.25) and Lone Wolf Cowl
+  // (Common + two non-match T14 enchants = 1027). Default off, since the
+  // player has to unlock the starforged recipe for the boost to apply in-game.
   includeStarforgedStatBoosts: boolean;
   // Highest enchant tier the player has unlocked (one of 4, 5, 7, 9, 10, 12, 14).
   // Both the element and spirit slot pick the best enchant ≤ this tier, since
   // element and spirit enchants apply at their own tier regardless of the item's
   // tier (verified in-game with T14 Tornado + Behemoth on T7 Potion of Renewal).
   maxEnchantTier: number;
-}
-
-// Spirit enchant tiers, keyed by the spirit *family* (first word of the
-// affinity name, e.g. "Bahamut Sovereignty" → "Bahamut"). Verified families
-// come from the ST Central Dragon Affinities sheet; unverified ones are
-// inferred from the in-game spirit list ordering and are marked below.
-export const SPIRIT_TIERS: Record<string, number> = {
-  // Tier 4 (verified from Dragon Affinities)
-  Ram: 4, Wolf: 4, Ox: 4, Eagle: 4, Viper: 4, Cat: 4, Bunny: 4,
-  // Tier 4 (inferred — early-game spirits not in the verified list)
-  Goose: 4, Armadillo: 4, Hippo: 4,
-  // Tier 5
-  Xolotl: 5,
-  Squirrel: 5, // inferred
-  // Tier 7
-  Owl: 7, Lizard: 7, Horse: 7,
-  Rhino: 7, // inferred
-  // Tier 9
-  Bear: 9, Dinosaur: 9, Lion: 9, Mammoth: 9, Shark: 9, Tiger: 9, Walrus: 9,
-  Hydra: 9, Tarrasque: 9, // inferred
-  // Tier 10
-  Quetzalcoatl: 10,
-  // Tier 12
-  Carbuncle: 12, Chimera: 12, Christmas: 12, Kraken: 12, Phoenix: 12,
-  Krampus: 12, Kirin: 12, // inferred
-  // Tier 14
-  Bahamut: 14, Behemoth: 14, Griffin: 14, Leviathan: 14, Ouroboros: 14, Titan: 14,
-  Ancestor: 14, // inferred (recent high-tier spirit)
-  Mundra: 14, // inferred (event spirit)
-};
-
-// Extract the spirit family name from an affinity string. The data uses
-// "Bear Vitality", "Bahamut Sovereignty", "Mundra's Spirit", "Christmas Spirit",
-// "Quetzalcoatl Spirit", etc. — the family is always the first whitespace token
-// with a trailing apostrophe-s stripped.
-export function spiritFamily(affinity: string): string {
-  const first = affinity.trim().split(/\s+/)[0] ?? "";
-  return first.replace(/'s$/, "");
-}
-
-export function spiritTierFor(affinity: string): number | null {
-  const fam = spiritFamily(affinity);
-  return SPIRIT_TIERS[fam] ?? null;
 }
 
 // BasePower at Common quality, no enchant, no APU.
@@ -172,25 +196,22 @@ interface EnchantStatAdd {
   hp: number;
 }
 
-// Stat addition an enchant of the given tier contributes for the present
-// stats on the item. Stats not on the item (e.g. atk on a def-only armor)
-// receive 0 — enchants only boost what's already there.
-function enchantStatsAt(
-  b: Blueprint,
-  tier: number,
-  match: boolean,
-): EnchantStatAdd {
-  const pick = (row: EnchantRow) => (match ? row.match : row.base);
-  // Each enchant's stat boost is capped at the item's base value for that
-  // stat. Verified in-game across:
-  //   hp:  Malady's Robe (def 630 + hp 39, both T14 matches → 1732)
-  //   atk: Squire Sword (T1, atk 16, T14 Oblivion + T14 Griffin → 38)
-  // Def cap is assumed by symmetry — verifying with a low-def item + T14
-  // enchants is on the data-points todo list.
+// Match-adjusted enchant value per stat (uncapped): floor(1.5 × base) when the
+// enchant matches an affinity on the item, else the flat base.
+function enchantValues(base: StatTriple, match: boolean): StatTriple {
+  const v = (x: number) => (match ? matchValue(x) : x);
+  return { atk: v(base.atk), def: v(base.def), hp: v(base.hp) };
+}
+
+// Stat addition an enchant contributes, capped at the item's base value for
+// that stat. Stats not on the item (e.g. atk on a def-only armor) receive 0 —
+// enchants only boost what's already there. Verified caps: hp (Malady's Robe),
+// atk (Squire Sword), def (Imbued Blade, Tower of Thorns).
+function cappedStats(b: Blueprint, raw: StatTriple): EnchantStatAdd {
   return {
-    atk: b.atk > 0 ? Math.min(pick(ENCHANT_TABLE.atk[tier]), b.atk) : 0,
-    def: b.def > 0 ? Math.min(pick(ENCHANT_TABLE.def[tier]), b.def) : 0,
-    hp: b.hp > 0 ? Math.min(pick(ENCHANT_TABLE.hp[tier]), b.hp) : 0,
+    atk: b.atk > 0 ? Math.min(raw.atk, b.atk) : 0,
+    def: b.def > 0 ? Math.min(raw.def, b.def) : 0,
+    hp: b.hp > 0 ? Math.min(raw.hp, b.hp) : 0,
   };
 }
 
@@ -207,14 +228,15 @@ function powerFromStats(b: Blueprint, add: EnchantStatAdd, q: number): number {
   return (0.8 * atk + 1.2 * def + 5 * hp) * (1 + 10 * crit) * (1 + 10 * eva);
 }
 
-// Convenience for callers that need the raw gain of an enchant choice.
-function enchantGainAt(
+// Gain (at Common-style quality q, for ranking) of an enchant whose base stats
+// are `base`, matched or not, on top of the item's quality-scaled base.
+function gainFromBase(
   b: Blueprint,
   q: number,
-  tier: number,
+  base: StatTriple,
   match: boolean,
 ): number {
-  const add = enchantStatsAt(b, tier, match);
+  const add = cappedStats(b, enchantValues(base, match));
   return powerFromStats(b, add, q) - powerAtQuality(b, q);
 }
 
@@ -224,7 +246,10 @@ export interface SlotChoice {
   family: string | null; // spirit family name when applicable
   targets: string[]; // elements when applicable (one of these matches)
   gain: number; // airship-power gain at the given quality (for ranking only)
-  statsAdded: EnchantStatAdd; // raw stats the enchant adds to the item
+  statsAdded: EnchantStatAdd; // stats the enchant adds, capped at the item's base
+  // Match-adjusted enchant values *before* the item-stat cap, zeroed for stats
+  // the item lacks. computePower re-caps these against the quality-scaled base.
+  enchantStats: EnchantStatAdd;
   // Locked = the item ships with this enchant pre-installed (built-in element
   // or built-in spirit, e.g. all Mundra items have Mundra Spirit baked in).
   // The player can't swap it for anything else, so we don't show skill-
@@ -269,6 +294,16 @@ export function bestEnchantPlan(
   const q = QUALITY_MULTIPLIER[quality];
 
   const zeroStats: EnchantStatAdd = { atk: 0, def: 0, hp: 0 };
+  // Match-adjusted enchant values before the item-stat cap, zeroed for stats
+  // the item lacks (mirrors how computePower applies them).
+  const slotEnchantStats = (base: StatTriple, match: boolean): EnchantStatAdd => {
+    const raw = enchantValues(base, match);
+    return {
+      atk: b.atk > 0 ? raw.atk : 0,
+      def: b.def > 0 ? raw.def : 0,
+      hp: b.hp > 0 ? raw.hp : 0,
+    };
+  };
 
   // Element slot
   // Built-in element enchants are already baked into the item's listed
@@ -283,18 +318,20 @@ export function bestEnchantPlan(
       targets: b.builtInElement,
       gain: 0,
       statsAdded: zeroStats,
+      enchantStats: zeroStats,
       locked: true,
     };
   } else {
-    const elementMatch =
-      affinityMatched && b.elementalAffinity.length > 0;
+    const elementMatch = affinityMatched && b.elementalAffinity.length > 0;
+    const base = elementBaseAt(enchantTier);
     element = {
       tier: enchantTier,
       match: elementMatch,
       family: null,
       targets: b.elementalAffinity,
-      gain: enchantGainAt(b, q, enchantTier, elementMatch),
-      statsAdded: enchantStatsAt(b, enchantTier, elementMatch),
+      gain: gainFromBase(b, q, base, elementMatch),
+      statsAdded: cappedStats(b, enchantValues(base, elementMatch)),
+      enchantStats: slotEnchantStats(base, elementMatch),
       locked: false,
     };
   }
@@ -314,32 +351,38 @@ export function bestEnchantPlan(
       targets: [],
       gain: 0,
       statsAdded: zeroStats,
+      enchantStats: zeroStats,
       locked: true,
     };
   } else {
-    // Start with the "any spirit at the item's tier" baseline.
+    // Start with the "any (standard) spirit at the player's tier" baseline.
+    const genericBase = spiritBaseAt(enchantTier, null);
     spirit = {
       tier: enchantTier,
       match: false,
       family: null,
       targets: [],
-      gain: enchantGainAt(b, q, enchantTier, false),
-      statsAdded: enchantStatsAt(b, enchantTier, false),
+      gain: gainFromBase(b, q, genericBase, false),
+      statsAdded: cappedStats(b, enchantValues(genericBase, false)),
+      enchantStats: slotEnchantStats(genericBase, false),
       locked: false,
     };
     if (affinityMatched) {
       for (const s of b.spiritAffinity) {
         const sTier = spiritTierFor(s);
         if (sTier !== null && sTier <= playerTier) {
-          const gain = enchantGainAt(b, q, sTier, true);
+          const family = spiritFamily(s);
+          const base = spiritBaseAt(sTier, family);
+          const gain = gainFromBase(b, q, base, true);
           if (gain > spirit.gain) {
             spirit = {
               tier: sTier,
               match: true,
-              family: spiritFamily(s),
+              family,
               targets: [],
               gain,
-              statsAdded: enchantStatsAt(b, sTier, true),
+              statsAdded: cappedStats(b, enchantValues(base, true)),
+              enchantStats: slotEnchantStats(base, true),
               locked: false,
             };
           }
@@ -392,17 +435,17 @@ export function computePower(b: Blueprint, opts: PowerOptions): number {
   const boost = opts.includeStarforgedStatBoosts
     ? b.starforgedStatBoosts
     : undefined;
-  // Quality-scaled and (optionally) milestone-boosted base stats. Kept as
-  // raw floats — the cap on enchant gain operates per slot on this exact
-  // value, so rounding here would break the LWC hp math (23.75 + 23.75 →
-  // 47.5 → 71 only works if the cap stays fractional per slot).
-  const rawAtkBase = b.atk * (1 + (boost?.atk ?? 0)) * q;
-  const rawDefBase = b.def * (1 + (boost?.def ?? 0)) * q;
-  const rawHpBase = b.hp * (1 + (boost?.hp ?? 0)) * q;
+  // Quality-scaled base stats, *before* the Starforged Milestone boost. The
+  // enchant cap operates per slot against this un-boosted value (kept as a
+  // raw float), and the +X% milestone is applied to the base+enchant total
+  // afterwards — see the boost step below.
+  const qAtkBase = b.atk * q;
+  const qDefBase = b.def * q;
+  const qHpBase = b.hp * q;
 
-  let rawAtk = rawAtkBase;
-  let rawDef = rawDefBase;
-  let rawHp = rawHpBase;
+  let rawAtk = qAtkBase;
+  let rawDef = qDefBase;
+  let rawHp = qHpBase;
 
   if (opts.enchanted) {
     const plan = bestEnchantPlan(
@@ -413,24 +456,39 @@ export function computePower(b: Blueprint, opts: PowerOptions): number {
     );
     for (const slot of [plan.element, plan.spirit]) {
       if (!slot || slot.locked) continue;
-      const tier = slot.tier;
-      const pick = (row: EnchantRow) => (slot.match ? row.match : row.base);
-      if (b.atk > 0)
-        rawAtk += Math.min(pick(ENCHANT_TABLE.atk[tier]), rawAtkBase);
-      if (b.def > 0)
-        rawDef += Math.min(pick(ENCHANT_TABLE.def[tier]), rawDefBase);
-      if (b.hp > 0) rawHp += Math.min(pick(ENCHANT_TABLE.hp[tier]), rawHpBase);
+      // slot.enchantStats are the match-adjusted enchant values (element- or
+      // spirit-specific) before the cap; re-cap them at the quality-scaled base.
+      if (b.atk > 0) rawAtk += Math.min(slot.enchantStats.atk, qAtkBase);
+      if (b.def > 0) rawDef += Math.min(slot.enchantStats.def, qDefBase);
+      if (b.hp > 0) rawHp += Math.min(slot.enchantStats.hp, qHpBase);
     }
   }
 
-  // Round each displayed stat to integer (round-half-up) before the AP
-  // formula. The game stores integer stats, and the AP it shows is computed
-  // from those integers — verified against Superior Frogsong (raw 3088.4 →
-  // stat-rounded 3090, matching the in-game 3090) and Superior Warrior
-  // Assegai unenchanted (atk 350 + hp 13 → AP 345, matching in-game 345).
-  const dispAtk = Math.round(rawAtk);
-  const dispDef = Math.round(rawDef);
-  const dispHp = Math.round(rawHp);
+  // Round the quality-scaled + enchanted stat to integer (round-half-up). This
+  // is the displayed stat *before* the Starforged Milestone. The game stores
+  // integer stats and computes AP from them — verified against Superior
+  // Frogsong (raw 3088.4 → stat-rounded 3090) and Superior Warrior Assegai
+  // (atk 350 + hp 13 → AP 345).
+  let dispAtk = Math.round(rawAtk);
+  let dispDef = Math.round(rawDef);
+  let dispHp = Math.round(rawHp);
+
+  // Starforged Milestone "+X% Base ATK/DEF/HP" multiplies the *already-rounded*
+  // base+enchant stat, then the result is rounded again — there are two
+  // distinct rounding steps. Verified across four in-game readings:
+  //   • Ghostbusters Suit (def 690, no affinity, 2× non-match): un-starforged
+  //     908 → 1634; starforged round(908 × 1.25) = 1135 → 2043.
+  //   • Lone Wolf Cowl Common (def 230 hp 19, no affinity, 2× non-match):
+  //     round(448 × 1.25) = 560 def; round(57 × 1.25) = 71 hp → AP 1027.
+  //   • Lone Wolf Cowl Superior unenchanted: round(230 × 1.25) = 288 → round(
+  //     288 × 1.25) = 360 def; round(19 × 1.25) = 24 → round(24 × 1.25) = 30 hp
+  //     → AP 582. A single combined round (230 × 1.25 × 1.25 = 359.375 → 359)
+  //     would miss the in-game 360 — the intermediate round is load-bearing.
+  if (boost) {
+    dispAtk = Math.round(dispAtk * (1 + (boost.atk ?? 0)));
+    dispDef = Math.round(dispDef * (1 + (boost.def ?? 0)));
+    dispHp = Math.round(dispHp * (1 + (boost.hp ?? 0)));
+  }
   // crit / eva: existing model multiplied them by q. There's no in-game
   // reading yet that nails the right scaling, so leave the q multiplier in
   // place — Sia at Common (q=1) and Slathered at Common (q=1) both work
@@ -494,7 +552,7 @@ export function recommendEnchant(
       const applicable = sTier !== null && sTier <= maxEnchantTier;
       const family = spiritFamily(s);
       const matchGain = applicable
-        ? enchantGainAt(item, 1, sTier!, true)
+        ? gainFromBase(item, 1, spiritBaseAt(sTier!, family), true)
         : 0;
       // Skip the line if it IS the optimal spirit choice (no useful note).
       if (plan.spirit.match && plan.spirit.family === family) continue;

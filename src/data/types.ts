@@ -99,7 +99,14 @@ export interface Blueprint {
 
 export interface Enchantment {
   name: string;
-  type: string; // "Element" | "Spirit" | etc.
+  type: string; // "Element" | "Spirit"
+  // Tier and base stats are read directly from the enchant's own blueprint row
+  // in the canonical Blueprints tab (each enchant is a craftable item). These
+  // are authoritative — the in-game affinity-match value is floor(1.5 × base).
+  tier: number;
+  atk: number;
+  def: number;
+  hp: number;
 }
 
 export interface DataMeta {

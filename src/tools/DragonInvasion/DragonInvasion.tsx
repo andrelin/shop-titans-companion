@@ -3,7 +3,8 @@ import type { Blueprint, GameData, Quality } from "../../data/types";
 import { QUALITY_COLOR, QUALITY_MULTIPLIER, QUALITY_ORDER } from "../../data/types";
 import {
   computePower,
-  ENCHANT_TABLE,
+  ELEMENT_TABLE,
+  SPIRIT_TABLE,
   ENCHANT_TIERS,
   recommendEnchant,
   SPIRIT_TIERS,
@@ -489,7 +490,10 @@ export function DragonInvasion({ data }: { data: GameData }) {
                     return (
                       <tr key={`${r.bp.name}::${r.quality}`}>
                         <td className={rankClass}>{r.categoryRank}</td>
-                        <td className="item-name">{r.bp.name}</td>
+                        <td className="item-name">
+                          <span className="item-name-text">{r.bp.name}</span>
+                          <ItemBonuses bp={r.bp} />
+                        </td>
                         <td style={{ color: "var(--muted)" }}>{r.bp.type}</td>
                         <td className="col-center">{r.bp.tier}</td>
                         <td
@@ -619,9 +623,138 @@ export function DragonInvasion({ data }: { data: GameData }) {
   );
 }
 
+// Per-item bonus badges, shown under the item name so players can see at a
+// glance which affinities an item can match and which AP-affecting bonuses it
+// carries — without cross-referencing the data sheet. Sourced entirely from
+// the synced Blueprint fields; nothing here is hand-authored.
+function ItemBonuses({ bp }: { bp: Blueprint }) {
+  const sfPct = bp.starforgedStatBoosts?.def ?? bp.starforgedStatBoosts?.atk;
+  const chips: { key: string; cls: string; label: string; title: string }[] = [];
+
+  for (const el of bp.elementalAffinity) {
+    chips.push({
+      key: `el-${el}`,
+      cls: "bonus-chip bonus-element",
+      label: el,
+      title: `Elemental affinity: a matching ${el} element enchant gets the higher "(match)" stat bonus.`,
+    });
+  }
+  for (const sp of bp.spiritAffinity) {
+    chips.push({
+      key: `sp-${sp}`,
+      cls: "bonus-chip bonus-spirit",
+      label: sp,
+      title: `Spirit affinity: a matching ${sp} spirit gets the "(match)" bonus (when its tier is worth it over a generic spirit).`,
+    });
+  }
+  for (const el of bp.builtInElement) {
+    chips.push({
+      key: `bie-${el}`,
+      cls: "bonus-chip bonus-builtin",
+      label: `🔒 ${el}`,
+      title: `Built-in ${el}: baked into the blueprint, already in the base AP. The element slot can't be re-enchanted.`,
+    });
+  }
+  for (const sp of bp.builtInSpirit) {
+    chips.push({
+      key: `bis-${sp}`,
+      cls: "bonus-chip bonus-builtin",
+      label: `🔒 ${sp}`,
+      title: `Built-in ${sp}: baked into the blueprint, already in the base AP. The spirit slot can't be re-enchanted.`,
+    });
+  }
+  if (sfPct) {
+    chips.push({
+      key: "sf",
+      cls: "bonus-chip bonus-starforged",
+      label: `+${Math.round(sfPct * 100)}% Starforged`,
+      title: `Has a Starforged Milestone that adds +${Math.round(sfPct * 100)}% to base ATK / DEF / HP. Counts toward AP only when the "+25% Starforged stat boost" toggle is on and you've unlocked the milestone in-game.`,
+    });
+  }
+  if (bp.airshipPowerUpgradeBonus > 0) {
+    chips.push({
+      key: "apu",
+      cls: "bonus-chip bonus-apu",
+      label: bp.artifactSkillName
+        ? `+${Math.round(bp.airshipPowerUpgradeBonus * 100)}% AP · ${bp.artifactSkillName}`
+        : `+${Math.round(bp.airshipPowerUpgradeBonus * 100)}% Airship Power`,
+      title: bp.artifactSkillName
+        ? `Artifact skill ${bp.artifactSkillName} grants +${Math.round(bp.airshipPowerUpgradeBonus * 100)}% airship power. Counts toward AP only when the "+20/25% Bonus AP" toggle is on.`
+        : `Has a +${Math.round(bp.airshipPowerUpgradeBonus * 100)}% Bonus Airship Power upgrade. Counts toward AP only when the "+20/25% Bonus AP" toggle is on.`,
+    });
+  }
+
+  if (chips.length === 0) {
+    return <span className="item-bonuses item-bonuses-none">no affinity or bonus</span>;
+  }
+  return (
+    <span className="item-bonuses">
+      {chips.map((c) => (
+        <span key={c.key} className={c.cls} title={c.title}>
+          {c.label}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 // Tier columns in the enchant table. Items between columns step down to the
 // next-lower column (the convention from the Dragon Invasion reference sheet).
 const ENCHANT_TIER_COLS = [4, 5, 7, 9, 10, 12, 14] as const;
+
+// Renders a base/match table for one enchant kind (element or spirit). The
+// values come straight from `ELEMENT_TABLE` / `SPIRIT_TABLE`, which are derived
+// from the synced enchant blueprints — match = floor(1.5 × base).
+function EnchantStatTable({
+  title,
+  table,
+}: {
+  title: string;
+  table: Record<"atk" | "def" | "hp", Record<number, { base: number; match: number }>>;
+}) {
+  return (
+    <div className="explain-table-wrap">
+      <div className="explain-subtitle">{title}</div>
+      <table className="explain-table">
+        <thead>
+          <tr>
+            <th>Stat</th>
+            {ENCHANT_TIER_COLS.map((t) => (
+              <th key={t} className="num" colSpan={2}>
+                T{t}
+              </th>
+            ))}
+          </tr>
+          <tr>
+            <th></th>
+            {ENCHANT_TIER_COLS.map((t) => (
+              <Fragment key={t}>
+                <th className="num explain-sub">base</th>
+                <th className="num explain-sub">match</th>
+              </Fragment>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {(["atk", "def", "hp"] as const).map((stat) => (
+            <tr key={stat}>
+              <td>{stat.toUpperCase()}</td>
+              {ENCHANT_TIER_COLS.map((t) => {
+                const row = table[stat][t];
+                return (
+                  <Fragment key={t}>
+                    <td className="num">{row?.base ?? "—"}</td>
+                    <td className="num explain-match">{row?.match ?? "—"}</td>
+                  </Fragment>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
   const upgradeCount = useMemo(
@@ -667,8 +800,12 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
 
         <h3>2. Quality</h3>
         <p>
-          Quality scales the final AP value linearly — it does not compound
-          with crit or evasion.
+          Quality multiplies the item's base <strong>stats</strong> (atk / def
+          / hp) by the factor below. Those scaled stats are then rounded to
+          whole numbers before the AP formula runs — the game stores integer
+          stats — so the final AP is close to, but not exactly, a linear
+          scaling of the Common value (the rounding shifts it by a point or
+          two). Crit and evasion scale by the same factor and do not compound.
         </p>
         <table className="explain-table">
           <thead>
@@ -703,60 +840,33 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           <strong>sum of both slots</strong>.
         </p>
         <p>
-          Each enchant adds a flat number of airship-power points{" "}
-          <em>per stat the item already has</em> (atk, def, or hp). The amount
-          depends on tier and whether the enchant matches the item's affinity.
-          An item with both atk and def gets the gain for each present stat,
-          for each slot. The flat gain is then multiplied through the same{" "}
-          <code>(1 + 10·crit) × (1 + 10·eva)</code> factor and the quality
-          multiplier as the base.
+          Each enchant adds a flat number of <em>stat points</em>{" "}
+          <em>per stat the item already has</em> (atk, def, or hp), and the AP
+          formula then runs on the boosted stats. The amount depends on tier
+          and whether the enchant matches the item's affinity. An item with
+          both atk and def gets the gain for each present stat, for each slot.
+        </p>
+        <p>
+          One important cap: each enchant's stat boost is{" "}
+          <strong>limited to the item's own base value</strong> for that stat,
+          per slot. A T1 sword with 16 atk gains only +16 atk from a T14
+          enchant that would otherwise add 164 — you can't enchant a stat past
+          doubling it per slot. This is why low-stat items gain less from
+          enchanting than the raw tier table suggests.
         </p>
 
-        <h3>4. Per-tier enchant points</h3>
+        <h3>4. Per-tier enchant stats</h3>
         <p>
-          Values are airship-power points added per stat at Common quality with
-          crit/eva = 0. The "(match)" column is the affinity-matched value —
-          roughly 1.5× the base.
+          These are the flat stat points an enchant adds per stat, read straight
+          from each enchant's own blueprint. The "(match)" column is the
+          affinity-matched value — exactly <code>floor(1.5 × base)</code>.
+          Elements and spirits share the same stats at most tiers, but{" "}
+          <strong>spirits are slightly higher at T4 and T7</strong>, and a few
+          event spirits (Tiger, Christmas, Krampus, Kirin) are buffed one notch
+          above the standard for their tier.
         </p>
-        <div className="explain-table-wrap">
-          <table className="explain-table">
-            <thead>
-              <tr>
-                <th>Stat</th>
-                {ENCHANT_TIER_COLS.map((t) => (
-                  <th key={t} className="num" colSpan={2}>
-                    T{t}
-                  </th>
-                ))}
-              </tr>
-              <tr>
-                <th></th>
-                {ENCHANT_TIER_COLS.map((t) => (
-                  <Fragment key={t}>
-                    <th className="num explain-sub">base</th>
-                    <th className="num explain-sub">match</th>
-                  </Fragment>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {(["atk", "def", "hp"] as const).map((stat) => (
-                <tr key={stat}>
-                  <td>{stat.toUpperCase()}</td>
-                  {ENCHANT_TIER_COLS.map((t) => {
-                    const row = ENCHANT_TABLE[stat][t];
-                    return (
-                      <Fragment key={t}>
-                        <td className="num">{row.base}</td>
-                        <td className="num explain-match">{row.match}</td>
-                      </Fragment>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <EnchantStatTable title="Element enchants" table={ELEMENT_TABLE} />
+        <EnchantStatTable title="Spirit enchants (standard)" table={SPIRIT_TABLE} />
         <p>
           Item tiers between columns step down to the next-lower column. So a
           T15 or T16 item uses the T14 column, a T13 item uses T12, T11 uses
@@ -788,11 +898,11 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
 
         <h3>6. Affinity match bonus</h3>
         <p>
-          The "(match)" values above are roughly 1.5× the base values — that's
-          the bonus you get from matching the item's element or spirit. Items
-          can have one elemental affinity, one spirit affinity, both, or
-          neither. The "Match affinity" toggle on the controls bar assumes you
-          pick the matching enchant whenever possible.
+          The "(match)" values above are <code>floor(1.5 × base)</code> — the
+          bonus you get from matching the item's element or spirit. Items can
+          have one elemental affinity, one spirit affinity, both, or neither.
+          The "Match affinity" toggle on the controls bar assumes you pick the
+          matching enchant whenever possible.
         </p>
 
         <h3>7. +20/25% Bonus Airship Power and artifact-skill boosts</h3>
@@ -823,7 +933,32 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           added. All other items are unaffected.
         </p>
 
-        <h3>8. Built-in enchants</h3>
+        <h3>8. Starforged Milestone: +25% base ATK/DEF/HP</h3>
+        <p>
+          Separate from the Bonus Airship Power upgrade above, many recipes
+          have a <strong>Starforged Milestone</strong> that adds{" "}
+          <em>+25% to base ATK, DEF and HP</em>. Items that carry one show a
+          green <span className="bonus-chip bonus-starforged">+25% Starforged</span>{" "}
+          badge under their name. The "+25% Starforged stat boost" toggle on
+          the controls bar assumes you've unlocked the milestone on every item
+          that has one.
+        </p>
+        <p>
+          This boost applies to the <strong>base stats plus the enchant
+          stats together</strong> — not just the base — and there are two
+          rounding steps: the quality-scaled base+enchant stat is rounded to a
+          whole number first, then the +25% is applied and the result rounded
+          again. For example, a Ghostbusters Suit (690 def, no affinity) with
+          two non-matching T14 enchants shows 908 def un-starforged (AP 1634)
+          and <code>round(908 × 1.25) = 1135</code> def starforged (AP 2043).
+          Verified exact at Common quality. The interaction with higher
+          qualities is verified for the unenchanted case (a Superior starforged
+          item rounds twice: <code>round(base × 1.25)</code> then{" "}
+          <code>round(× 1.25)</code>), and treated as best-effort for enchanted
+          Superior+ until more in-game readings pin it.
+        </p>
+
+        <h3>9. Built-in enchants</h3>
         <p>
           Some blueprints ship with an enchant baked into one of their slots
           that can't be swapped — Mundra items always carry Mundra Spirit,
@@ -839,14 +974,14 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           can be enchanted for further gain.
         </p>
 
-        <h3>9. Familiars</h3>
+        <h3>10. Familiars</h3>
         <p>
           The canonical data sheet lists airship-power values for familiars,
           but in-game familiars don't actually contribute to the airship. The
           ranker excludes them from every category.
         </p>
 
-        <h3>10. Top N per category</h3>
+        <h3>11. Top N per category</h3>
         <p>
           Each item is bucketed into one of four categories — Weapons, Body
           Armor, Misc Armor, Accessories — following the Dragon Invasion
@@ -856,11 +991,10 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           filter.
         </p>
 
-        <h3>11. Spirit families by tier</h3>
+        <h3>12. Spirit families by tier</h3>
         <p>
-          Quick reference: which tier each spirit family lives at. Some are
-          inferred from in-game ordering rather than the verified reference
-          list.
+          Quick reference: which tier each spirit family lives at. Read directly
+          from each spirit's blueprint, so these are authoritative.
         </p>
         <ul className="explain-spirits">
           {spiritsByTier.map(([tier, families]) => (
@@ -890,24 +1024,10 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           >
             ST Central's displayed-stat reference
           </a>
-          , and the per-tier enchant-power table comes from the{" "}
-          <a
-            href="https://st-central.net/dragon-invasion/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            ST Central Dragon Invasion guide
-          </a>{" "}
-          (and its{" "}
-          <a
-            href="https://docs.google.com/spreadsheets/d/1eWZQ4SSqbMc0xLqDQQZwzZg5fU19Se8XnDdvdcMO3Aw"
-            target="_blank"
-            rel="noreferrer"
-          >
-            companion sheet
-          </a>
-          ), which are no longer being kept current — but the underlying values
-          reflect stable game mechanics.
+          . The per-tier enchant stats and spirit tiers are read directly from
+          the enchant blueprints in that same sheet (each enchant is a craftable
+          item with its own tier and base stats), so they stay authoritative and
+          update with the daily sync.
         </p>
       </div>
     </details>

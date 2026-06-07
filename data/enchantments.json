@@ -1,294 +1,586 @@
 [
   {
     "name": "Ember Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 4,
+    "atk": 16,
+    "def": 11,
+    "hp": 3
   },
   {
     "name": "Flame Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 7,
+    "atk": 38,
+    "def": 25,
+    "hp": 8
   },
   {
     "name": "Blaze Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Inferno Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Blistering Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Bubble Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 4,
+    "atk": 16,
+    "def": 11,
+    "hp": 3
   },
   {
     "name": "Tide Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 7,
+    "atk": 38,
+    "def": 25,
+    "hp": 8
   },
   {
     "name": "Flood Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Torrent Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Maelstrom Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Breeze Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 4,
+    "atk": 16,
+    "def": 11,
+    "hp": 3
   },
   {
     "name": "Gale Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 7,
+    "atk": 38,
+    "def": 25,
+    "hp": 8
   },
   {
     "name": "Tempest Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Hurricane Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Tornado Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Nature Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 4,
+    "atk": 16,
+    "def": 11,
+    "hp": 3
   },
   {
     "name": "Wild Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 7,
+    "atk": 38,
+    "def": 25,
+    "hp": 8
   },
   {
     "name": "Primal Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Primeval Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Gaia Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Light Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 4,
+    "atk": 16,
+    "def": 11,
+    "hp": 3
   },
   {
     "name": "Holy Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 7,
+    "atk": 38,
+    "def": 25,
+    "hp": 8
   },
   {
     "name": "Sacred Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Divine Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Apotheosis Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Corrupted Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 4,
+    "atk": 16,
+    "def": 11,
+    "hp": 3
   },
   {
     "name": "Unholy Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 7,
+    "atk": 38,
+    "def": 25,
+    "hp": 8
   },
   {
     "name": "Nightmare Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Abyssal Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Oblivion Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Luxurious Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 5,
+    "atk": 26,
+    "def": 18,
+    "hp": 5
   },
   {
     "name": "Opulent Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 10,
+    "atk": 63,
+    "def": 42,
+    "hp": 13
   },
   {
     "name": "Platinum Element",
-    "type": "Element"
+    "type": "Element",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Ram Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Wolf Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Ox Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Eagle Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Viper Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Cat Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Bunny Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Goose Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 19,
+    "def": 12,
+    "hp": 4
   },
   {
     "name": "Xolotl Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 5,
+    "atk": 26,
+    "def": 18,
+    "hp": 5
   },
   {
     "name": "Rhino Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 7,
+    "atk": 41,
+    "def": 27,
+    "hp": 8
   },
   {
     "name": "Owl Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 7,
+    "atk": 41,
+    "def": 27,
+    "hp": 8
   },
   {
     "name": "Armadillo Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 7,
+    "atk": 41,
+    "def": 27,
+    "hp": 8
   },
   {
     "name": "Lizard Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 7,
+    "atk": 41,
+    "def": 27,
+    "hp": 8
   },
   {
     "name": "Horse Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 7,
+    "atk": 41,
+    "def": 27,
+    "hp": 8
   },
   {
     "name": "Hippo Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 7,
+    "atk": 41,
+    "def": 27,
+    "hp": 8
   },
   {
     "name": "Squirrel Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 7,
+    "atk": 41,
+    "def": 27,
+    "hp": 8
   },
   {
     "name": "Shark Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Walrus Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Lion Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Bear Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Mammoth Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Dinosaur Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 48,
+    "def": 32,
+    "hp": 10
   },
   {
     "name": "Tiger Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 50,
+    "def": 33,
+    "hp": 10
   },
   {
     "name": "Quetzalcoatl Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 10,
+    "atk": 63,
+    "def": 42,
+    "hp": 13
   },
   {
     "name": "Phoenix Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Hydra Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Tarrasque Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Carbuncle Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Chimera Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Kraken Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 99,
+    "def": 66,
+    "hp": 20
   },
   {
     "name": "Christmas Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 104,
+    "def": 69,
+    "hp": 21
   },
   {
     "name": "Krampus Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 104,
+    "def": 69,
+    "hp": 21
   },
   {
     "name": "Kirin Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 12,
+    "atk": 104,
+    "def": 69,
+    "hp": 21
   },
   {
     "name": "Behemoth Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Ouroboros Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Bahamut Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Leviathan Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Griffin Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Titan Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   },
   {
     "name": "Ancestor Spirit",
-    "type": "Spirit"
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 164,
+    "def": 109,
+    "hp": 33
   }
 ]

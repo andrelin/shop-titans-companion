@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Blueprint } from "./types";
 import {
-  ENCHANT_TABLE,
+  ELEMENT_TABLE,
+  SPIRIT_TABLE,
   applyArtifactStatMods,
   bestEnchantPlan,
   computePower,
@@ -401,11 +402,12 @@ describe("hp enchant cap at base hp", () => {
 
   it("Tower of Thorns + T14 non-match + T9 non-match formula gives 768", () => {
     const baseAtk = 400, baseDef = 100;
+    // Oblivion is a T14 element; Mammoth is a T9 spirit (both non-match).
     const atkAdd =
-      ENCHANT_TABLE.atk[14].base + ENCHANT_TABLE.atk[9].base;
+      ELEMENT_TABLE.atk[14].base + SPIRIT_TABLE.atk[9].base;
     const defAdd =
-      Math.min(ENCHANT_TABLE.def[14].base, baseDef) +
-      Math.min(ENCHANT_TABLE.def[9].base, baseDef);
+      Math.min(ELEMENT_TABLE.def[14].base, baseDef) +
+      Math.min(SPIRIT_TABLE.def[9].base, baseDef);
     const ap = 0.8 * (baseAtk + atkAdd) + 1.2 * (baseDef + defAdd);
     expect(Math.round(ap)).toBe(768);
   });
@@ -437,52 +439,29 @@ describe("hp enchant cap at base hp", () => {
   });
 });
 
-describe.skip("open data points (skipped pending resolution)", () => {
-
-  // Sky Pirate Outfit + Gale + Xolotl + 25% Bonus AP: user-reported 317;
-  // model with derived T5 stats gives 294. Suggests lower-tier def stats
-  // are higher than (Dragon power / 1.2) by ~25%.
-  it("Sky Pirate Outfit + Gale + Xolotl + 25% upgrade = 317", () => {
-    const b = bp({
-      name: "Sky Pirate Outfit",
-      type: "Light Armor",
-      tier: 5,
-      def: 86,
-      eva: 0.05,
-      elementalAffinity: ["Air"],
-      hasAirshipPowerUpgrade: true,
-      airshipPowerUpgradeBonus: 0.25,
-    });
-    expect(computePower(b, commonOpts)).toBe(317);
+// Bottled Mirth (T7 Potion, hp 46, built-in Holy Element → element slot locked
+// at 0 AP). No spirit affinity, so the spirit slot is a generic non-match at
+// the player's tier. The two in-game readings differ only by which spirit was
+// applied, so they pin the spirit hp_base at two tiers — set maxEnchantTier to
+// the tier of the applied spirit:
+//   Walrus (T9 spirit) → spirit hp_base 10 → 230 + 10·5 = 280
+//   Horse  (T7 spirit) → spirit hp_base  8 → 230 + 8·5  = 270
+// (base 230 = 46 hp × 5; the locked Holy element adds nothing.)
+describe("Bottled Mirth — built-in element + generic spirit at the player tier", () => {
+  const bottledMirth = bp({
+    name: "Bottled Mirth",
+    type: "Potion",
+    tier: 7,
+    hp: 46,
+    builtInElement: ["Holy Element"],
   });
 
-  // XL Healing Potion + Fire + Ox (both non-match): user-reported 130.
-  // Model gives 95 + 5·(3+3) = 125; the +5 suggests T4 hp_base is closer
-  // to 3.5 stat or only one slot contributes hp on hp-only items.
-  it("XL Healing Potion + Fire + Ox = 130", () => {
-    const b = bp({
-      name: "XL Healing Potion",
-      type: "Potion",
-      tier: 4,
-      hp: 19,
-    });
-    expect(computePower(b, commonOpts)).toBe(130);
+  it("+ Holy (built-in) + Walrus (T9 spirit) = 280", () => {
+    expect(computePower(bottledMirth, { ...commonOpts, maxEnchantTier: 9 })).toBe(280);
   });
 
-  // Bottled Mirth + Holy (built-in, locked) + Walrus (T9 spirit applied to
-  // T7 item, no spirit affinity): user-reported 280. Model with locked
-  // element gives 230 + 5·8 = 270; the +10 suggests Walrus contributes
-  // beyond the T7 hp_base of 8 — maybe Walrus stays at T9 (hp_base=10) on
-  // applicable items even when item tier is lower.
-  it("Bottled Mirth + Holy (built-in) + Walrus = 280", () => {
-    const b = bp({
-      name: "Bottled Mirth",
-      type: "Potion",
-      tier: 7,
-      hp: 46,
-      builtInElement: ["Holy Element"],
-    });
-    expect(computePower(b, commonOpts)).toBe(280);
+  it("+ Holy (built-in) + Horse (T7 spirit) = 270", () => {
+    expect(computePower(bottledMirth, { ...commonOpts, maxEnchantTier: 7 })).toBe(270);
   });
 });
 
@@ -683,28 +662,205 @@ describe("quality multiplier scales the final AP linearly", () => {
     expect(computePower(b, { ...commonOpts, maxEnchantTier: 12 })).toBe(1199);
   });
 
-  // Common Lone Wolf Cowl + Oblivion (T14 Dark match) + Bahamut (T14 non-
-  // match) = 1027 in-game *with the +25% Base ATK/DEF/HP Starforged
-  // Milestone applied*. With includeStarforgedStatBoosts=true:
-  //   base def 230 × 1.25 = 287.5; enchant 163 + 109 = 272 (uncapped)
-  //     → raw def 559.5 → display 560
-  //   base hp 19 × 1.25 = 23.75; enchant min(49, 23.75) + min(33, 23.75)
-  //     = 47.5 (cap binds on both slots) → raw hp 71.25 → display 71
+  // Common Lone Wolf Cowl + Oblivion + Bahamut = 1027 in-game *with the +25%
+  // Base ATK/DEF/HP Starforged Milestone applied*. The real blueprint has NO
+  // elemental affinity (only a Wolf Ferocity spirit, which loses to a generic
+  // T14 spirit), so both enchant slots are non-match. The Starforged boost
+  // multiplies the base+enchant total:
+  //   def: (230 + 109 + 109) × 1.25 = 448 × 1.25 = 560 → display 560
+  //   hp:  (19 + min(33,19) + min(33,19)) × 1.25 = 57 × 1.25 = 71.25 → 71
   //   AP = 1.2·560 + 5·71 = 672 + 355 = 1027 ✓
-  // Same item with milestone OFF gives 823 (off −204) — the toggle
-  // controls whether the boost flows into AP.
-  it("Lone Wolf Cowl + Oblivion + Bahamut with Starforged = 1027", () => {
+  // (An earlier version of this test fabricated a "Dark" elemental affinity so
+  // Oblivion matched, and the old base-only boost happened to land on the same
+  // def 560 — a compensating error. The Ghostbusters Suit readings below, on a
+  // genuinely no-affinity item, distinguish the two and confirm full-boost.)
+  it("Lone Wolf Cowl + two non-match enchants with Starforged = 1027", () => {
     const b = bp({
       name: "Lone Wolf Cowl",
       tier: 9,
       def: 230,
       hp: 19,
-      elementalAffinity: ["Dark"],
       spiritAffinity: ["Wolf Ferocity"],
       starforgedStatBoosts: { atk: 0.25, def: 0.25, hp: 0.25 },
     });
     expect(
       computePower(b, { ...commonOpts, includeStarforgedStatBoosts: true }),
     ).toBe(1027);
+  });
+
+  // Lone Wolf Cowl Superior, unenchanted, with the +25% Starforged Milestone.
+  // Displayed in-game: def 360, hp 30, AP 582. Pins the two-step rounding and
+  // the Starforged × quality stacking:
+  //   def: round(230 × 1.25) = 288 → round(288 × 1.25) = 360
+  //   hp:  round(19 × 1.25)  = 24  → round(24 × 1.25)  = 30
+  //   AP = 1.2·360 + 5·30 = 432 + 150 = 582 ✓
+  // A single combined round (230 × 1.25 × 1.25 = 359.375 → 359) misses 360.
+  it("Lone Wolf Cowl Superior unenchanted + Starforged = 582", () => {
+    const b = bp({
+      name: "Lone Wolf Cowl",
+      tier: 9,
+      def: 230,
+      hp: 19,
+      spiritAffinity: ["Wolf Ferocity"],
+      starforgedStatBoosts: { atk: 0.25, def: 0.25, hp: 0.25 },
+    });
+    expect(
+      computePower(b, {
+        ...commonOpts,
+        quality: "Superior",
+        enchanted: false,
+        includeStarforgedStatBoosts: true,
+      }),
+    ).toBe(582);
+  });
+
+  // Lone Wolf Cowl Flawless, unenchanted, with the +25% Starforged Milestone.
+  // Displayed in-game: def 431, hp 36, AP 697. Second quality tier confirming
+  // the two-step rounding:
+  //   def: round(230 × 1.5) = 345 → round(345 × 1.25) = round(431.25) = 431
+  //   hp:  round(19 × 1.5)  = 29  → round(29 × 1.25)  = round(36.25)  = 36
+  //   AP = 1.2·431 + 5·36 = 517.2 + 180 = 697.2 → 697 ✓
+  it("Lone Wolf Cowl Flawless unenchanted + Starforged = 697", () => {
+    const b = bp({
+      name: "Lone Wolf Cowl",
+      tier: 9,
+      def: 230,
+      hp: 19,
+      spiritAffinity: ["Wolf Ferocity"],
+      starforgedStatBoosts: { atk: 0.25, def: 0.25, hp: 0.25 },
+    });
+    expect(
+      computePower(b, {
+        ...commonOpts,
+        quality: "Flawless",
+        enchanted: false,
+        includeStarforgedStatBoosts: true,
+      }),
+    ).toBe(697);
+  });
+
+  // Starforged Superior Lone Wolf Cowl + Nightmare (T9 Dark element, non-match
+  // — LWC has no elemental affinity) + Wolf (T4 spirit, match). In-game: def
+  // 423, hp 50, AP 758 (re-confirmed by the user). This is the case that
+  // proved the Starforged two-step rounding is correct *with enchants at
+  // Superior quality*, and pins the T4 spirit MATCH values. Nightmare's T9
+  // non-match values (def_base 32, hp_base 10) are already pinned by Tower of
+  // Thorns + Mammoth (768) and Bottled Mirth + Walrus (280), so the reading
+  // uniquely fixes Wolf's T4 match: def_match 18, hp_match 6.
+  //   def: round(230×1.25 + 32 + 18) = round(337.5) = 338 → round(338×1.25) = round(422.5) = 423
+  //   hp:  round(19×1.25  + 10 + 6)  = round(39.75) = 40  → round(40×1.25)  = 50
+  //   AP = 1.2·423 + 5·50 = 507.6 + 250 = 757.6 → 758 ✓
+  // Formula-level (not via computePower) because Nightmare T9 + Wolf T4 is a
+  // deliberately non-optimal combo for testing the affinity — computePower's
+  // bestEnchantPlan would pick stronger generic enchants. The two-step
+  // starforge path through computePower is pinned by the unenchanted Superior
+  // (582) / Flawless (697) and the Common enchanted (1027 / 2043) tests.
+  it("LWC Superior + Nightmare(T9) + Wolf(T4) Starforged = 758 (T4 match values)", () => {
+    expect(SPIRIT_TABLE.def[4].match).toBe(18); // Wolf T4 spirit: floor(1.5×12)
+    expect(SPIRIT_TABLE.hp[4].match).toBe(6); // floor(1.5×4)
+    const rnd = (x: number) => Math.round(x);
+    // Nightmare is a T9 element (non-match); Wolf is a T4 spirit (match).
+    const eDef = ELEMENT_TABLE.def[9].base + SPIRIT_TABLE.def[4].match; // 32 + 18
+    const eHp = ELEMENT_TABLE.hp[9].base + SPIRIT_TABLE.hp[4].match; // 10 + 6
+    const dispDef = rnd(rnd(230 * 1.25 + eDef) * 1.25);
+    const dispHp = rnd(rnd(19 * 1.25 + eHp) * 1.25);
+    expect(dispDef).toBe(423);
+    expect(dispHp).toBe(50);
+    expect(rnd(1.2 * dispDef + 5 * dispHp)).toBe(758);
+  });
+
+  // Ghostbusters Suit (T15 Light Armor, def 690, eva 5%, no affinity) with two
+  // non-match T14 enchants (Oblivion + Ouroboros — neither matches). Confirmed
+  // in-game displayed def 908 = 690 + 109 + 109. Un-starforged:
+  //   def 908, eva 5% → 1.2·908·1.5 = 1634.4 → 1634 ✓
+  it("Ghostbusters Suit + Oblivion + Ouroboros (no Starforge) = 1634", () => {
+    const b = bp({
+      name: "Ghostbusters Suit",
+      type: "Light Armor",
+      tier: 15,
+      def: 690,
+      eva: 0.05,
+      starforgedStatBoosts: { atk: 0.25, def: 0.25, hp: 0.25 },
+    });
+    expect(computePower(b, commonOpts)).toBe(1634);
+  });
+
+  // Same Ghostbusters Suit *with* the +25% Base ATK/DEF/HP Starforged
+  // Milestone applied = 2043 in-game. The boost multiplies the base+enchant
+  // total: (690 + 109 + 109) × 1.25 = 908 × 1.25 = 1135 def → 1.2·1135·1.5 =
+  // 2043.0 → 2043. Equivalently, the un-starforged 1634.4 × 1.25 = 2043 exactly
+  // (AP is linear in def for this single-stat item). This pins that Starforged
+  // boosts enchant stats too, not just the base.
+  it("Ghostbusters Suit + Oblivion + Ouroboros with Starforged = 2043", () => {
+    const b = bp({
+      name: "Ghostbusters Suit",
+      type: "Light Armor",
+      tier: 15,
+      def: 690,
+      eva: 0.05,
+      starforgedStatBoosts: { atk: 0.25, def: 0.25, hp: 0.25 },
+    });
+    expect(
+      computePower(b, { ...commonOpts, includeStarforgedStatBoosts: true }),
+    ).toBe(2043);
+  });
+
+  // ---- Readings the element/spirit base split made exact (re-grounding) ----
+
+  // XL Healing Potion (T4 Potion, hp 19, no affinity) + Ember (T4 element
+  // non-match, hp_base 3) + Ox (T4 spirit non-match, hp_base 4) = 130 in-game.
+  // The element/spirit split is the whole story: element hp 3 + spirit hp 4 =
+  // 7 → AP (19 + 7) × 5 = 130. The old element-only table used 3 for both
+  // slots and gave 125. maxEnchantTier=4 forces the T4 element + T4 spirit.
+  it("XL Healing Potion + Ember + Ox (T4) = 130 (element/spirit hp split)", () => {
+    const b = bp({ name: "XL Healing Potion", type: "Potion", tier: 4, hp: 19 });
+    expect(computePower(b, { ...commonOpts, maxEnchantTier: 4 })).toBe(130);
+  });
+
+  // Chronos Runeblade (T7 Sword, atk 280 def 70, Earth affinity, no spirit
+  // affinity) + Wild (T7 element Earth match) + Horse (T7 spirit non-match) =
+  // 463 in-game. With the split + match=floor(1.5×base):
+  //   atk: 280 + floor(1.5·38)=57 + 41 (spirit base) = 378
+  //   def: 70  + floor(1.5·25)=37 + 27 (spirit base) = 134
+  //   AP = 0.8·378 + 1.2·134 = 463.2 → 463. maxEnchantTier=7 forces T7 both.
+  it("Chronos Runeblade + Wild + Horse (T7) = 463", () => {
+    const b = bp({
+      name: "Chronos Runeblade",
+      type: "Sword",
+      tier: 7,
+      atk: 280,
+      def: 70,
+      elementalAffinity: ["Earth"],
+    });
+    expect(computePower(b, { ...commonOpts, maxEnchantTier: 7 })).toBe(463);
+  });
+
+  // Chronos Runeblade + Primal (T9 element Earth match) + Horse (T7 spirit
+  // non-match) = 488 in-game. A deliberate mixed-tier combo (T9 element + T7
+  // spirit) that bestEnchantPlan wouldn't pick, so it's pinned formula-level:
+  //   atk: 280 + floor(1.5·48)=72 (T9 elem match) + 41 (T7 spirit base) = 393
+  //   def: 70  + floor(1.5·32)=48 + 27 = 145
+  //   AP = 0.8·393 + 1.2·145 = 488.4 → 488.
+  it("Chronos Runeblade + Primal(T9) + Horse(T7) = 488 (mixed-tier)", () => {
+    const fl = (x: number) => Math.floor(1.5 * x);
+    const atk = 280 + fl(ELEMENT_TABLE.atk[9].base) + SPIRIT_TABLE.atk[7].base;
+    const def = 70 + fl(ELEMENT_TABLE.def[9].base) + SPIRIT_TABLE.def[7].base;
+    expect(Math.round(0.8 * atk + 1.2 * def)).toBe(488);
+  });
+
+  // Sky Pirate Outfit (T5 Light Armor, def 86, eva 5%, Air affinity, +25%
+  // Bonus Airship Power upgrade) + Gale (T7 Air element, match) + Xolotl (T5
+  // spirit, non-match) = 317 in-game. The old element-only table missed this
+  // (gave ~294); the re-grounding fixes it — Gale's T7 element def-match is
+  // floor(1.5×25)=37, Xolotl's T5 spirit def base is 18:
+  //   def = 86 + 37 + 18 = 141
+  //   AP  = 1.2·141 · (1 + 10·0.05) · 1.25 = 253.8 · 1.25 = 317.25 → 317
+  // Formula-level: the T7-element + T5-spirit mix is a deliberate combo
+  // bestEnchantPlan wouldn't choose (it'd take a stronger generic T7 spirit).
+  it("Sky Pirate Outfit + Gale(T7) + Xolotl(T5) + 25% upgrade = 317", () => {
+    const fl = (x: number) => Math.floor(1.5 * x);
+    const def = 86 + fl(ELEMENT_TABLE.def[7].base) + SPIRIT_TABLE.def[5].base;
+    const raw = 1.2 * def * (1 + 10 * 0.05) * 1.25;
+    expect(Math.round(raw)).toBe(317);
   });
 });

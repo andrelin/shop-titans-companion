@@ -428,6 +428,60 @@ td.num.enchanted {
   font-size: 13.5px;
   color: var(--text);
 }
+.item-name-text {
+  display: block;
+}
+.item-bonuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 4px;
+}
+.item-bonuses-none {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--muted-2);
+}
+.bonus-chip {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--border);
+  background: var(--panel-3);
+  color: var(--muted);
+  white-space: nowrap;
+  cursor: help;
+}
+.bonus-element {
+  color: #7aa9ff;
+  border-color: rgba(122, 169, 255, 0.35);
+  background: rgba(122, 169, 255, 0.08);
+}
+.bonus-spirit {
+  color: #c084fc;
+  border-color: rgba(192, 132, 252, 0.35);
+  background: rgba(192, 132, 252, 0.08);
+}
+.bonus-builtin {
+  color: var(--accent);
+  border-color: rgba(255, 181, 71, 0.3);
+  background: rgba(255, 181, 71, 0.08);
+}
+.bonus-starforged {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.35);
+  background: rgba(74, 222, 128, 0.08);
+}
+.bonus-apu {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.08);
+}
 
 .delta {
   font-variant-numeric: tabular-nums;
@@ -612,6 +666,12 @@ td.num.enchanted {
 .explain-table-wrap {
   overflow-x: auto;
   margin: 8px 0 4px;
+}
+.explain-subtitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 10px 0 2px;
 }
 
 .explain table.explain-table {
