@@ -1,0 +1,32 @@
+name: CI
+
+# Runs the full check suite on every PR and on pushes to main and Renovate
+# branches. Gating Renovate's branches/PRs on this means a dependency bump that
+# breaks type-checking, the tests, or the production build can't auto-merge.
+on:
+  pull_request:
+  push:
+    branches: [main, "renovate/**"]
+
+# Cancel an in-progress run when a branch gets a newer push (e.g. a Renovate
+# branch that also has an open PR triggers both events).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

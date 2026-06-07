@@ -1,6 +1,6 @@
 # Dragon Invasion data points
 
-In-game readings the model is calibrated against, plus the ones we still need.
+In-game readings the model is calibrated against, plus the ones we still need. Visual/mechanical reference screenshots (Starforged borders, the AP readings behind key fixes) live in [`game-reference/`](game-reference/).
 
 Quick workflow: craft at Common, apply the listed element + spirit enchants, read the in-game airship power, and post the number back. The test suite at `src/data/enchant.test.ts` pins the verified cases — regressing one of them now breaks `npm test`.
 

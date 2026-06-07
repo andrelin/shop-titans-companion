@@ -8,7 +8,7 @@
  * Source workbook: https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c
  */
 import { parse } from "csv-parse/sync";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -338,8 +338,38 @@ async function main() {
   // the separate Enchantments tab.
   const enchantments = parseEnchantments(blueprintRows);
 
+  const blueprintsJson = JSON.stringify(blueprints, null, 2) + "\n";
+  const enchantmentsJson = JSON.stringify(enchantments, null, 2) + "\n";
+
+  // Only bump `syncedAt` when something substantive actually changed — the
+  // blueprints, the enchants, or the sheet version. Otherwise preserve the
+  // committed timestamp so the files stay byte-identical and the scheduled
+  // GitHub Action makes no commit (it commits only on a real `data/` diff).
+  // Without this, `syncedAt = now` changes every run and produces a daily
+  // timestamp-only commit with no real content.
+  const readJson = async (name: string): Promise<unknown> => {
+    try {
+      return JSON.parse(await readFile(resolve(DATA_DIR, name), "utf8"));
+    } catch {
+      return null;
+    }
+  };
+  const [prevBlueprints, prevEnchantments, prevMeta] = await Promise.all([
+    readFile(resolve(DATA_DIR, "blueprints.json"), "utf8").catch(() => null),
+    readFile(resolve(DATA_DIR, "enchantments.json"), "utf8").catch(() => null),
+    readJson("meta.json") as Promise<{ syncedAt?: string; sourceSheetVersion?: string | null } | null>,
+  ]);
+
+  const dataChanged =
+    prevBlueprints !== blueprintsJson ||
+    prevEnchantments !== enchantmentsJson ||
+    (prevMeta?.sourceSheetVersion ?? null) !== (version ?? null);
+
   const meta = {
-    syncedAt: new Date().toISOString(),
+    syncedAt:
+      dataChanged || !prevMeta?.syncedAt
+        ? new Date().toISOString()
+        : prevMeta.syncedAt,
     sourceSpreadsheet: `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}`,
     sourceSheetVersion: version,
     blueprintCount: blueprints.length,
@@ -347,22 +377,14 @@ async function main() {
   };
 
   await Promise.all([
-    writeFile(
-      resolve(DATA_DIR, "blueprints.json"),
-      JSON.stringify(blueprints, null, 2) + "\n",
-    ),
-    writeFile(
-      resolve(DATA_DIR, "enchantments.json"),
-      JSON.stringify(enchantments, null, 2) + "\n",
-    ),
-    writeFile(
-      resolve(DATA_DIR, "meta.json"),
-      JSON.stringify(meta, null, 2) + "\n",
-    ),
+    writeFile(resolve(DATA_DIR, "blueprints.json"), blueprintsJson),
+    writeFile(resolve(DATA_DIR, "enchantments.json"), enchantmentsJson),
+    writeFile(resolve(DATA_DIR, "meta.json"), JSON.stringify(meta, null, 2) + "\n"),
   ]);
 
   console.log(
-    `Wrote ${blueprints.length} blueprints, ${enchantments.length} enchantments (${version ?? "unknown version"}).`,
+    `Wrote ${blueprints.length} blueprints, ${enchantments.length} enchantments (${version ?? "unknown version"})` +
+      `${dataChanged ? "" : " — no substantive change, kept syncedAt"}.`,
   );
 }
 

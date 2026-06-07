@@ -81,3 +81,16 @@ Several cross-cutting concerns will pay for themselves once two or three tools a
 - **Quality and enchant math helpers.** Tier scaling, quality multipliers, enchant stat contributions, and Starforged bonuses appear in nearly every crafting-adjacent tool. A single helper module keeps the numbers consistent across features.
 - **User-state storage.** Several tools (pet planner, antique tracker, daily budgeter, achievement progress) need a place to store user-entered inventory, schedules, and goals. Decide early whether that lives in local storage, a sync backend, or an import/export blob.
 - **Changelog watcher.** The sheet's Changelog tab is the canonical source for game-version updates. A shared watcher that flags when downstream tool assumptions may be stale is cheap insurance.
+
+## Game mechanics worth knowing across tools
+
+Notes on game systems that affect more than one tool, captured so the knowledge isn't re-learned per feature. In-game reference screenshots live in [`game-reference/`](game-reference/).
+
+### Starforging
+
+Starforging is a **per-item late-game unlock**, completed milestone by milestone — so most players only have a handful of items fully starforged at any time. Tools that assume "the player has everything starforged" will mislead; prefer per-item state, with an "assume all" shortcut.
+
+- Each starforgeable item has **5 Starforged milestones**, completed in order (parsed into `Blueprint.starforgedMilestones`).
+- Item progression / in-game visual states: not mastered → mastered → starforging (milestones in progress) → **fully starforged**, shown as **3 gold stars + a multicolored/iridescent border** (see `game-reference/starforged-milestones-crafting.png` and `starforged-border-inventory.png`).
+- Only the **"+25% Base ATK, DEF and HP"** milestone affects airship power / displayed stats. It is the **final** milestone for ~850 items (so its unlock coincides with fully starforged), but the **4th of 5** for ~9 artifact-skill items (Wyrmbane Cannon, Kiku-Ichimonji, Backfire Hammer, Grimar's Collection, Binder of Memories), where it unlocks one step before fully starforged. So "has the +25% boost" is *not* strictly the same as "fully starforged."
+- How it enters airship power (the Dragon Invasion ranker models this — see `data-points.md` and `src/data/enchant.ts`): the +25% multiplies the **base + enchant** stat total as a **second rounding step**, `round(round(quality·base + enchant) × 1.25)`, not a base-only boost. A future Starforged Milestone Planner would also want the *other* four milestones (surcharge value/cost, multicraft chance, value increase, quality chance) — they don't touch airship power but do feed the economy tools.

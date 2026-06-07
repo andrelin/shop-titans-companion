@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import type { Blueprint, GameData, Quality } from "../../data/types";
 import { QUALITY_COLOR, QUALITY_MULTIPLIER, QUALITY_ORDER } from "../../data/types";
 import {
@@ -7,6 +7,7 @@ import {
   SPIRIT_TABLE,
   ENCHANT_TIERS,
   recommendEnchant,
+  spiritFamily,
   SPIRIT_TIERS,
 } from "../../data/enchant";
 
@@ -94,6 +95,9 @@ interface Row {
   enchantedPower: number;
   rankedPower: number;
   delta: number;
+  // Whether the +25% Starforged boost was applied to this row's AP (item has
+  // the milestone AND it's either globally on or marked unlocked for this item).
+  starforged: boolean;
 }
 
 function formatNumber(n: number): string {
@@ -105,10 +109,43 @@ export function DragonInvasion({ data }: { data: GameData }) {
   const [selectedQualities, setSelectedQualities] = useState<Quality[]>([
     "Common",
   ]);
-  const [affinityMatched, setAffinityMatched] = useState(true);
   const [includeAirshipUpgrade, setIncludeAirshipUpgrade] = useState(true);
+  // Global Starforged switch: when on, every item that has the +25% milestone
+  // gets the boost. When off, only the items the player has individually marked
+  // as unlocked (below) get it — Starforged is a per-item late-game unlock, so
+  // most players only have a handful.
   const [includeStarforgedStatBoosts, setIncludeStarforgedStatBoosts] =
     useState(false);
+  // Per-item Starforged unlocks, keyed by item name, persisted to localStorage
+  // so the player's roster survives reloads.
+  const [starforgedUnlocked, setStarforgedUnlocked] = useState<Set<string>>(
+    () => {
+      try {
+        const raw = localStorage.getItem("sf-unlocked");
+        return raw ? new Set<string>(JSON.parse(raw)) : new Set();
+      } catch {
+        return new Set();
+      }
+    },
+  );
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "sf-unlocked",
+        JSON.stringify([...starforgedUnlocked]),
+      );
+    } catch {
+      /* localStorage unavailable — selection just won't persist */
+    }
+  }, [starforgedUnlocked]);
+  const toggleStarforged = useCallback((name: string) => {
+    setStarforgedUnlocked((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) next.delete(name);
+      else next.add(name);
+      return next;
+    });
+  }, []);
   // Highest enchant tier the player has unlocked. Defaults to the highest
   // tier in the data (so when the game adds a new tier and we extend
   // ENCHANT_TABLE, the new ceiling becomes the default automatically).
@@ -122,7 +159,18 @@ export function DragonInvasion({ data }: { data: GameData }) {
     () => data.blueprints.reduce((m, b) => (b.tier > m ? b.tier : m), 1),
     [data.blueprints],
   );
-  const [minTier, setMinTier] = useState<number>(4);
+  // Distinct item tiers present in the data, descending — for the "cap items
+  // at Tn" dropdown. Like the enchant cap, we only constrain the *max* tier.
+  const itemTiers = useMemo(() => {
+    const s = new Set(data.blueprints.map((b) => b.tier));
+    return [...s].sort((a, b) => b - a);
+  }, [data.blueprints]);
+  // How many items actually carry a +X% Bonus Airship Power upgrade / qualifying
+  // artifact skill — shown in the toggle so it's clear it affects only a few.
+  const airshipUpgradeCount = useMemo(
+    () => data.blueprints.filter((b) => b.airshipPowerUpgradeBonus > 0).length,
+    [data.blueprints],
+  );
   const [maxTier, setMaxTier] = useState<number>(dataMaxTier);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<{ key: SortKey; dir: "asc" | "desc" }>({
@@ -146,12 +194,20 @@ export function DragonInvasion({ data }: { data: GameData }) {
       // Familiars don't contribute to airship power in-game, despite the
       // canonical sheet listing AP values for them — exclude from rankings.
       if (bp.type === "Familiar") continue;
+      // The +25% Starforged boost applies to this item if it has the milestone
+      // and either the global switch is on or the player marked it unlocked.
+      const starforged =
+        !!bp.starforgedStatBoosts &&
+        (includeStarforgedStatBoosts || starforgedUnlocked.has(bp.name));
       for (const quality of qualitiesInOrder) {
         const opts = {
           quality,
-          affinityMatched,
+          // Always assume the player picks the affinity-matching enchant — the
+          // ranker is about best-case airship power, and a matching enchant is
+          // never worse than a generic one.
+          affinityMatched: true,
           includeAirshipUpgrade,
-          includeStarforgedStatBoosts,
+          includeStarforgedStatBoosts: starforged,
           maxEnchantTier,
         } as const;
         const basePower = computePower(bp, { ...opts, enchanted: false });
@@ -165,6 +221,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
           enchantedPower,
           rankedPower,
           delta: enchantedPower - basePower,
+          starforged,
         });
       }
     }
@@ -172,9 +229,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
   }, [
     data.blueprints,
     selectedQualities,
-    affinityMatched,
     includeAirshipUpgrade,
     includeStarforgedStatBoosts,
+    starforgedUnlocked,
     maxEnchantTier,
     rankedMode,
   ]);
@@ -205,7 +262,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
     return visibleCats.map((cat) => ({
       category: cat,
       rows: ranked.get(cat)!.filter((r) => {
-        if (r.bp.tier < minTier || r.bp.tier > maxTier) return false;
+        if (r.bp.tier > maxTier) return false;
         if (
           q &&
           !r.bp.name.toLowerCase().includes(q) &&
@@ -215,7 +272,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
         return true;
       }),
     }));
-  }, [ranked, categoryFilter, minTier, maxTier, search]);
+  }, [ranked, categoryFilter, maxTier, search]);
 
   const setSortKey = (key: SortKey) => {
     setSort((s) =>
@@ -263,6 +320,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
   return (
     <>
       <div className="controls">
+        {/* Row 1 — qualities to include */}
         <div className="controls-row">
           <div
             className="quality-picker"
@@ -297,7 +355,10 @@ export function DragonInvasion({ data }: { data: GameData }) {
               );
             })}
           </div>
+        </div>
 
+        {/* Row 2 — view + cap dropdowns */}
+        <div className="controls-row">
           <select
             value={categoryFilter}
             onChange={(e) =>
@@ -337,6 +398,22 @@ export function DragonInvasion({ data }: { data: GameData }) {
           </select>
 
           <select
+            value={maxTier}
+            onChange={(e) => setMaxTier(Number(e.target.value))}
+            aria-label="Max item tier"
+            title="Highest item tier to include. Defaults to all items; cap it lower to hide higher-tier items you can't craft yet."
+          >
+            <option value={dataMaxTier}>All items (up to T{dataMaxTier})</option>
+            {itemTiers
+              .filter((t) => t < dataMaxTier)
+              .map((t) => (
+                <option key={t} value={t}>
+                  Cap items at T{t}
+                </option>
+              ))}
+          </select>
+
+          <select
             value={maxEnchantTier}
             onChange={(e) => setMaxEnchantTier(Number(e.target.value))}
             aria-label="Max enchant tier you can craft"
@@ -351,59 +428,34 @@ export function DragonInvasion({ data }: { data: GameData }) {
               </option>
             ))}
           </select>
-        </div>
-
-        <div className="controls-row secondary">
-          <span className="tier-range">
-            <span>Tier</span>
-            <input
-              type="number"
-              min={1}
-              max={Math.max(20, dataMaxTier)}
-              value={minTier}
-              onChange={(e) => setMinTier(Number(e.target.value))}
-              aria-label="Min tier"
-            />
-            <span>–</span>
-            <input
-              type="number"
-              min={1}
-              max={Math.max(20, dataMaxTier)}
-              value={maxTier}
-              onChange={(e) => setMaxTier(Number(e.target.value))}
-              aria-label="Max tier"
-            />
-          </span>
 
           <input
+            className="search-input"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search items…"
-            style={{ width: 220 }}
+            aria-label="Search items"
           />
+        </div>
 
-          <label className="toggle">
-            <input
-              type="checkbox"
-              checked={affinityMatched}
-              onChange={(e) => setAffinityMatched(e.target.checked)}
-            />
-            <span>Match affinity</span>
-          </label>
+        {/* Row 3 — optional power assumptions */}
+        <div className="controls-row secondary">
           <label
             className="toggle"
-            title="A handful of items get an airship-power multiplier — either from a Bonus Airship Power Crafting/Starforged upgrade (listed in the data sheet) or from an artifact skill like Meirika's Secret on Wyrmbane Cannon. Tick to assume the bonus is active; every other item is unaffected."
+            title={`A few items (${airshipUpgradeCount} in the data) can be crafted with a "Bonus Airship Power" upgrade, or carry an artifact skill like Meirika's Secret, that multiplies just that item's airship power by +20% or +25%. When on, the ranking adds that bonus for those items; every other item is unchanged.`}
           >
             <input
               type="checkbox"
               checked={includeAirshipUpgrade}
               onChange={(e) => setIncludeAirshipUpgrade(e.target.checked)}
             />
-            <span>+20/25% Airship upgrade</span>
+            <span>
+              Apply +20/25% Bonus Airship Power ({airshipUpgradeCount} items)
+            </span>
           </label>
           <label
             className="toggle"
-            title="Many items have a Starforged Milestone that adds +25% to base ATK / DEF / HP. The boost only applies once you've unlocked the milestone — tick to assume you have it on every item that lists one. Items without the milestone are unaffected either way."
+            title="Starforged is a per-item late-game unlock (+25% base ATK/DEF/HP). ON = assume you have it on every item that can take it. OFF = only the items you've marked with the ★ star in the list get the boost. Either way, boosted rows are highlighted and items without the milestone are unaffected."
           >
             <input
               type="checkbox"
@@ -412,8 +464,15 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 setIncludeStarforgedStatBoosts(e.target.checked)
               }
             />
-            <span>+25% Starforged stat boost</span>
+            <span>+25% Starforged on all items</span>
           </label>
+          {!includeStarforgedStatBoosts && (
+            <span className="controls-hint">
+              {starforgedUnlocked.size > 0
+                ? `or ★-marked per item (${starforgedUnlocked.size} unlocked)`
+                : "or mark items with the ★ star as you unlock them"}
+            </span>
+          )}
         </div>
       </div>
 
@@ -488,10 +547,37 @@ export function DragonInvasion({ data }: { data: GameData }) {
                             ? "rank rank-3"
                             : "rank rank-other";
                     return (
-                      <tr key={`${r.bp.name}::${r.quality}`}>
+                      <tr
+                        key={`${r.bp.name}::${r.quality}`}
+                        className={r.starforged ? "starforged-row" : undefined}
+                      >
                         <td className={rankClass}>{r.categoryRank}</td>
                         <td className="item-name">
-                          <span className="item-name-text">{r.bp.name}</span>
+                          <span className="item-name-text">
+                            {r.bp.name}
+                            {r.bp.starforgedStatBoosts ? (
+                              <button
+                                type="button"
+                                className={`sf-star${r.starforged ? " on" : ""}`}
+                                disabled={includeStarforgedStatBoosts}
+                                onClick={() => toggleStarforged(r.bp.name)}
+                                aria-label={
+                                  r.starforged
+                                    ? "Starforged unlocked"
+                                    : "Mark Starforged unlocked"
+                                }
+                                title={
+                                  includeStarforgedStatBoosts
+                                    ? "Starforged is applied to every item via the global toggle. Turn that off to pick per item."
+                                    : starforgedUnlocked.has(r.bp.name)
+                                      ? "Starforged unlocked — this item's AP includes +25% base ATK/DEF/HP. Click to remove."
+                                      : "Mark this item's Starforged milestone unlocked, so its AP includes the +25% boost."
+                                }
+                              >
+                                {r.starforged ? "★" : "☆"}
+                              </button>
+                            ) : null}
+                          </span>
                           <ItemBonuses bp={r.bp} />
                         </td>
                         <td style={{ color: "var(--muted)" }}>{r.bp.type}</td>
@@ -628,7 +714,6 @@ export function DragonInvasion({ data }: { data: GameData }) {
 // carries — without cross-referencing the data sheet. Sourced entirely from
 // the synced Blueprint fields; nothing here is hand-authored.
 function ItemBonuses({ bp }: { bp: Blueprint }) {
-  const sfPct = bp.starforgedStatBoosts?.def ?? bp.starforgedStatBoosts?.atk;
   const chips: { key: string; cls: string; label: string; title: string }[] = [];
 
   for (const el of bp.elementalAffinity) {
@@ -643,8 +728,8 @@ function ItemBonuses({ bp }: { bp: Blueprint }) {
     chips.push({
       key: `sp-${sp}`,
       cls: "bonus-chip bonus-spirit",
-      label: sp,
-      title: `Spirit affinity: a matching ${sp} spirit gets the "(match)" bonus (when its tier is worth it over a generic spirit).`,
+      label: spiritFamily(sp),
+      title: `Spirit affinity (${sp}): a matching ${spiritFamily(sp)} spirit gets the "(match)" bonus when its tier is worth it over a generic spirit.`,
     });
   }
   for (const el of bp.builtInElement) {
@@ -663,14 +748,9 @@ function ItemBonuses({ bp }: { bp: Blueprint }) {
       title: `Built-in ${sp}: baked into the blueprint, already in the base AP. The spirit slot can't be re-enchanted.`,
     });
   }
-  if (sfPct) {
-    chips.push({
-      key: "sf",
-      cls: "bonus-chip bonus-starforged",
-      label: `+${Math.round(sfPct * 100)}% Starforged`,
-      title: `Has a Starforged Milestone that adds +${Math.round(sfPct * 100)}% to base ATK / DEF / HP. Counts toward AP only when the "+25% Starforged stat boost" toggle is on and you've unlocked the milestone in-game.`,
-    });
-  }
+  // Note: the +25% Base ATK/DEF/HP Starforged Milestone is deliberately *not*
+  // badged here — ~56% of items carry it, so a per-item badge is noise. It's a
+  // global assumption controlled by the "+25% Starforged stat boost" toggle.
   if (bp.airshipPowerUpgradeBonus > 0) {
     chips.push({
       key: "apu",
@@ -685,7 +765,7 @@ function ItemBonuses({ bp }: { bp: Blueprint }) {
   }
 
   if (chips.length === 0) {
-    return <span className="item-bonuses item-bonuses-none">no affinity or bonus</span>;
+    return <span className="item-bonuses item-bonuses-none">no affinity</span>;
   }
   return (
     <span className="item-bonuses">
@@ -757,10 +837,20 @@ function EnchantStatTable({
 }
 
 function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
-  const upgradeCount = useMemo(
-    () => blueprints.filter((b) => b.airshipPowerUpgradeBonus > 0).length,
+  // The full list of items that carry a +X% Bonus Airship Power upgrade or a
+  // qualifying artifact skill — small enough to enumerate, so we do.
+  const apBonusItems = useMemo(
+    () =>
+      blueprints
+        .filter((b) => b.airshipPowerUpgradeBonus > 0)
+        .sort(
+          (a, b) =>
+            b.airshipPowerUpgradeBonus - a.airshipPowerUpgradeBonus ||
+            a.name.localeCompare(b.name),
+        ),
     [blueprints],
   );
+  const upgradeCount = apBonusItems.length;
 
   // Group spirit families by their tier so the user can quickly scan them.
   const spiritsByTier = useMemo(() => {
@@ -900,9 +990,10 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
         <p>
           The "(match)" values above are <code>floor(1.5 × base)</code> — the
           bonus you get from matching the item's element or spirit. Items can
-          have one elemental affinity, one spirit affinity, both, or neither.
-          The "Match affinity" toggle on the controls bar assumes you pick the
-          matching enchant whenever possible.
+          have one elemental affinity, one spirit affinity, both, or neither;
+          an item's affinities are shown as chips under its name in the table.
+          The ranker always assumes you apply the affinity-matching enchant
+          where it helps (a match is never worse than a generic enchant).
         </p>
 
         <h3>7. +20/25% Bonus Airship Power and artifact-skill boosts</h3>
@@ -930,18 +1021,40 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
         <p>
           Toggling on the +20/25% control multiplies that specific item's
           total AP by the listed percentage after the enchant gain has been
-          added. All other items are unaffected.
+          added. All other items are unaffected. The full list ({upgradeCount}{" "}
+          items):
         </p>
+        <ul className="explain-ap-list">
+          {apBonusItems.map((b) => (
+            <li key={b.name}>
+              <strong>{b.name}</strong>{" "}
+              <span className="explain-ap-pct">
+                +{Math.round(b.airshipPowerUpgradeBonus * 100)}%
+              </span>{" "}
+              <span className="explain-ap-src">
+                ({b.type}
+                {b.artifactSkillName
+                  ? ` · ${b.artifactSkillName}`
+                  : " · crafting/Starforged upgrade"}
+                )
+              </span>
+            </li>
+          ))}
+        </ul>
 
         <h3>8. Starforged Milestone: +25% base ATK/DEF/HP</h3>
         <p>
           Separate from the Bonus Airship Power upgrade above, many recipes
-          have a <strong>Starforged Milestone</strong> that adds{" "}
-          <em>+25% to base ATK, DEF and HP</em>. Items that carry one show a
-          green <span className="bonus-chip bonus-starforged">+25% Starforged</span>{" "}
-          badge under their name. The "+25% Starforged stat boost" toggle on
-          the controls bar assumes you've unlocked the milestone on every item
-          that has one.
+          (about half the items in the data) have a{" "}
+          <strong>Starforged Milestone</strong> that adds{" "}
+          <em>+25% to base ATK, DEF and HP</em>. It's a per-item late-game
+          unlock, so you control it two ways: the{" "}
+          <em>+25% Starforged on all items</em> toggle assumes you have it
+          everywhere it's available, and — with that toggle off — the{" "}
+          <strong>★ star</strong> on each eligible row lets you mark just the
+          items you've actually unlocked (saved in your browser). Either way,
+          rows with the boost applied are highlighted, and items without the
+          milestone are unaffected.
         </p>
         <p>
           This boost applies to the <strong>base stats plus the enchant
