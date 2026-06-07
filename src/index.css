@@ -308,6 +308,22 @@ table {
   font-size: 13px;
 }
 
+/* Each category renders its own ranking table; a fixed layout with the shared
+   <colgroup> widths keeps columns aligned across all of them. Text-heavy cells
+   (item name, enchant recommendation) wrap within their column; short columns
+   stay on one line. */
+.table-wrap table {
+  table-layout: fixed;
+}
+.table-wrap table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.table-wrap table td.num,
+.table-wrap table td.col-center {
+  white-space: nowrap;
+}
+
 th,
 td {
   text-align: left;

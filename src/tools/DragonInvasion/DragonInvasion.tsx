@@ -490,11 +490,22 @@ export function DragonInvasion({ data }: { data: GameData }) {
             </div>
             <div className="table-wrap">
               <table>
+                {/* Shared fixed column widths so every category table aligns
+                    (each category is its own <table>). */}
+                <colgroup>
+                  <col style={{ width: "4%" }} />
+                  <col style={{ width: "21%" }} />
+                  <col style={{ width: "11%" }} />
+                  <col style={{ width: "6%" }} />
+                  <col style={{ width: "9%" }} />
+                  <col style={{ width: "9%" }} />
+                  <col style={{ width: "12%" }} />
+                  <col style={{ width: "9%" }} />
+                  <col style={{ width: "19%" }} />
+                </colgroup>
                 <thead>
                   <tr>
-                    <th className="col-center" style={{ width: 56 }}>
-                      #
-                    </th>
+                    <th className="col-center">#</th>
                     <th aria-sort={ariaSort("name")} onClick={() => setSortKey("name")}>
                       Item
                     </th>
