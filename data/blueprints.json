@@ -2039,6 +2039,49 @@
     }
   },
   {
+    "name": "Unearthed Blade",
+    "type": "Sword",
+    "tier": 16,
+    "airshipPower": 1168,
+    "atk": 1460,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Tomb Born Malevolence"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-127 Iron Spent",
+      "x1.25 Value Increase",
+      "-47 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-2 Xzyur Eye Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Wood Axe",
     "type": "Axe",
     "tier": 1,
@@ -3990,6 +4033,51 @@
     "ascensionUpgrades": [
       "-3 Stardust Spent",
       "-1 Xzyur Claw Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
+    "name": "Axe of Sept",
+    "type": "Axe",
+    "tier": 16,
+    "airshipPower": 1809,
+    "atk": 1330,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.07,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [
+      "Titan Solemnity"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-16 Jewels Spent",
+      "x1.25 Value Increase",
+      "-125 Wood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Paramount Gem Spent",
+      "-3 Stardust Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -8130,6 +8218,46 @@
     }
   },
   {
+    "name": "Pearlescent Nautilus",
+    "type": "Mace",
+    "tier": 16,
+    "airshipPower": 1064,
+    "atk": 1330,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Gold"
+    ],
+    "spiritAffinity": [
+      "Ancestor Tradition"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-113 Iron Spent",
+      "x1.25 Value Increase",
+      "-33 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "x1.25 Value Increase",
+      "+20% Bonus Favor",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-1 Mysterious Fossil Spent",
+      "-3 Essence Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0
+  },
+  {
     "name": "Javelin",
     "type": "Spear",
     "tier": 1,
@@ -8531,6 +8659,44 @@
       "-32 Leather Spent",
       "+10% Multicraft Chance",
       "-2 Living Root Spent"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0
+  },
+  {
+    "name": "Reaching Wishbone",
+    "type": "Spear",
+    "tier": 6,
+    "airshipPower": 264,
+    "atk": 240,
+    "def": 60,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-25 Wood Spent",
+      "x1.25 Value Increase",
+      "-7 Ironwood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-25 Wood Spent",
+      "+10% Multicraft Chance",
+      "-1 White Sand Spent"
     ],
     "hasAirshipPowerUpgrade": false,
     "airshipPowerUpgradeBonus": 0
@@ -10082,6 +10248,49 @@
     "ascensionUpgrades": [
       "-3 Stardust Spent",
       "-13 Jewels Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
+    "name": "It From the Crypt",
+    "type": "Spear",
+    "tier": 16,
+    "airshipPower": 1096,
+    "atk": 1370,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Tomb Born Malevolence"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-13 Jewels Spent",
+      "x1.25 Value Increase",
+      "-47 Ironwood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Claw Spent",
+      "-4 Stardust Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -11947,6 +12156,50 @@
     }
   },
   {
+    "name": "King Kaching",
+    "type": "Bow",
+    "tier": 16,
+    "airshipPower": 1931,
+    "atk": 1420,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.07,
+    "elementalAffinity": [
+      "Light",
+      "Air"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-36 Ironwood Spent",
+      "x1.25 Value Increase",
+      "-125 Wood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Wing Nexus Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Carved Branch",
     "type": "Staff",
     "tier": 1,
@@ -13215,6 +13468,52 @@
     "ascensionUpgrades": [
       "-6 Jewels Spent",
       "-2 Silk Scarab Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
+    "name": "Gemologist Scepter",
+    "type": "Staff",
+    "tier": 11,
+    "airshipPower": 575,
+    "atk": 600,
+    "def": 0,
+    "hp": 19,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light",
+      "Gold"
+    ],
+    "spiritAffinity": [
+      "Quetzalcoatl Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-71 Wood Spent",
+      "x1.25 Value Increase",
+      "-7 Jewels Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-21 Ironwood Spent",
+      "-1 Zirconia Eggshell Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -18313,7 +18612,7 @@
       "-20% Craft Time Reduction",
       "-85 Iron Spent",
       "x1.25 Value Increase",
-      "Blueprint: Otherwordly Chime",
+      "Blueprint: Otherworldly Chime",
       "Quality Chance x2"
     ],
     "starforgedMilestones": [
@@ -18337,7 +18636,7 @@
     }
   },
   {
-    "name": "Otherwordly Chime",
+    "name": "Otherworldly Chime",
     "type": "Instrument",
     "tier": 13,
     "airshipPower": 984,
@@ -19461,6 +19760,50 @@
     "ascensionUpgrades": [
       "-1 Xzyur Claw Spent",
       "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
+    "name": "Slaughter & Malice",
+    "type": "Dual Wield",
+    "tier": 16,
+    "airshipPower": 2136,
+    "atk": 1780,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.05,
+    "elementalAffinity": [
+      "Dark",
+      "Fire"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-138 Wood Spent",
+      "x1.25 Value Increase",
+      "-50 Ironwood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Wing Nexus Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -24183,6 +24526,49 @@
     }
   },
   {
+    "name": "Mixture of Resentment",
+    "type": "Potion",
+    "tier": 16,
+    "airshipPower": 855,
+    "atk": 0,
+    "def": 0,
+    "hp": 171,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Tomb Born Malevolence"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-47 Oils Spent",
+      "x1.25 Value Increase",
+      "-127 Herbs Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Paramount Gem Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Scroll of Sparks",
     "type": "Spell",
     "tier": 1,
@@ -28375,6 +28761,49 @@
     }
   },
   {
+    "name": "Forgotten Graveplate",
+    "type": "Heavy Armor",
+    "tier": 16,
+    "airshipPower": 930,
+    "atk": 0,
+    "def": 775,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Tomb Born Malevolence"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-47 Steel Spent",
+      "x1.25 Value Increase",
+      "-127 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Paramount Gem Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Leather Armor",
     "type": "Light Armor",
     "tier": 1,
@@ -30263,6 +30692,51 @@
     "ascensionUpgrades": [
       "-3 Stardust Spent",
       "-1 Wing Nexus Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
+    "name": "Clovered Gambeson",
+    "type": "Light Armor",
+    "tier": 16,
+    "airshipPower": 1072,
+    "atk": 0,
+    "def": 710,
+    "hp": 44,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [
+      "Titan Solemnity"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-45 Fabric Spent",
+      "x1.25 Value Increase",
+      "-100 Leather Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Wing Nexus Spent",
+      "-3 Stardust Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -34301,6 +34775,51 @@
     "ascensionUpgrades": [
       "-1 Alien Bulb Spent",
       "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
+    "name": "Heaume of the Mightiest",
+    "type": "Helmet",
+    "tier": 16,
+    "airshipPower": 1632,
+    "atk": 0,
+    "def": 800,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.07,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [
+      "Titan Solemnity"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-125 Iron Spent",
+      "x1.25 Value Increase",
+      "-45 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Xzyur Claw Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -38404,6 +38923,47 @@
     }
   },
   {
+    "name": "All-Knowing Cone",
+    "type": "Magician Hat",
+    "tier": 16,
+    "airshipPower": 945,
+    "atk": 0,
+    "def": 625,
+    "hp": 39,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-12 Jewels Spent",
+      "-36 Fabric Spent",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Xzyur Eye Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Iron Armguards",
     "type": "Gauntlets",
     "tier": 1,
@@ -39292,6 +39852,49 @@
     "ascensionUpgrades": [
       "-5 Jewels Spent",
       "-4 Rustwyrm Scale Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
+    "name": "Gauntlets of Fortune",
+    "type": "Gauntlets",
+    "tier": 10,
+    "airshipPower": 449,
+    "atk": 0,
+    "def": 220,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.07,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-17 Steel Spent",
+      "x1.25 Value Increase",
+      "-61 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-5 Jewels Spent",
+      "-1 Precious Shell Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -46162,6 +46765,51 @@
     }
   },
   {
+    "name": "Gemmed Footpaws",
+    "type": "Light Footwear",
+    "tier": 16,
+    "airshipPower": 1357,
+    "atk": 0,
+    "def": 665,
+    "hp": 0,
+    "eva": 0.07,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [
+      "Bunny Hops"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-45 Fabric Spent",
+      "x1.25 Value Increase",
+      "-150 Leather Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-2 Xzyur Claw Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Wooden Shield",
     "type": "Shield",
     "tier": 1,
@@ -49973,6 +50621,51 @@
     }
   },
   {
+    "name": "Mantle of Splendor",
+    "type": "Cloak",
+    "tier": 16,
+    "airshipPower": 1999,
+    "atk": 0,
+    "def": 980,
+    "hp": 0,
+    "eva": 0.07,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [
+      "Titan Solemnity"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-40 Fabric Spent",
+      "x1.25 Value Increase",
+      "-110 Leather Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Paramount Gem Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Primitive Idol",
     "type": "Idol",
     "tier": 5,
@@ -50675,6 +51368,51 @@
     }
   },
   {
+    "name": "Feline of Fortune",
+    "type": "Idol",
+    "tier": 16,
+    "airshipPower": 1286,
+    "atk": 0,
+    "def": 634,
+    "hp": 105,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [
+      "Cat Grace"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-36 Steel Spent",
+      "x1.25 Value Increase",
+      "-100 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Claw Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Iron Ring",
     "type": "Ring",
     "tier": 1,
@@ -50997,6 +51735,44 @@
     "ascensionUpgrades": [
       "-11 Steel Spent",
       "-1 Rustwyrm Scale Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0
+  },
+  {
+    "name": "Fortune Enhancer",
+    "type": "Ring",
+    "tier": 5,
+    "airshipPower": 156,
+    "atk": 115,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.07,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-17 Iron Spent",
+      "x1.25 Value Increase",
+      "-17 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-11 Steel Spent",
+      "-1 Living Root Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -54819,6 +55595,50 @@
     }
   },
   {
+    "name": "Fell Spectator",
+    "type": "Amulet",
+    "tier": 16,
+    "airshipPower": 1210,
+    "atk": 0,
+    "def": 800,
+    "hp": 50,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark",
+      "Fire"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-16 Jewels Spent",
+      "x1.25 Value Increase",
+      "-94 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Wing Nexus Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    }
+  },
+  {
     "name": "Troublin",
     "type": "Familiar",
     "tier": 3,
@@ -56087,6 +56907,45 @@
     "ascensionUpgrades": [
       "-2 Moon Crystal Spent",
       "-8 Oils Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0
+  },
+  {
+    "name": "Seven Oysters",
+    "type": "Meal",
+    "tier": 7,
+    "airshipPower": 222,
+    "atk": 85,
+    "def": 128,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light",
+      "Water"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-9 Oils Spent",
+      "-24 Iron Spent",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-2 Deep Pearl Spent",
+      "-1 Star Metal Spent",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
