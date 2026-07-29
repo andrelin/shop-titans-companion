@@ -95,8 +95,9 @@ ones. Firebase creates a distinct `uid` per provider by default, so this needs h
    provider config. (I'll give you the exact click-path once we're at this step.)
 5. **Account linking:** Authentication → Settings → *User account linking* → **"Link accounts that use the same email
    address"** (see the section above; combined with explicit linking in code for the Hide-My-Email case).
-6. **Authorized domains:** Authentication → Settings → *Authorized domains* → add the GitHub Pages domain
-   (`andrelin.github.io`) and `localhost` for dev.
+6. **Authorized domains:** Authentication → Settings → *Authorized domains* → add the custom domain `stc.lindjo.no` (and
+   `di.lindjo.no` if it serves the app), the GitHub Pages domain `andrelin.github.io`, and `localhost` for dev. See
+   `docs/PLAN-hosting.md`.
 7. Send me the web `firebaseConfig`. Apple's secrets stay in the Firebase console — I never need them in code.
 
 1. **Firebase project:** [console.firebase.google.com](https://console.firebase.google.com) → *Add project* (free "Spark"
