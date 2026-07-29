@@ -51,3 +51,5 @@ A Vite + React + TypeScript single-page app deployed to GitHub Pages, structured
 
 - Shared game-data types live in `src/data/types.ts` so every tool imports the same shapes. New tools go under `src/tools/<Name>/` and are registered in the `TOOLS` array in `src/App.tsx` (the active tool is reflected in the URL hash for shareable links).
 - `docs/future-tools.md` is the roadmap for additional tools (quest planner, hero loadouts, crafting ROI, etc.).
+- **`docs/design-conventions.md` is the visual language** — the star colour-coding (rainbow Starforged / gold Ascension / blue Transcendence), the amber "experimental" cue, acquisition badges, the chip palette, and the `<select>`-options-are-text-only constraint. Match it when adding UI; update it in the same change when you change it.
+- Per-user selections (Starforged unlocks, transcendence levels, future prefs) go through `useSettings` / `src/data/settings.ts` (one `st-settings` blob); new synced prefs join that blob so they cloud-sync for free later (`docs/PLAN-cloud-sync.md`).
