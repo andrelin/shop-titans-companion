@@ -18,8 +18,8 @@ not just a binary flag.
 | 1. Data layer | Parse the three Transcendence columns (+ seal costs) into typed, ordered upgrades | ✅ DONE |
 | 1b. Acquisition data + badge | Parse unlock/antique data; 3-state premium/antiques/chest badge in the Dragon Invasion table | ✅ DONE |
 | 2. Calibration | Collect in-game AP readings to pin the power-model math | ⏳ PENDING (needs user readings) |
-| 3. Power model | Integrate Transcendence into `computePower`, calibrated + tested | ⏳ PENDING (blocked on Phase 2) |
-| 4. UI | Per-item 0–3 level control + global toggle, badges, explainer | ⏳ PENDING (blocked on Phase 3) |
+| 3. Power model | Integrate Transcendence into `computePower`, calibrated + tested | 🚧 EXPERIMENTAL — opt-in unverified estimate shipped (default off = no-op); calibration still pending |
+| 4. UI | Per-item 0–3 level control + global toggle, badges, explainer | 🚧 PARTIAL — global experimental level control + warning banner + explainer shipped; per-item 0–3 tracking still pending |
 | 5. Docs & tests | Pin every reading in `enchant.test.ts`; update `data-points.md` + explainer | ⏳ PENDING (rolls with Phases 3–4) |
 | 6. Seal recommender tool | New tool: rank airship-worthy items by AP-per-seal for scarce seals | ⏳ PENDING (blocked on Phase 3) |
 
@@ -72,6 +72,10 @@ Every number below must come from an in-game reading before Phase 3 writes model
    Does "item base stat" for the cap include the transcendence flat add?
 5. **Rounding.** Starforged uses two round-half-up steps (stat-round, then boost-round).
    Confirm Transcendence's `+X% Base` uses the same rounding discipline.
+6. **Are flat adds scaled by the `%` boosts?** The experimental model treats flat adds as base-stat increases, so both the
+   Starforged `+25%` and the transcendence `+10% Base` scale them. The alternative is that flat adds are added truly flat,
+   *after* the multipliers. → Read a Starforged item's AP with a flat-add transcendence slot unlocked, and compare against both
+   orderings.
 
 ### Current player state (2026-07-29)
 
@@ -79,6 +83,11 @@ Player has transcended **nothing** yet and holds **230 seals**; a single T15/T16
 essentially one high-tier level. Seals are *very* rare, so the first spend must be both the wisest AP buy **and** the
 calibration reading — there is no separate "cheap test item" budget. The player compares at **Common** (confirmed: the model
 reproduces their Obsidian Lava Cake 2190 and Chapter Cauchemar 2932 exactly at Common).
+
+**Calibration is also event-gated.** Effective/enchanted AP is only visible in-game while a **Dragon Invasion event is active**,
+so no reading can be taken until the next event runs — and the player can currently afford only a single level. Calibration
+(Phases 2–3, and the recommender) is therefore parked until an event is live and the player chooses to spend. The experimental
+estimate stays shipped (default off, clearly flagged) in the meantime.
 
 Confirmed owned (both premium T15 pack items): **Chapter Cauchemar** (Accessories leader, 2932) and **Obsidian Lava Cake**
 (2190). **Chose not to buy** Heaume of the Mightiest (premium — was purchasable, declined), so despite topping the raw
@@ -100,17 +109,37 @@ unlocking slot 1, at Common* (enchants held constant so the delta isolates trans
 That pins question 1 (flat-add value), 4 (enchant-cap interaction), and 5 (rounding). Pair with a later reading on an item
 where the flat add creates a *new* stat (e.g. Ghostbusters Suit `HP +69` on def-only) for question 2.
 
-## Phase 3 — Power model ⏳ PENDING (blocked on Phase 2)
+## Phase 3 — Power model 🚧 EXPERIMENTAL (opt-in estimate shipped; calibration pending)
 
-Extend `src/data/enchant.ts`:
+**Shipped in `src/data/enchant.ts` as an opt-in, unverified estimate** (default off = exact no-op, so every verified reading and
+pinned test is untouched):
 
-- `PowerOptions` gains `transcendenceLevel: number` (0–3; 0 = none).
-- A helper resolves the active upgrades: `activeTranscendence(b: Blueprint, level: number): TranscendenceUpgrade[]`
-  → `b.transcendence?.filter(u => u.slot <= level) ?? []`.
-- In `computePower`, apply — in the order Phase 2 pins — the flat `stat` adds (atk/def/hp/eva/crit) and the `pctBase` multiplier,
-  slotting them correctly relative to quality scaling, the enchant cap, the Starforged boost, and the two rounding steps.
-- Every decision (pre/post-quality, new-stat handling, stacking with Starforged) gets an inline comment citing the reading that proves it,
-  exactly like the existing Starforged comments.
+- `PowerOptions.transcendenceLevel?: number` (0–3; default 0). `activeTranscendence(b, level)` returns the first-N slots.
+- `computePower` applies, when level > 0: flat `stat` adds **post-quality and uncapped** (can introduce a stat the item lacks);
+  `CRIT/EVA` adds as additive decimals on the multiplier; the `pctBase` slot as its own round-half-up step **after** the
+  Starforged boost. Each choice is commented as a **guess**, not a citation.
+- Guarded by tests in `enchant.test.ts` ("EXPERIMENTAL transcendence"): level-0 no-op, flat-add / new-stat / rounding, and
+  crit-eva behaviour — locking the estimate's behaviour without claiming it is calibrated.
+
+**Still pending (the real Phase 3):** replace the guesses with calibrated behaviour once a reading lands, cite it inline like
+the Starforged comments, and pin the reading with `.toBe`. Until then the numbers are estimates, loudly flagged in the UI.
+
+## Phase 4 — UI 🚧 PARTIAL (global experimental control shipped; per-item pending)
+
+**Shipped in `src/tools/DragonInvasion/DragonInvasion.tsx`:**
+
+- A global **🧪 Transcendence (experimental)** level selector (Off / L1 / L2 / L3) driving `transcendenceLevel`, a loud
+  **warning banner** whenever it is on, and an **explainer section** (§13) spelling out that the numbers are unverified.
+
+**Still pending:**
+
+- Per-item **level control** (0/1/2/3) on each eligible row, persisted to `localStorage` (e.g. key `transcendence-levels`, a
+  `Record<string, number>`), paralleling the existing `starforgedUnlocked` set + `toggleStarforged` — replacing the blunt global
+  level once the model is calibrated.
+- Row highlight / per-item badge showing the active level's effect.
+
+Possible future refinement (not v1): track which *specific* slots are unlocked when a player unlocks out of strict 1→2→3 order —
+assumed sequential for now; confirm during Phase 2.
 
 ## Phase 4 — UI ⏳ PENDING (blocked on Phase 3)
 
@@ -163,6 +192,14 @@ per Dragon Invasion category and you would field the best *free* (non-transcende
    the item+level that maximises the fielded AP for the seals, then allocate the budget across categories by marginal gain.
 4. **Then AP-per-seal**, among the leader/leapfrog candidates, using the calibrated model and `computePower` with
    `transcendenceLevel`. Show marginal per-slot efficiency **and** absolute net gain.
+
+**Player-chosen target depth (1 / 2 / 3 levels), defaulting to 3.** A **target-depth selector** lets the player rank for buying
+one, two, or all three levels. Default to **L3 (fully transcended)** — once a player commits seals to an item they'll almost
+always max it out for the full value of the investment, so the end state is the most useful comparison — but let them drop to
+L1/L2 when a tight budget or a shallower plan calls for it. Rank each candidate by its AP **at the chosen depth** and the
+**total seals to reach that depth**, and still expose the per-level breakdown (L1/L2/L3 AP, cumulative seal cost, AP-per-seal at
+each) as a drill-down. The experimental in-ranker control (Off/L1/L2/L3) is the crude stand-in for this until the dedicated tool
+exists.
 
 **Key insight — transcendence value is driven by stat weight, not raw AP rank.** The AP formula weights HP `5×`, DEF `1.2×`,
 ATK `0.8×`, and crit/eva multiply the whole sum. So a flat HP add on a high-eva item is worth far more per point than a flat
