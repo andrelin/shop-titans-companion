@@ -23,9 +23,9 @@ Apple" is viable at no extra cost — it just needs a Service ID + key configure
 | --- | --- | --- |
 | 0. Setup (user) | Create Firebase project, enable Google + Apple providers, add web app, share config | ⏳ PENDING (user) |
 | 1. Firebase init + auth | SDK install, config module, auth hook (Google + Apple), sign-in/out UI | ⏳ PENDING (blocked on 0) |
-| 2. Settings store | Firestore read/write/subscribe; localStorage fallback; first-sign-in migration | ⏳ PENDING (blocked on 1) |
-| 3. Wire existing state | Route `sf-unlocked` + `transcendence-levels` through the synced store | ⏳ PENDING (blocked on 2) |
-| 4. Rules + tests | Firestore security rules; unit-test the store's merge/serialize logic | ⏳ PENDING (rolls with 2–3) |
+| 2. Settings store | localStorage backend + normalize/merge/migration behind a seam; Firestore backend later | 🚧 PARTIAL — localStorage half shipped (`src/data/settings.ts`, `useSettings`); Firestore read/write/subscribe pending on Phase 1 |
+| 3. Wire existing state | Route `sf-unlocked` + `transcendence-levels` through the synced store | ✅ DONE — `DragonInvasion.tsx` reads/writes both via `useSettings`; legacy keys migrated into `st-settings` |
+| 4. Rules + tests | Firestore security rules; unit-test the store's merge/serialize/migration logic | 🚧 PARTIAL — `settings.test.ts` covers normalize/merge/load+migration; Firestore rules pending |
 
 ## Data model
 

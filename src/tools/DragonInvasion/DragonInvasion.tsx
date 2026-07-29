@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type { Blueprint, GameData, Quality } from "../../data/types";
 import { QUALITY_COLOR, QUALITY_MULTIPLIER, QUALITY_ORDER } from "../../data/types";
 import {
@@ -16,6 +16,7 @@ import {
   type Category,
 } from "../../data/categories";
 import { acquisitionBadge } from "../../data/acquisition";
+import { useSettings } from "../../hooks/useSettings";
 
 // The highest enchant tier currently in the data. When the game adds a new
 // tier and we extend ENCHANT_TABLE, the dropdown picks it up automatically
@@ -67,36 +68,15 @@ export function DragonInvasion({ data }: { data: GameData }) {
   // most players only have a handful.
   const [includeStarforgedStatBoosts, setIncludeStarforgedStatBoosts] =
     useState(false);
-  // Per-item Starforged unlocks, keyed by item name, persisted to localStorage
-  // so the player's roster survives reloads.
-  const [starforgedUnlocked, setStarforgedUnlocked] = useState<Set<string>>(
-    () => {
-      try {
-        const raw = localStorage.getItem("sf-unlocked");
-        return raw ? new Set<string>(JSON.parse(raw)) : new Set();
-      } catch {
-        return new Set();
-      }
-    },
-  );
-  useEffect(() => {
-    try {
-      localStorage.setItem(
-        "sf-unlocked",
-        JSON.stringify([...starforgedUnlocked]),
-      );
-    } catch {
-      /* localStorage unavailable — selection just won't persist */
-    }
-  }, [starforgedUnlocked]);
-  const toggleStarforged = useCallback((name: string) => {
-    setStarforgedUnlocked((prev) => {
-      const next = new Set(prev);
-      if (next.has(name)) next.delete(name);
-      else next.add(name);
-      return next;
-    });
-  }, []);
+  // Per-item roster that should follow the player across devices — Starforged
+  // unlocks and per-item transcendence levels — behind a single store (today
+  // localStorage; cloud sync plugs in here later, see docs/PLAN-cloud-sync.md).
+  const {
+    starforged: starforgedUnlocked,
+    toggleStarforged,
+    transcendenceLevels,
+    setItemTranscendence,
+  } = useSettings();
   // Highest enchant tier the player has unlocked. Defaults to the highest
   // tier in the data (so when the game adds a new tier and we extend
   // ENCHANT_TABLE, the new ceiling becomes the default automatically).
@@ -133,40 +113,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
   );
   const [topPerCategory, setTopPerCategory] = useState<number>(20);
   // EXPERIMENTAL global override: apply this level to *every* item that has
-  // transcendence (0 = off, use per-item levels below). The AP math is
-  // UNVERIFIED — a loud warning shows whenever any transcendence is applied.
+  // transcendence (0 = off, use the per-item levels from the settings store).
+  // The AP math is UNVERIFIED — a loud warning shows whenever any is applied.
   const [transcendenceLevel, setTranscendenceLevel] = useState<number>(0);
-  // Per-item experimental transcendence level (0–3), keyed by item name,
-  // persisted to localStorage. Used when the global override is Off — mirrors
-  // the Starforged per-item unlocks.
-  const [transcendenceLevels, setTranscendenceLevels] = useState<
-    Record<string, number>
-  >(() => {
-    try {
-      const raw = localStorage.getItem("transcendence-levels");
-      return raw ? (JSON.parse(raw) as Record<string, number>) : {};
-    } catch {
-      return {};
-    }
-  });
-  useEffect(() => {
-    try {
-      localStorage.setItem(
-        "transcendence-levels",
-        JSON.stringify(transcendenceLevels),
-      );
-    } catch {
-      /* localStorage unavailable — selection just won't persist */
-    }
-  }, [transcendenceLevels]);
-  const setItemTranscendence = useCallback((name: string, level: number) => {
-    setTranscendenceLevels((prev) => {
-      const next = { ...prev };
-      if (level <= 0) delete next[name];
-      else next[name] = level;
-      return next;
-    });
-  }, []);
 
   // One row per (blueprint, selected quality). Sorted in the QUALITY_ORDER
   // sequence so Common rows precede Superior etc. when other keys tie.
