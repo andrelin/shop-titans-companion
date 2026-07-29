@@ -418,16 +418,19 @@ export function DragonInvasion({ data }: { data: GameData }) {
             className="toggle"
             title="EXPERIMENTAL and UNVERIFIED. Global override: applies the first N Transcendence upgrades (flat stat adds + a +10% base boost) to EVERY item that has them, ignoring the per-item levels. Leave on 'Off — per item' to set levels individually with the 🧪 control on each row. The airship-power math is NOT yet confirmed against in-game readings — treat these numbers as rough estimates."
           >
-            <span>🧪 Transcendence (experimental):</span>
+            <span>
+              🧪 <span className="transc-seal">✦</span> Transcendence{" "}
+              <span className="exp-flag">(experimental)</span>:
+            </span>
             <select
               value={transcendenceLevel}
               onChange={(e) => setTranscendenceLevel(Number(e.target.value))}
               aria-label="Experimental transcendence global override level"
             >
               <option value={0}>Off — per item</option>
-              <option value={1}>All at Level 1</option>
-              <option value={2}>All at Level 2</option>
-              <option value={3}>All at Level 3</option>
+              <option value={1}>All at ✦ T1</option>
+              <option value={2}>All at ✦ T2</option>
+              <option value={3}>All at ✦ T3</option>
             </select>
           </label>
         </div>
@@ -437,7 +440,8 @@ export function DragonInvasion({ data }: { data: GameData }) {
         Object.keys(transcendenceLevels).length > 0) && (
         <div className="experimental-banner" role="status">
           <strong>⚠ Experimental:</strong> AP now includes an{" "}
-          <strong>unverified</strong> estimate of Transcendence
+          <strong>unverified</strong> estimate of{" "}
+          <span className="transc-seal">✦</span> Transcendence
           {transcendenceLevel > 0
             ? ` level ${transcendenceLevel} on every item that has it`
             : ` for ${Object.keys(transcendenceLevels).length} item${
@@ -592,7 +596,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
                                   },
                                   (_, l) => (
                                     <option key={l} value={l}>
-                                      {`🧪 T${l}`}
+                                      {`✦ T${l}`}
                                     </option>
                                   ),
                                 )}
@@ -1157,14 +1161,20 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           ))}
         </ul>
 
-        <h3>13. Transcendence (experimental, unverified)</h3>
+        <h3>
+          13. <span className="transc-seal">✦</span> Transcendence{" "}
+          <span className="exp-flag">🧪 (experimental, unverified)</span>
+        </h3>
         <p>
           Transcendence is a late-game path that unlocks up to three upgrade
-          slots per item with Transcendence Seals — typically two flat stat adds
-          (e.g. <code>ATK +160</code>, <code>HP +50</code>) and a{" "}
-          <code>+10% Base ATK, DEF and HP</code> boost. Turning on the{" "}
-          <strong>🧪 Transcendence</strong> control applies the first N of those
-          slots to every item that has them.
+          slots per item with <span className="transc-seal">✦</span>{" "}
+          Transcendence Seals — typically two flat stat adds (e.g.{" "}
+          <code>ATK +160</code>, <code>HP +50</code>) and a{" "}
+          <code>+10% Base ATK, DEF and HP</code> boost. The teal{" "}
+          <span className="transc-seal">✦</span> marks the feature; the amber{" "}
+          🧪 flags that the numbers are <strong>estimates</strong>. Turning on
+          the <span className="transc-seal">✦</span> Transcendence control
+          applies the first N of those slots to every item that has them.
         </p>
         <p>
           <strong>

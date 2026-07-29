@@ -506,22 +506,38 @@ td.num.enchanted {
   color: #fbbf24;
 }
 
-/* Per-item experimental transcendence level selector, inline after the item
-   name (next to the Starforged ★). */
+/* Transcendence identity: the in-game feature uses a teal/cyan "Transcendence
+   Seal" star (✦) on a purple panel, so transcendence controls share that teal
+   accent. (The separate amber "experimental" banner carries the unverified
+   caution.) */
+.transc-seal {
+  color: #2dd4bf;
+  font-weight: 700;
+}
+/* Per-item transcendence level selector, inline after the item name (next to
+   the Starforged ★). Teal seal content (the Transcendence feature) inside a
+   dashed amber frame (the "experimental / unverified" cue) — both signals at
+   once. */
 .transc-select {
   margin-left: 6px;
   font-size: 10px;
   padding: 0 2px;
   border-radius: 5px;
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  background: rgba(251, 191, 36, 0.08);
-  color: var(--muted);
+  border: 1px dashed rgba(251, 191, 36, 0.75);
+  background: rgba(45, 212, 191, 0.1);
+  color: #2dd4bf;
   cursor: pointer;
   vertical-align: middle;
 }
 .transc-select:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
+}
+/* Small inline "experimental" flag used alongside the teal ✦ seal so a control
+   reads as both "Transcendence" and "experimental". */
+.exp-flag {
+  color: #fbbf24;
+  font-weight: 700;
 }
 
 /* Per-item Starforged star toggle, inline after the item name. Empty star =
