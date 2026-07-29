@@ -506,16 +506,17 @@ td.num.enchanted {
   color: #fbbf24;
 }
 
-/* Transcendence identity: the in-game feature uses a teal/cyan "Transcendence
-   Seal" star (✦) on a purple panel, so transcendence controls share that teal
-   accent. (The separate amber "experimental" banner carries the unverified
-   caution.) */
+/* Transcendence identity: a blue four-pointed "Transcendence Seal" mark (✦) in
+   #4a90e2 (matching the in-game blue star fill). Four points + blue keep it
+   distinct from the five-pointed gold Starforged ★, since Shop Titans uses stars
+   throughout. (The separate amber "experimental" banner + dashed frames carry
+   the unverified caution.) */
 .transc-seal {
-  color: #2dd4bf;
+  color: #4a90e2;
   font-weight: 700;
 }
 /* Per-item transcendence level selector, inline after the item name (next to
-   the Starforged ★). Teal seal content (the Transcendence feature) inside a
+   the Starforged ★). Blue seal content (the Transcendence feature) inside a
    dashed amber frame (the "experimental / unverified" cue) — both signals at
    once. */
 .transc-select {
@@ -524,8 +525,8 @@ td.num.enchanted {
   padding: 0 2px;
   border-radius: 5px;
   border: 1px dashed rgba(251, 191, 36, 0.75);
-  background: rgba(45, 212, 191, 0.1);
-  color: #2dd4bf;
+  background: rgba(74, 144, 226, 0.14);
+  color: #4a90e2;
   cursor: pointer;
   vertical-align: middle;
 }
