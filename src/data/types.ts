@@ -55,6 +55,38 @@ export interface ArtifactStatMod {
   critSet?: number;
 }
 
+// One of an item's three Transcendence upgrade slots. Slots unlock
+// sequentially with Transcendence Seals (after the item's Ascension is
+// complete), so a player is at "level N" when the first N slots are unlocked.
+// Most AP-relevant items have two flat stat adds and one "+X% Base ATK, DEF and
+// HP" multiplier across their three slots; some slots are economy upgrades
+// (`Quality Chance x2`, multicraft, craft-time) that don't affect airship power
+// — those parse to kind "other" but still occupy their slot position so the
+// level→effect mapping stays correct.
+//
+// NOTE: the *data* here is a faithful parse of the sheet's Transcendence
+// columns. How these combine into airship power (order of operations vs
+// quality, enchants, Starforged, and whether flat adds scale with quality) is
+// NOT yet modelled — that needs in-game calibration readings, tracked in
+// docs/PLAN-transcendence.md. Until then `computePower` ignores this field.
+export type TranscendenceUpgrade =
+  | {
+      slot: 1 | 2 | 3;
+      // Transcendence Seals to unlock this slot (from the "Seals Needed"
+      // column). Seals are the scarce resource, so this is the denominator for
+      // an AP-per-seal recommendation. Whether it's marginal or cumulative
+      // across slots is noted in docs/PLAN-transcendence.md pending confirmation.
+      seals: number;
+      kind: "stat";
+      // atk/def/hp amounts are flat stat points; crit/eva amounts are decimals
+      // (0.02 = "+2%"), matching how the Blueprint stores its own crit/eva.
+      stat: "atk" | "def" | "hp" | "eva" | "crit";
+      amount: number;
+      raw: string;
+    }
+  | { slot: 1 | 2 | 3; seals: number; kind: "pctBase"; pct: number; raw: string } // "+10% Base ATK, DEF and HP" → 0.10
+  | { slot: 1 | 2 | 3; seals: number; kind: "other"; raw: string }; // economy upgrade, no AP effect
+
 export interface Blueprint {
   name: string;
   type: string;
@@ -95,6 +127,21 @@ export interface Blueprint {
     eva?: number;
     crit?: number;
   };
+  // The item's three Transcendence upgrade slots, in unlock order (slot 1..3).
+  // Absent slots (sheet "---") are omitted; present economy slots are kept as
+  // kind "other". Parsed at sync time from the Transcendence columns.
+  transcendence?: TranscendenceUpgrade[];
+  // Acquisition info (parsed from the sheet). `unlockPrerequisite` is the raw
+  // "Unlock Prerequisite" cell — a worker (Blacksmith/Tailor/…) for freely
+  // craftable items, or a pack/offer/chest name for premium items.
+  // `antiqueFrom` is the "Available as an Antique starting on (UTC)" date,
+  // present only for premium items that rotate into the Antiques store.
+  // `premium` is derived: the item is not freely craftable (has an antique date
+  // or a pack/offer/chest prerequisite). The UI badges premium items and flips
+  // the badge to "in Antiques" once `antiqueFrom` is in the past.
+  unlockPrerequisite?: string;
+  antiqueFrom?: string | null;
+  premium?: boolean;
 }
 
 export interface Enchantment {

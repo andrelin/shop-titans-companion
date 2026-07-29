@@ -57,6 +57,7 @@ function splitList(raw: string | undefined): string[] {
 const COL = {
   name: 0,
   type: 1,
+  unlockPrerequisite: 2,
   tier: 5,
   airshipPower: 15,
   atk: 44,
@@ -71,7 +72,14 @@ const COL = {
   craftingUpgrade: [55, 57, 59, 61, 63] as const,
   starforgedMilestone: [66, 68, 70, 72, 74] as const,
   ascensionUpgrade: [77, 79, 81] as const,
+  transcendenceUpgrade: [83, 85, 87] as const,
+  transcendenceSeals: [84, 86, 88] as const,
+  antiqueFrom: 95,
 } as const;
+
+// A premium (not freely craftable) item: its Unlock Prerequisite names a
+// purchasable source rather than a worker. Combined with an antique date below.
+const PREMIUM_PREREQ_RE = /\b(pack|content pass|bundle|offer|chest)\b/i;
 
 function parseAirshipUpgradeBonus(upgrades: string[]): number {
   // matches strings like "+25% Bonus Airship Power"
@@ -105,6 +113,60 @@ function parseStarforgedStatBoosts(upgrades: string[]): StatBoosts | undefined {
     if (/\bCRIT\b/.test(tail)) out.crit = pct;
   }
   return Object.keys(out).length > 0 ? out : undefined;
+}
+
+// Parse an item's three Transcendence slots (in column order) into typed
+// upgrades. Faithful transcription of the sheet only — no AP interpretation.
+//   "+10% Base ATK, DEF and HP" → pctBase 0.10
+//   "ATK +27" / "DEF +40" / "HP +17" → flat stat add
+//   "CRIT +2%" / "EVA +5%" → stat add as a decimal (0.02 / 0.05)
+//   anything else (e.g. "Quality Chance x2") → "other" (occupies the slot,
+//   contributes no airship power)
+// Absent slots (sheet "---") are dropped so a level-N player maps to the first
+// N *present* upgrades.
+type TranscendenceUpgrade = import("../src/data/types").TranscendenceUpgrade;
+function parseTranscendence(
+  slots: string[],
+  sealCosts: string[],
+): TranscendenceUpgrade[] {
+  const out: TranscendenceUpgrade[] = [];
+  slots.forEach((raw, i) => {
+    const slot = (i + 1) as 1 | 2 | 3;
+    const s = (raw ?? "").trim();
+    if (!s || s === "---") return;
+    const seals = toNumber(sealCosts[i]);
+    const pct = s.match(/\+(\d+(?:\.\d+)?)\s*%\s*Base\s+ATK/i);
+    if (pct) {
+      out.push({ slot, seals, kind: "pctBase", pct: Number(pct[1]) / 100, raw: s });
+      return;
+    }
+    const flat = s.match(/^(ATK|DEF|HP)\s*\+\s*(\d+(?:\.\d+)?)$/i);
+    if (flat) {
+      out.push({
+        slot,
+        seals,
+        kind: "stat",
+        stat: flat[1].toLowerCase() as "atk" | "def" | "hp",
+        amount: Number(flat[2]),
+        raw: s,
+      });
+      return;
+    }
+    const pctStat = s.match(/^(CRIT|EVA)\s*\+\s*(\d+(?:\.\d+)?)\s*%$/i);
+    if (pctStat) {
+      out.push({
+        slot,
+        seals,
+        kind: "stat",
+        stat: pctStat[1].toLowerCase() as "crit" | "eva",
+        amount: Number(pctStat[2]) / 100,
+        raw: s,
+      });
+      return;
+    }
+    out.push({ slot, seals, kind: "other", raw: s });
+  });
+  return out;
 }
 
 // Artifact items unlocked via Artifact Chests carry artifact skills that the
@@ -156,7 +218,7 @@ const ARTIFACT_STAT_MODS: Record<string, ArtifactStatModEntry> = {
   },
 };
 
-interface ParsedBlueprint {
+export interface ParsedBlueprint {
   name: string;
   type: string;
   tier: number;
@@ -178,6 +240,10 @@ interface ParsedBlueprint {
   artifactSkillName?: string;
   artifactStatMods?: import("../src/data/types").ArtifactStatMod;
   starforgedStatBoosts?: StatBoosts;
+  transcendence?: TranscendenceUpgrade[];
+  unlockPrerequisite?: string;
+  antiqueFrom?: string | null;
+  premium?: boolean;
 }
 
 function parseBlueprints(rows: string[][]): ParsedBlueprint[] {
@@ -195,6 +261,9 @@ function parseBlueprints(rows: string[][]): ParsedBlueprint[] {
     [COL.eva, "EVA"],
     [COL.crit, "CRIT"],
     [COL.elementalAffinity, "Elemental Affinity"],
+    [COL.transcendenceUpgrade[0], "Transcendence Upgrade 1"],
+    [COL.unlockPrerequisite, "Unlock Prerequisite"],
+    [COL.antiqueFrom, "Available as an Antique starting on (UTC)"],
   ];
   for (const [i, expected] of checks) {
     const got = (header[i] ?? "").trim();
@@ -221,6 +290,21 @@ function parseBlueprints(rows: string[][]): ParsedBlueprint[] {
     const ascensionUpgrades = COL.ascensionUpgrade
       .map((c) => (r[c] ?? "").trim())
       .filter((v) => v && v !== "---");
+    const transcendence = parseTranscendence(
+      COL.transcendenceUpgrade.map((c) => r[c] ?? ""),
+      COL.transcendenceSeals.map((c) => r[c] ?? ""),
+    );
+    const unlockPrerequisiteRaw = (r[COL.unlockPrerequisite] ?? "").trim();
+    const unlockPrerequisite =
+      unlockPrerequisiteRaw && unlockPrerequisiteRaw !== "---"
+        ? unlockPrerequisiteRaw
+        : "";
+    const antiqueRaw = (r[COL.antiqueFrom] ?? "").trim();
+    const antiqueFrom = antiqueRaw && antiqueRaw !== "---" ? antiqueRaw : null;
+    // Premium = not freely craftable: has an Antiques rotation date (only premium
+    // items get one) or a purchasable prerequisite (pack/offer/chest/pass).
+    const premium =
+      antiqueFrom !== null || PREMIUM_PREREQ_RE.test(unlockPrerequisite);
     const parsedBonus = parseAirshipUpgradeBonus([
       ...craftingUpgrades,
       ...starforgedMilestones,
@@ -261,6 +345,10 @@ function parseBlueprints(rows: string[][]): ParsedBlueprint[] {
       ...(artifactSkillName ? { artifactSkillName } : {}),
       ...(statMod ? { artifactStatMods: statMod.mods } : {}),
       ...(starforgedStatBoosts ? { starforgedStatBoosts } : {}),
+      ...(transcendence.length > 0 ? { transcendence } : {}),
+      ...(unlockPrerequisite ? { unlockPrerequisite } : {}),
+      ...(antiqueFrom ? { antiqueFrom } : {}),
+      ...(premium ? { premium: true } : {}),
     });
   }
   return out;
@@ -303,6 +391,168 @@ function parseEnchantments(blueprintRows: string[][]): ParsedEnchantment[] {
     });
   }
   return out;
+}
+
+// ---------------------------------------------------------------------------
+// Changelog / commit summary
+//
+// Every sync that actually changes the data writes a human-readable summary of
+// *what* changed: which items were added/removed and which had an AP-relevant
+// field (stats, affinities, bonuses) change. The summary is both prepended to
+// docs/data-changelog.md (committed) and written to data-sync-report.txt
+// (git-ignored) so the CI job can use it as the commit message body.
+//
+// Only fields the power ranker reads are diffed — not every sheet cell. The
+// crafting/starforged/ascension/transcendence upgrade *lists*, values, XP, etc.
+// change constantly and would bury the signal; the git history of `data/` is the
+// authoritative byte-level record for those.
+// ---------------------------------------------------------------------------
+const CHANGELOG_PATH = resolve(ROOT, "docs", "data-changelog.md");
+const REPORT_PATH = resolve(ROOT, "data-sync-report.txt");
+const CHANGELOG_MARKER = "<!-- entries -->";
+const CHANGELOG_HEADER = `# Data changelog
+
+Auto-generated by the data sync (\`npm run sync\`). Most recent syncs first. Only
+power-ranker-relevant fields are summarised here — see the git history of \`data/\`
+for the exact byte-level diff behind each entry.
+
+${CHANGELOG_MARKER}
+`;
+
+// Fields whose changes are worth surfacing — everything the ranker reads.
+const DIFF_FIELDS: (keyof ParsedBlueprint)[] = [
+  "type",
+  "tier",
+  "airshipPower",
+  "atk",
+  "def",
+  "hp",
+  "eva",
+  "crit",
+  "elementalAffinity",
+  "spiritAffinity",
+  "builtInElement",
+  "builtInSpirit",
+  "airshipPowerUpgradeBonus",
+  "starforgedStatBoosts",
+];
+
+function fieldToText(v: unknown): string {
+  if (v === undefined || v === null) return "—";
+  if (Array.isArray(v)) return v.length ? v.join("/") : "—";
+  if (typeof v === "object") return JSON.stringify(v);
+  return String(v);
+}
+
+interface ItemChange {
+  name: string;
+  changes: string[];
+}
+interface DataDiff {
+  added: ParsedBlueprint[];
+  removed: string[];
+  changed: ItemChange[];
+}
+
+export function diffBlueprints(
+  prev: ParsedBlueprint[],
+  next: ParsedBlueprint[],
+): DataDiff {
+  const prevByName = new Map(prev.map((b) => [b.name, b]));
+  const nextByName = new Map(next.map((b) => [b.name, b]));
+  const added = next.filter((b) => !prevByName.has(b.name));
+  const removed = prev.filter((b) => !nextByName.has(b.name)).map((b) => b.name);
+  const changed: ItemChange[] = [];
+  for (const b of next) {
+    const p = prevByName.get(b.name);
+    if (!p) continue;
+    const changes: string[] = [];
+    for (const f of DIFF_FIELDS) {
+      const before = fieldToText(p[f]);
+      const after = fieldToText(b[f]);
+      if (before !== after) changes.push(`${f} ${before} → ${after}`);
+    }
+    if (changes.length) changed.push({ name: b.name, changes });
+  }
+  return { added, removed, changed };
+}
+
+// Cap a long list so a pathological sync (e.g. a schema change touching every
+// row) can't produce a 1500-line commit message / changelog entry.
+function capList(lines: string[], cap: number): string[] {
+  if (lines.length <= cap) return lines;
+  return [...lines.slice(0, cap), `- …and ${lines.length - cap} more`];
+}
+
+// Build the markdown changelog entry + a one-line commit headline.
+export function buildSummary(args: {
+  date: string; // ISO
+  prevVersion: string | null;
+  version: string | null;
+  prevCount: number | null;
+  nextCount: number;
+  diff: DataDiff | null;
+}): { headline: string; entry: string } {
+  const { date, prevVersion, version, prevCount, nextCount, diff } = args;
+  const day = date.slice(0, 10);
+  const A = diff?.added.length ?? 0;
+  const R = diff?.removed.length ?? 0;
+  const C = diff?.changed.length ?? 0;
+
+  const headline =
+    `data: sync ${version ?? "update"} (${day})` +
+    (diff ? ` — +${A} −${R} ~${C} items` : "");
+
+  const meta: string[] = [];
+  if (prevVersion !== version) {
+    meta.push(`- Sheet version: ${prevVersion ?? "—"} → ${version ?? "—"}`);
+  }
+  const delta = prevCount === null ? "" : ` (${nextCount - prevCount >= 0 ? "+" : ""}${nextCount - prevCount})`;
+  meta.push(`- Blueprints: ${prevCount ?? "—"} → ${nextCount}${delta}`);
+
+  const sections: string[] = [];
+  const cap = 80;
+  if (diff && diff.added.length) {
+    sections.push("", `### Added (${diff.added.length})`);
+    sections.push(...capList(diff.added.map((b) => `- ${b.name} (${b.type} T${b.tier})`), cap));
+  }
+  if (diff && diff.removed.length) {
+    sections.push("", `### Removed (${diff.removed.length})`);
+    sections.push(...capList(diff.removed.map((n) => `- ${n}`), cap));
+  }
+  if (diff && diff.changed.length) {
+    sections.push("", `### Changed (${diff.changed.length})`);
+    sections.push(...capList(diff.changed.map((c) => `- ${c.name}: ${c.changes.join(", ")}`), cap));
+  }
+  if (!diff || (A === 0 && R === 0 && C === 0)) {
+    sections.push("", "_No power-ranker-relevant field changes; version/metadata only._");
+  }
+
+  const entry =
+    [`## ${day} — ${version ?? "unknown version"}`, "", ...meta, ...sections]
+      .join("\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trimEnd() + "\n";
+  return { headline, entry };
+}
+
+async function prependChangelogEntry(entry: string): Promise<void> {
+  let existing: string;
+  try {
+    existing = await readFile(CHANGELOG_PATH, "utf8");
+  } catch {
+    existing = CHANGELOG_HEADER;
+  }
+  const idx = existing.indexOf(CHANGELOG_MARKER);
+  if (idx === -1) {
+    // File exists but lost its marker — rebuild from a fresh header.
+    existing = CHANGELOG_HEADER;
+  }
+  const cut = existing.indexOf(CHANGELOG_MARKER) + CHANGELOG_MARKER.length;
+  const head = existing.slice(0, cut);
+  const rest = existing.slice(cut).replace(/^\n+/, "");
+  const next = `${head}\n\n${entry}\n${rest}`.replace(/\n{3,}$/, "\n");
+  await writeFile(CHANGELOG_PATH, next);
 }
 
 async function readSheetVersion(): Promise<string | null> {
@@ -357,7 +607,11 @@ async function main() {
   const [prevBlueprints, prevEnchantments, prevMeta] = await Promise.all([
     readFile(resolve(DATA_DIR, "blueprints.json"), "utf8").catch(() => null),
     readFile(resolve(DATA_DIR, "enchantments.json"), "utf8").catch(() => null),
-    readJson("meta.json") as Promise<{ syncedAt?: string; sourceSheetVersion?: string | null } | null>,
+    readJson("meta.json") as Promise<{
+      syncedAt?: string;
+      sourceSheetVersion?: string | null;
+      blueprintCount?: number;
+    } | null>,
   ]);
 
   const dataChanged =
@@ -365,11 +619,9 @@ async function main() {
     prevEnchantments !== enchantmentsJson ||
     (prevMeta?.sourceSheetVersion ?? null) !== (version ?? null);
 
+  const now = new Date().toISOString();
   const meta = {
-    syncedAt:
-      dataChanged || !prevMeta?.syncedAt
-        ? new Date().toISOString()
-        : prevMeta.syncedAt,
+    syncedAt: dataChanged || !prevMeta?.syncedAt ? now : prevMeta.syncedAt,
     sourceSpreadsheet: `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}`,
     sourceSheetVersion: version,
     blueprintCount: blueprints.length,
@@ -382,13 +634,45 @@ async function main() {
     writeFile(resolve(DATA_DIR, "meta.json"), JSON.stringify(meta, null, 2) + "\n"),
   ]);
 
+  // When something actually changed, record *what* — prepend a dated entry to
+  // the changelog and write the commit-message report the CI job consumes.
+  if (dataChanged) {
+    let prevParsed: ParsedBlueprint[] | null = null;
+    if (prevBlueprints) {
+      try {
+        prevParsed = JSON.parse(prevBlueprints) as ParsedBlueprint[];
+      } catch {
+        prevParsed = null;
+      }
+    }
+    const diff = prevParsed ? diffBlueprints(prevParsed, blueprints) : null;
+    const { headline, entry } = buildSummary({
+      date: now,
+      prevVersion: prevMeta?.sourceSheetVersion ?? null,
+      version,
+      prevCount: prevParsed?.length ?? prevMeta?.blueprintCount ?? null,
+      nextCount: blueprints.length,
+      diff,
+    });
+    await prependChangelogEntry(entry);
+    await writeFile(REPORT_PATH, `${headline}\n\n${entry}`);
+    console.log(`Changelog updated — ${headline}`);
+  }
+
   console.log(
     `Wrote ${blueprints.length} blueprints, ${enchantments.length} enchantments (${version ?? "unknown version"})` +
       `${dataChanged ? "" : " — no substantive change, kept syncedAt"}.`,
   );
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+// Only run the sync when executed directly (`npm run sync`), not when the
+// module is imported (e.g. by the changelog unit tests).
+const invokedDirectly =
+  process.argv[1] !== undefined &&
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedDirectly) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

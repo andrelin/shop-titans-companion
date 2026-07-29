@@ -6,6 +6,8 @@ dist
 .claude/settings.local.json
 *.log
 *.tsbuildinfo
+# Transient commit-message file written by `npm run sync`; consumed by CI, never committed.
+data-sync-report.txt
 .env
 .env.*
 !.env.example

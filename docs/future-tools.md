@@ -10,6 +10,12 @@ Compares the cost (gold, components, time) of pushing a blueprint from one quali
 ### Starforged Milestone Planner
 Tracks Starforged progress per blueprint and projects which item is closest to the next milestone breakpoint, including the marginal stat or surcharge cap unlock that milestone delivers. Consumes Blueprints and quality scaling data. Helps players decide which item to push next when they have limited time-skips or premium components to spend.
 
+### Transcendence Seal Recommender
+Ranks which item (and slot) to transcend next for the most airship power per Transcendence Seal —
+net lineup gain vs the free category leader, then AP-per-seal, since seals are very rare.
+Consumes Blueprints (transcendence + seal-cost data) and the calibrated Transcendence power model.
+**Active planned work — see `docs/PLAN-transcendence.md` (Phase 6);** blocked on the transcendence power-model calibration.
+
 ### Recycle and Disenchant Value Tool
 Given a list of items in the shop or inventory, estimates the gold and enchanted-component yield from recycling versus selling at surcharge. Consumes Blueprints, Enchantments, and Merchant Levels. Removes the guesswork around clearing space without leaving value on the table, especially during high-volume crafting sprees.
 

@@ -727,6 +727,41 @@ export function DragonInvasion({ data }: { data: GameData }) {
 function ItemBonuses({ bp }: { bp: Blueprint }) {
   const chips: { key: string; cls: string; label: string; title: string }[] = [];
 
+  // Not-freely-craftable items get an acquisition badge so the player can tell at
+  // a glance which items they'd have to have obtained. Three states, in priority
+  // order: items past their Antiques rotation date are buyable by anyone now
+  // ("in Antiques"); chest-sourced items get a chest badge; everything else
+  // premium is a pack/pass the player may or may not own.
+  if (bp.premium) {
+    const antiqueMs = bp.antiqueFrom ? Date.parse(bp.antiqueFrom) : NaN;
+    const inAntiques = Number.isFinite(antiqueMs) && antiqueMs <= Date.now();
+    const fromChest = /chest/i.test(bp.unlockPrerequisite ?? "");
+    const source = bp.unlockPrerequisite ?? "a premium source";
+    let acq: { cls: string; label: string; title: string };
+    if (inAntiques) {
+      acq = {
+        cls: "bonus-chip bonus-antique",
+        label: "🏺 in Antiques",
+        title: `Premium item (${source}) — now buyable from the Antiques store (since ${bp.antiqueFrom}), so you can obtain it without the original pack.`,
+      };
+    } else if (fromChest) {
+      acq = {
+        cls: "bonus-chip bonus-chest",
+        label: "🎁 from chest",
+        title: `Random drop from ${source} — can't be crafted or bought directly, only obtained by opening chests, so you may or may not have it.`,
+      };
+    } else {
+      acq = {
+        cls: "bonus-chip bonus-premium",
+        label: "💎 premium",
+        title: bp.antiqueFrom
+          ? `Premium item — obtained from ${source}. Not freely craftable; enters the Antiques store on ${bp.antiqueFrom}.`
+          : `Premium item — obtained from ${source}. Not freely craftable.`,
+      };
+    }
+    chips.push({ key: "acq", ...acq });
+  }
+
   for (const el of bp.elementalAffinity) {
     chips.push({
       key: `el-${el}`,
@@ -1005,6 +1040,16 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           an item's affinities are shown as chips under its name in the table.
           The ranker always assumes you apply the affinity-matching enchant
           where it helps (a match is never worse than a generic enchant).
+        </p>
+        <p>
+          Items that aren't freely craftable also carry an{" "}
+          <strong>acquisition badge</strong> under their name so you can tell at
+          a glance how you'd obtain them: <em>💎 premium</em> (from a
+          real-money pack/pass you may or may not own), <em>🏺 in Antiques</em>{" "}
+          (a premium item whose Antiques-store rotation date has passed, so it's
+          buyable by anyone now), or <em>🎁 from chest</em> (a random drop from
+          opening chests — not craftable or buyable directly). Craftable items
+          show no badge. Hover any badge for the exact source.
         </p>
 
         <h3>7. +20/25% Bonus Airship Power and artifact-skill boosts</h3>

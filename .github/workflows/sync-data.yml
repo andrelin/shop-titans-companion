@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: write
+  # Needed so the commit step can dispatch the Pages deploy workflow below.
+  actions: write
 
 jobs:
   sync:
@@ -21,13 +23,33 @@ jobs:
       - run: npm ci
       - run: npm run sync
       - name: Commit changes
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if [[ -n "$(git status --porcelain data/)" ]]; then
-            git add data/
-            git commit -m "data: scheduled sync $(date -u +'%Y-%m-%d')"
+          # sync-data.ts writes data-sync-report.txt (git-ignored) with a rich
+          # commit message summarising exactly what changed this run; fall back to
+          # a plain message if it's somehow absent.
+          if [[ -n "$(git status --porcelain data/ docs/data-changelog.md)" ]]; then
+            git add data/ docs/data-changelog.md
+            if [[ -s data-sync-report.txt ]]; then
+              git commit -F data-sync-report.txt
+            else
+              git commit -m "data: scheduled sync $(date -u +'%Y-%m-%d')"
+            fi
             git push
+            echo "committed=true" >> "$GITHUB_OUTPUT"
           else
             echo "No data changes."
+            echo "committed=false" >> "$GITHUB_OUTPUT"
           fi
+      # Only rebuild/redeploy the site when the sync actually committed new data.
+      # The push above is made with GITHUB_TOKEN, which by design does NOT trigger
+      # the `on: push` deploy workflow (GitHub's recursion guard). workflow_dispatch
+      # is the documented exception, so we dispatch Pages explicitly here — and only
+      # on a real commit, so no-op syncs (the common case) don't rebuild anything.
+      - name: Trigger Pages deploy
+        if: steps.commit.outputs.committed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml
