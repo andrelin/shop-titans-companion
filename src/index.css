@@ -506,6 +506,24 @@ td.num.enchanted {
   color: #fbbf24;
 }
 
+/* Per-item experimental transcendence level selector, inline after the item
+   name (next to the Starforged ★). */
+.transc-select {
+  margin-left: 6px;
+  font-size: 10px;
+  padding: 0 2px;
+  border-radius: 5px;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.08);
+  color: var(--muted);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.transc-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Per-item Starforged star toggle, inline after the item name. Empty star =
    not unlocked; filled iridescent star = boost applied (mirrors the game's
    multicolored Starforged border). */

@@ -10,6 +10,12 @@ import {
   spiritFamily,
   SPIRIT_TIERS,
 } from "../../data/enchant";
+import {
+  CATEGORY_ORDER,
+  categoryOf,
+  type Category,
+} from "../../data/categories";
+import { acquisitionBadge } from "../../data/acquisition";
 
 // The highest enchant tier currently in the data. When the game adds a new
 // tier and we extend ENCHANT_TABLE, the dropdown picks it up automatically
@@ -30,63 +36,8 @@ type SortKey =
   | "name"
   | "type";
 
-// Categories mirror the four columns of the community Dragon Invasion sheet.
-// Each item belongs to exactly one. Items not mapped fall to "Other" and are
-// hidden by default.
-type Category = "Weapons" | "Body Armor" | "Misc Armor" | "Accessories" | "Other";
-
-const TYPE_TO_CATEGORY: Record<string, Category> = {
-  // Weapons
-  Sword: "Weapons",
-  Axe: "Weapons",
-  Dagger: "Weapons",
-  Mace: "Weapons",
-  Spear: "Weapons",
-  Staff: "Weapons",
-  Wand: "Weapons",
-  Bow: "Weapons",
-  Crossbow: "Weapons",
-  Gun: "Weapons",
-  Instrument: "Weapons",
-  Aurasong: "Weapons",
-  "Dual Wield": "Weapons",
-  // Body Armor (chest pieces)
-  "Heavy Armor": "Body Armor",
-  "Light Armor": "Body Armor",
-  Clothes: "Body Armor",
-  // Misc Armor (helmets, footwear, gloves)
-  Helmet: "Misc Armor",
-  "Magician Hat": "Misc Armor",
-  "Rogue Hat": "Misc Armor",
-  Gloves: "Misc Armor",
-  Gauntlets: "Misc Armor",
-  "Light Footwear": "Misc Armor",
-  "Heavy Footwear": "Misc Armor",
-  Boots: "Misc Armor",
-  // Accessories
-  Cloak: "Accessories",
-  Shield: "Accessories",
-  Amulet: "Accessories",
-  Ring: "Accessories",
-  Spell: "Accessories",
-  Familiar: "Accessories",
-  Quiver: "Accessories",
-  Potion: "Accessories",
-  "Herbal Medicine": "Accessories",
-  Meal: "Accessories",
-  Dessert: "Accessories",
-};
-
-const CATEGORY_ORDER: Category[] = [
-  "Weapons",
-  "Body Armor",
-  "Misc Armor",
-  "Accessories",
-];
-
-function categoryOf(type: string): Category {
-  return TYPE_TO_CATEGORY[type] ?? "Other";
-}
+// Category bucketing (Weapons / Body Armor / Misc Armor / Accessories) lives in
+// src/data/categories.ts so every event tool shares one mapping.
 
 interface Row {
   bp: Blueprint;
@@ -181,9 +132,41 @@ export function DragonInvasion({ data }: { data: GameData }) {
     "enchanted",
   );
   const [topPerCategory, setTopPerCategory] = useState<number>(20);
-  // EXPERIMENTAL: apply the first N transcendence upgrades to every item that
-  // has them (0 = off). The AP math is UNVERIFIED — a loud warning shows when on.
+  // EXPERIMENTAL global override: apply this level to *every* item that has
+  // transcendence (0 = off, use per-item levels below). The AP math is
+  // UNVERIFIED — a loud warning shows whenever any transcendence is applied.
   const [transcendenceLevel, setTranscendenceLevel] = useState<number>(0);
+  // Per-item experimental transcendence level (0–3), keyed by item name,
+  // persisted to localStorage. Used when the global override is Off — mirrors
+  // the Starforged per-item unlocks.
+  const [transcendenceLevels, setTranscendenceLevels] = useState<
+    Record<string, number>
+  >(() => {
+    try {
+      const raw = localStorage.getItem("transcendence-levels");
+      return raw ? (JSON.parse(raw) as Record<string, number>) : {};
+    } catch {
+      return {};
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "transcendence-levels",
+        JSON.stringify(transcendenceLevels),
+      );
+    } catch {
+      /* localStorage unavailable — selection just won't persist */
+    }
+  }, [transcendenceLevels]);
+  const setItemTranscendence = useCallback((name: string, level: number) => {
+    setTranscendenceLevels((prev) => {
+      const next = { ...prev };
+      if (level <= 0) delete next[name];
+      else next[name] = level;
+      return next;
+    });
+  }, []);
 
   // One row per (blueprint, selected quality). Sorted in the QUALITY_ORDER
   // sequence so Common rows precede Superior etc. when other keys tie.
@@ -202,6 +185,12 @@ export function DragonInvasion({ data }: { data: GameData }) {
       const starforged =
         !!bp.starforgedStatBoosts &&
         (includeStarforgedStatBoosts || starforgedUnlocked.has(bp.name));
+      // Effective transcendence level: the global override if set, else this
+      // item's own saved level. EXPERIMENTAL / unverified — 0 unless opted in.
+      const tLevel =
+        transcendenceLevel > 0
+          ? transcendenceLevel
+          : (transcendenceLevels[bp.name] ?? 0);
       for (const quality of qualitiesInOrder) {
         const opts = {
           quality,
@@ -212,8 +201,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
           includeAirshipUpgrade,
           includeStarforgedStatBoosts: starforged,
           maxEnchantTier,
-          // EXPERIMENTAL / unverified — off (0) unless the player opts in.
-          transcendenceLevel,
+          transcendenceLevel: tLevel,
         } as const;
         const basePower = computePower(bp, { ...opts, enchanted: false });
         const enchantedPower = computePower(bp, { ...opts, enchanted: true });
@@ -240,6 +228,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
     maxEnchantTier,
     rankedMode,
     transcendenceLevel,
+    transcendenceLevels,
   ]);
 
   // Bucket rows by category, with each category sorted by ranked power so we
@@ -478,32 +467,36 @@ export function DragonInvasion({ data }: { data: GameData }) {
           )}
           <label
             className="toggle"
-            title="EXPERIMENTAL and UNVERIFIED. Applies the first N Transcendence upgrades (flat stat adds + a +10% base boost) to every item that has them. The airship-power math is NOT yet confirmed against in-game readings — treat these numbers as rough estimates only."
+            title="EXPERIMENTAL and UNVERIFIED. Global override: applies the first N Transcendence upgrades (flat stat adds + a +10% base boost) to EVERY item that has them, ignoring the per-item levels. Leave on 'Off — per item' to set levels individually with the 🧪 control on each row. The airship-power math is NOT yet confirmed against in-game readings — treat these numbers as rough estimates."
           >
             <span>🧪 Transcendence (experimental):</span>
             <select
               value={transcendenceLevel}
               onChange={(e) => setTranscendenceLevel(Number(e.target.value))}
-              aria-label="Experimental transcendence level"
+              aria-label="Experimental transcendence global override level"
             >
-              <option value={0}>Off</option>
-              <option value={1}>Level 1</option>
-              <option value={2}>Level 2</option>
-              <option value={3}>Level 3</option>
+              <option value={0}>Off — per item</option>
+              <option value={1}>All at Level 1</option>
+              <option value={2}>All at Level 2</option>
+              <option value={3}>All at Level 3</option>
             </select>
           </label>
         </div>
       </div>
 
-      {transcendenceLevel > 0 && (
+      {(transcendenceLevel > 0 ||
+        Object.keys(transcendenceLevels).length > 0) && (
         <div className="experimental-banner" role="status">
           <strong>⚠ Experimental:</strong> AP now includes an{" "}
-          <strong>unverified</strong> estimate of Transcendence level{" "}
-          {transcendenceLevel} (first {transcendenceLevel} upgrade
-          {transcendenceLevel === 1 ? "" : "s"} on every item that has them).
-          These numbers are <strong>not calibrated against in-game readings</strong>{" "}
-          and may be wrong — feedback welcome. Set to “Off” for the verified
-          numbers.
+          <strong>unverified</strong> estimate of Transcendence
+          {transcendenceLevel > 0
+            ? ` level ${transcendenceLevel} on every item that has it`
+            : ` for ${Object.keys(transcendenceLevels).length} item${
+                Object.keys(transcendenceLevels).length === 1 ? "" : "s"
+              } you set below`}
+          . These numbers are{" "}
+          <strong>not calibrated against in-game readings</strong> and may be
+          wrong — feedback welcome. Clear the levels for the verified numbers.
         </div>
       )}
 
@@ -618,6 +611,43 @@ export function DragonInvasion({ data }: { data: GameData }) {
                               >
                                 {r.starforged ? "★" : "☆"}
                               </button>
+                            ) : null}
+                            {r.bp.transcendence &&
+                            r.bp.transcendence.length > 0 ? (
+                              <select
+                                className="transc-select"
+                                value={Math.min(
+                                  transcendenceLevel > 0
+                                    ? transcendenceLevel
+                                    : (transcendenceLevels[r.bp.name] ?? 0),
+                                  r.bp.transcendence.length,
+                                )}
+                                disabled={transcendenceLevel > 0}
+                                onChange={(e) =>
+                                  setItemTranscendence(
+                                    r.bp.name,
+                                    Number(e.target.value),
+                                  )
+                                }
+                                aria-label={`Experimental transcendence level for ${r.bp.name}`}
+                                title={
+                                  transcendenceLevel > 0
+                                    ? "A global transcendence override is active — set the top control to “Off — per item” to choose per item."
+                                    : "EXPERIMENTAL, unverified: how many transcendence levels to estimate for this item (saved on this device)."
+                                }
+                              >
+                                {Array.from(
+                                  {
+                                    length:
+                                      Math.min(3, r.bp.transcendence.length) + 1,
+                                  },
+                                  (_, l) => (
+                                    <option key={l} value={l}>
+                                      {`🧪 T${l}`}
+                                    </option>
+                                  ),
+                                )}
+                              </select>
                             ) : null}
                           </span>
                           <ItemBonuses bp={r.bp} />
@@ -758,39 +788,12 @@ export function DragonInvasion({ data }: { data: GameData }) {
 function ItemBonuses({ bp }: { bp: Blueprint }) {
   const chips: { key: string; cls: string; label: string; title: string }[] = [];
 
-  // Not-freely-craftable items get an acquisition badge so the player can tell at
-  // a glance which items they'd have to have obtained. Three states, in priority
-  // order: items past their Antiques rotation date are buyable by anyone now
-  // ("in Antiques"); chest-sourced items get a chest badge; everything else
-  // premium is a pack/pass the player may or may not own.
-  if (bp.premium) {
-    const antiqueMs = bp.antiqueFrom ? Date.parse(bp.antiqueFrom) : NaN;
-    const inAntiques = Number.isFinite(antiqueMs) && antiqueMs <= Date.now();
-    const fromChest = /chest/i.test(bp.unlockPrerequisite ?? "");
-    const source = bp.unlockPrerequisite ?? "a premium source";
-    let acq: { cls: string; label: string; title: string };
-    if (inAntiques) {
-      acq = {
-        cls: "bonus-chip bonus-antique",
-        label: "🏺 in Antiques",
-        title: `Premium item (${source}) — now buyable from the Antiques store (since ${bp.antiqueFrom}), so you can obtain it without the original pack.`,
-      };
-    } else if (fromChest) {
-      acq = {
-        cls: "bonus-chip bonus-chest",
-        label: "🎁 from chest",
-        title: `Random drop from ${source} — can't be crafted or bought directly, only obtained by opening chests, so you may or may not have it.`,
-      };
-    } else {
-      acq = {
-        cls: "bonus-chip bonus-premium",
-        label: "💎 premium",
-        title: bp.antiqueFrom
-          ? `Premium item — obtained from ${source}. Not freely craftable; enters the Antiques store on ${bp.antiqueFrom}.`
-          : `Premium item — obtained from ${source}. Not freely craftable.`,
-      };
-    }
-    chips.push({ key: "acq", ...acq });
+  // Not-freely-craftable items get an acquisition badge (premium / in-Antiques /
+  // from-chest) so the player can tell at a glance which items they'd have to
+  // have obtained. Logic is shared with the recommender in src/data/acquisition.ts.
+  const acq = acquisitionBadge(bp);
+  if (acq) {
+    chips.push({ key: "acq", cls: acq.cls, label: acq.label, title: acq.title });
   }
 
   for (const el of bp.elementalAffinity) {

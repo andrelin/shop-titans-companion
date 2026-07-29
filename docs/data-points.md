@@ -4,6 +4,15 @@ In-game readings the model is calibrated against, plus the ones we still need. V
 
 Quick workflow: craft at Common, apply the listed element + spirit enchants, read the in-game airship power, and post the number back. The test suite at `src/data/enchant.test.ts` pins the verified cases — regressing one of them now breaks `npm test`.
 
+## Transcendence — pending calibration (NOT yet verified)
+
+The Transcendence upgrade path is parsed into the data and applied by an **experimental, opt-in** estimate in the ranker (default off, loudly flagged); the seal recommender is built on that same estimate.
+**No in-game reading has calibrated it yet.**
+Calibration is **event-gated**: effective/enchanted AP is only visible in-game during an **active Dragon Invasion event**, which runs roughly **once per month**, so it can't be taken on demand.
+As of 2026-07-29 the next event is ~1 day out and **no calibration is possible today**.
+When an event is live: transcend one level (Chapter Cauchemar slot 1 is the safe pick — it's the Accessories leader, so it banks its full gain regardless of the open questions), read the **Common** AP immediately before and after with the same enchants, and post both numbers.
+That converts the estimate into a verified model and unblocks the recommender. The open questions are enumerated in `docs/PLAN-transcendence.md` (Phase 2).
+
 ## Verified data points (model matches in-game)
 
 All verified readings match the in-game value exactly except one: Sia (+1; re-verified, model 1696 vs 1695). Two things drove the recent work. (1) The Ghostbusters Suit starforged reading (2043) corrected the Starforged-Milestone math — the +25% boost multiplies the base **plus enchant** total and is applied as a *second rounding step* (round the quality+enchant stat, ×1.25, round again); confirmed by Lone Wolf Cowl unenchanted Superior (582) / Flawless (697) and enchanted Superior (758). (2) The enchant tiers **and base stats** were found to live authoritatively in the Blueprints tab; the enchant tables are now derived from synced data, distinguishing element vs spirit base (they differ below T9) with match = floor(1.5 × base). That re-grounding closed XL Healing (130) and both Chronos readings (463, 488) exactly. See point 12 and the "Enchant stats are authoritative in the sheet" section.
