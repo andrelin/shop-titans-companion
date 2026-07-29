@@ -539,6 +539,13 @@ td.num.enchanted {
   color: #fbbf24;
   font-weight: 700;
 }
+/* The experimental transcendence controls sit on their own row, lightly divided
+   from the verified controls above. */
+.transcendence-row {
+  border-top: 1px dashed rgba(148, 163, 184, 0.18);
+  margin-top: 2px;
+  padding-top: 8px;
+}
 
 /* Per-item Starforged star toggle, inline after the item name. Empty star =
    not unlocked; filled iridescent star = boost applied (mirrors the game's

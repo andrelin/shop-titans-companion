@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  clampLevel,
   loadSettings,
   SETTINGS_KEY,
   type SyncedSettings,
@@ -42,8 +43,9 @@ export function useSettings() {
   const setItemTranscendence = useCallback((name: string, level: number) => {
     setSettings((prev) => {
       const next = { ...prev.transcendenceLevels };
-      if (level <= 0) delete next[name];
-      else next[name] = Math.min(3, Math.round(level));
+      const n = clampLevel(level);
+      if (n <= 0) delete next[name];
+      else next[name] = n;
       return { ...prev, transcendenceLevels: next };
     });
   }, []);

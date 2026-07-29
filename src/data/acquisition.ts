@@ -25,7 +25,10 @@ export function acquisitionBadge(
   now: number = Date.now(),
 ): AcquisitionBadge | null {
   if (!bp.premium) return null;
-  const antiqueMs = bp.antiqueFrom ? Date.parse(bp.antiqueFrom) : NaN;
+  // The sheet's antique date is in UTC ("...starting on (UTC)"); parse it as
+  // UTC midnight (append " UTC") rather than the viewer's local midnight, so the
+  // premium ↔ in-Antiques flip happens at the same instant for everyone.
+  const antiqueMs = bp.antiqueFrom ? Date.parse(`${bp.antiqueFrom} UTC`) : NaN;
   const inAntiques = Number.isFinite(antiqueMs) && antiqueMs <= now;
   const fromChest = /chest/i.test(bp.unlockPrerequisite ?? "");
   const source = bp.unlockPrerequisite ?? "a premium source";

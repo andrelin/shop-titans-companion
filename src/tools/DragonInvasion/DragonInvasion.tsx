@@ -57,6 +57,17 @@ function formatNumber(n: number): string {
   return n.toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
 
+// EXPERIMENTAL transcendence level actually applied to an item: the global
+// override wins when set (> 0), otherwise the item's own saved per-item level.
+// Single source of truth for both the AP computation and the per-item selector.
+function effectiveTranscendenceLevel(
+  globalOverride: number,
+  perItem: Record<string, number>,
+  name: string,
+): number {
+  return globalOverride > 0 ? globalOverride : (perItem[name] ?? 0);
+}
+
 export function DragonInvasion({ data }: { data: GameData }) {
   const [selectedQualities, setSelectedQualities] = useState<Quality[]>([
     "Common",
@@ -134,12 +145,12 @@ export function DragonInvasion({ data }: { data: GameData }) {
       const starforged =
         !!bp.starforgedStatBoosts &&
         (includeStarforgedStatBoosts || starforgedUnlocked.has(bp.name));
-      // Effective transcendence level: the global override if set, else this
-      // item's own saved level. EXPERIMENTAL / unverified — 0 unless opted in.
-      const tLevel =
-        transcendenceLevel > 0
-          ? transcendenceLevel
-          : (transcendenceLevels[bp.name] ?? 0);
+      // EXPERIMENTAL / unverified — 0 unless opted in.
+      const tLevel = effectiveTranscendenceLevel(
+        transcendenceLevel,
+        transcendenceLevels,
+        bp.name,
+      );
       for (const quality of qualitiesInOrder) {
         const opts = {
           quality,
@@ -414,6 +425,11 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 : "or mark items with the ★ star as you unlock them"}
             </span>
           )}
+        </div>
+
+        {/* Experimental transcendence on its own row, so the verified controls
+            above stay uncluttered and the experimental feature reads as separate. */}
+        <div className="controls-row secondary transcendence-row">
           <label
             className="toggle"
             title="EXPERIMENTAL and UNVERIFIED. Global override: applies the first N Transcendence upgrades (flat stat adds + a +10% base boost) to EVERY item that has them, ignoring the per-item levels. Leave on 'Off — per item' to set levels individually with the 🧪 control on each row. The airship-power math is NOT yet confirmed against in-game readings — treat these numbers as rough estimates."
@@ -433,6 +449,10 @@ export function DragonInvasion({ data }: { data: GameData }) {
               <option value={3}>All at ✦ T3</option>
             </select>
           </label>
+          <span className="controls-hint">
+            or set a <span className="transc-seal">✦</span> level per item in the
+            list
+          </span>
         </div>
       </div>
 
@@ -570,9 +590,11 @@ export function DragonInvasion({ data }: { data: GameData }) {
                               <select
                                 className="transc-select"
                                 value={Math.min(
-                                  transcendenceLevel > 0
-                                    ? transcendenceLevel
-                                    : (transcendenceLevels[r.bp.name] ?? 0),
+                                  effectiveTranscendenceLevel(
+                                    transcendenceLevel,
+                                    transcendenceLevels,
+                                    r.bp.name,
+                                  ),
                                   r.bp.transcendence.length,
                                 )}
                                 disabled={transcendenceLevel > 0}

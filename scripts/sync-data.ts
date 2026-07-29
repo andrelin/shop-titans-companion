@@ -636,28 +636,39 @@ async function main() {
   ]);
 
   // When something actually changed, record *what* — prepend a dated entry to
-  // the changelog and write the commit-message report the CI job consumes.
+  // the changelog and write the commit-message report the CI job consumes. This
+  // is auxiliary: the data files are already written above, so a failure here
+  // must NOT abort the run and cause the CI commit step to be skipped. Any error
+  // is logged and swallowed; the sync still succeeds (with the workflow's
+  // fallback commit message if the report is missing).
   if (dataChanged) {
-    let prevParsed: ParsedBlueprint[] | null = null;
-    if (prevBlueprints) {
-      try {
-        prevParsed = JSON.parse(prevBlueprints) as ParsedBlueprint[];
-      } catch {
-        prevParsed = null;
+    try {
+      let prevParsed: ParsedBlueprint[] | null = null;
+      if (prevBlueprints) {
+        try {
+          prevParsed = JSON.parse(prevBlueprints) as ParsedBlueprint[];
+        } catch {
+          prevParsed = null;
+        }
       }
+      const diff = prevParsed ? diffBlueprints(prevParsed, blueprints) : null;
+      const { headline, entry } = buildSummary({
+        date: now,
+        prevVersion: prevMeta?.sourceSheetVersion ?? null,
+        version,
+        prevCount: prevParsed?.length ?? prevMeta?.blueprintCount ?? null,
+        nextCount: blueprints.length,
+        diff,
+      });
+      await prependChangelogEntry(entry);
+      await writeFile(REPORT_PATH, `${headline}\n\n${entry}`);
+      console.log(`Changelog updated — ${headline}`);
+    } catch (err) {
+      console.warn(
+        "Changelog/report step failed (non-fatal; data still committed):",
+        err,
+      );
     }
-    const diff = prevParsed ? diffBlueprints(prevParsed, blueprints) : null;
-    const { headline, entry } = buildSummary({
-      date: now,
-      prevVersion: prevMeta?.sourceSheetVersion ?? null,
-      version,
-      prevCount: prevParsed?.length ?? prevMeta?.blueprintCount ?? null,
-      nextCount: blueprints.length,
-      diff,
-    });
-    await prependChangelogEntry(entry);
-    await writeFile(REPORT_PATH, `${headline}\n\n${entry}`);
-    console.log(`Changelog updated — ${headline}`);
   }
 
   console.log(

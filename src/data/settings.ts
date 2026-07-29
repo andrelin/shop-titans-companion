@@ -17,6 +17,18 @@ export const EMPTY_SETTINGS: SyncedSettings = {
   transcendenceLevels: {},
 };
 
+// The number of transcendence slots an item can have. Levels are clamped to
+// this; bump it here (one place) if the game ever adds a fourth slot.
+export const MAX_TRANSCENDENCE_LEVEL = 3;
+
+// Clamp a raw level to the valid 0..MAX range (0 = none/invalid). Shared by the
+// store's normalize step and the per-item setter so they can never disagree.
+export function clampLevel(v: unknown): number {
+  const n = Math.round(Number(v));
+  if (!Number.isFinite(n) || n <= 0) return 0;
+  return Math.min(MAX_TRANSCENDENCE_LEVEL, n);
+}
+
 // localStorage keys: the combined blob, plus the two legacy per-feature keys
 // migrated in once so existing selections survive the switch.
 export const SETTINGS_KEY = "st-settings";
@@ -58,10 +70,8 @@ export function normalizeSettings(raw: unknown): SyncedSettings {
   const transcendenceLevels: Record<string, number> = {};
   if (r.transcendenceLevels && typeof r.transcendenceLevels === "object") {
     for (const [name, v] of Object.entries(r.transcendenceLevels)) {
-      const n = Math.round(Number(v));
-      if (Number.isFinite(n) && n > 0) {
-        transcendenceLevels[name] = Math.min(3, n);
-      }
+      const n = clampLevel(v);
+      if (n > 0) transcendenceLevels[name] = n;
     }
   }
   return { starforged, transcendenceLevels };

@@ -66,4 +66,19 @@ describe("acquisitionBadge", () => {
     });
     expect(acquisitionBadge(b, NOW)?.state).toBe("antiques");
   });
+
+  it("treats the antique date as UTC midnight (timezone-independent boundary)", () => {
+    const b = bp({
+      premium: true,
+      unlockPrerequisite: "A Pack",
+      antiqueFrom: "July 29, 2026",
+    });
+    // At exactly UTC midnight of the 29th it has rotated; one hour before, not.
+    expect(acquisitionBadge(b, Date.parse("2026-07-29T00:00:00Z"))?.state).toBe(
+      "antiques",
+    );
+    expect(acquisitionBadge(b, Date.parse("2026-07-28T23:00:00Z"))?.state).toBe(
+      "premium",
+    );
+  });
 });
