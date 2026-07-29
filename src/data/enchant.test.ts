@@ -864,3 +864,63 @@ describe("quality multiplier scales the final AP linearly", () => {
     expect(Math.round(raw)).toBe(317);
   });
 });
+
+// ---------------------------------------------------------------------------
+// EXPERIMENTAL transcendence — NOT verified against in-game readings.
+//
+// These lock the behaviour of the opt-in `transcendenceLevel` estimate so it
+// can't change by accident, and prove level 0 is a true no-op (so every
+// verified reading above is unaffected). The non-zero values are the model's
+// current *unverified estimate*, NOT in-game truth — when a real reading lands
+// (see docs/PLAN-transcendence.md) the model and these numbers get corrected
+// together. Do not treat these `.toBe`s as calibration.
+// ---------------------------------------------------------------------------
+describe("EXPERIMENTAL transcendence (unverified estimate)", () => {
+  const withT = (extra: Partial<Blueprint>): Blueprint =>
+    bp({
+      def: 100,
+      transcendence: [
+        { slot: 1, seals: 5, kind: "stat", stat: "def", amount: 50, raw: "DEF +50" },
+        { slot: 2, seals: 5, kind: "stat", stat: "hp", amount: 10, raw: "HP +10" },
+        { slot: 3, seals: 5, kind: "pctBase", pct: 0.1, raw: "+10% Base ATK, DEF and HP" },
+      ],
+      ...extra,
+    });
+
+  it("level 0 (and omitted) is a no-op vs no transcendence data", () => {
+    const base = bp({ def: 100 });
+    const t = withT({});
+    const noField = computePower(base, { ...commonOpts, enchanted: false });
+    const lvl0 = computePower(t, { ...commonOpts, enchanted: false, transcendenceLevel: 0 });
+    const omitted = computePower(t, { ...commonOpts, enchanted: false });
+    expect(lvl0).toBe(noField);
+    expect(omitted).toBe(noField);
+  });
+
+  it("flat adds apply post-quality, uncapped, and can introduce a new stat", () => {
+    const t = withT({});
+    const o = { ...commonOpts, enchanted: false };
+    // L0: 1.2·100 = 120
+    expect(computePower(t, { ...o, transcendenceLevel: 0 })).toBe(120);
+    // L1: def 100+50 → 1.2·150 = 180
+    expect(computePower(t, { ...o, transcendenceLevel: 1 })).toBe(180);
+    // L2: + HP 10 on a def-only item (new stat) → 1.2·150 + 5·10 = 230
+    expect(computePower(t, { ...o, transcendenceLevel: 2 })).toBe(230);
+    // L3: +10% Base rounds each stat → def round(150·1.1)=165, hp round(10·1.1)=11
+    //     → 1.2·165 + 5·11 = 253
+    expect(computePower(t, { ...o, transcendenceLevel: 3 })).toBe(253);
+  });
+
+  it("CRIT/EVA transcendence adds are additive decimals on the multiplier", () => {
+    const t = bp({
+      hp: 100,
+      transcendence: [
+        { slot: 1, seals: 5, kind: "stat", stat: "eva", amount: 0.03, raw: "EVA +3%" },
+      ],
+    });
+    const o = { ...commonOpts, enchanted: false };
+    // L0: 5·100 = 500; L1: ×(1 + 10·0.03) = ×1.3 → 650
+    expect(computePower(t, { ...o, transcendenceLevel: 0 })).toBe(500);
+    expect(computePower(t, { ...o, transcendenceLevel: 1 })).toBe(650);
+  });
+});

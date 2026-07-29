@@ -491,6 +491,21 @@ td.num.enchanted {
   background: rgba(103, 232, 249, 0.08);
 }
 
+/* Loud notice shown when the experimental (unverified) transcendence estimate
+   is applied to the ranking. */
+.experimental-banner {
+  margin: 10px 0 14px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.1);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.experimental-banner strong {
+  color: #fbbf24;
+}
+
 /* Per-item Starforged star toggle, inline after the item name. Empty star =
    not unlocked; filled iridescent star = boost applied (mirrors the game's
    multicolored Starforged border). */

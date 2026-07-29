@@ -1,4 +1,4 @@
-import type { Blueprint, Enchantment, Quality } from "./types";
+import type { Blueprint, Enchantment, Quality, TranscendenceUpgrade } from "./types";
 import { QUALITY_MULTIPLIER } from "./types";
 import enchantmentsJson from "../../data/enchantments.json";
 
@@ -166,6 +166,26 @@ export interface PowerOptions {
   // element and spirit enchants apply at their own tier regardless of the item's
   // tier (verified in-game with T14 Tornado + Behemoth on T7 Potion of Renewal).
   maxEnchantTier: number;
+  // EXPERIMENTAL, UNVERIFIED. Apply the item's first N Transcendence upgrades
+  // (0 = none). The airship-power interaction has NOT been calibrated against
+  // in-game readings — the numbers it produces are estimates and may be wrong;
+  // see docs/PLAN-transcendence.md. Optional and defaulting to 0 so every
+  // verified (non-transcended) reading and pinned test is unaffected.
+  transcendenceLevel?: number;
+}
+
+// EXPERIMENTAL: the item's first `level` Transcendence upgrades (unlock order).
+// Returns [] for level 0 or items with no transcendence data, so this is a
+// no-op unless the caller explicitly opts in. The array is already in slot
+// order, so we slice by count ("first N present upgrades") rather than filtering
+// on the absolute slot number — that stays correct even if a layout ever has a
+// gap (a dropped "---" slot leaving non-contiguous slot indices).
+function activeTranscendence(
+  b: Blueprint,
+  level: number,
+): TranscendenceUpgrade[] {
+  if (!b.transcendence || level <= 0) return [];
+  return b.transcendence.slice(0, level);
 }
 
 // BasePower at Common quality, no enchant, no APU.
@@ -464,6 +484,34 @@ export function computePower(b: Blueprint, opts: PowerOptions): number {
     }
   }
 
+  // EXPERIMENTAL transcendence (opts.transcendenceLevel; default 0 = no-op).
+  // UNVERIFIED assumptions — see docs/PLAN-transcendence.md:
+  //   • Flat stat adds (ATK/DEF/HP +N) are treated as base-stat increases: added
+  //     post-quality and UNCAPPED (and may introduce a stat the item lacks — real
+  //     per the sheet, e.g. Ghostbusters Suit HP +69 on a def-only item). They are
+  //     folded into the stat *before* the % boosts, so both the Starforged boost
+  //     and the transcendence "+X% Base" multiplier scale them.
+  //   • CRIT/EVA +N% are additive on the crit/eva decimals.
+  //   • "+X% Base ATK, DEF and HP" is its own round-half-up step, stacking after
+  //     the Starforged boost.
+  // Open calibration question: whether flat adds should really be scaled by the %
+  // boosts (as here) or added truly flat afterwards. None of this is verified; the
+  // resulting AP is an estimate for feedback.
+  let transcPct = 0;
+  let transcCrit = 0;
+  let transcEva = 0;
+  for (const u of activeTranscendence(b, opts.transcendenceLevel ?? 0)) {
+    if (u.kind === "stat") {
+      if (u.stat === "atk") rawAtk += u.amount;
+      else if (u.stat === "def") rawDef += u.amount;
+      else if (u.stat === "hp") rawHp += u.amount;
+      else if (u.stat === "crit") transcCrit += u.amount;
+      else if (u.stat === "eva") transcEva += u.amount;
+    } else if (u.kind === "pctBase") {
+      transcPct += u.pct;
+    }
+  }
+
   // Round the quality-scaled + enchanted stat to integer (round-half-up). This
   // is the displayed stat *before* the Starforged Milestone. The game stores
   // integer stats and computes AP from them — verified against Superior
@@ -489,12 +537,22 @@ export function computePower(b: Blueprint, opts: PowerOptions): number {
     dispDef = Math.round(dispDef * (1 + (boost.def ?? 0)));
     dispHp = Math.round(dispHp * (1 + (boost.hp ?? 0)));
   }
+  // EXPERIMENTAL transcendence "+X% Base" slot — multiplies the rounded stat
+  // (base + enchant + flat transcendence adds, all folded in above), as its own
+  // round-half-up step stacking after the Starforged boost. No-op when transcPct
+  // is 0.
+  if (transcPct > 0) {
+    dispAtk = Math.round(dispAtk * (1 + transcPct));
+    dispDef = Math.round(dispDef * (1 + transcPct));
+    dispHp = Math.round(dispHp * (1 + transcPct));
+  }
   // crit / eva: existing model multiplied them by q. There's no in-game
   // reading yet that nails the right scaling, so leave the q multiplier in
   // place — Sia at Common (q=1) and Slathered at Common (q=1) both work
-  // unchanged; Superior+ eva items are untested.
-  const crit = b.crit * q;
-  const eva = b.eva * q;
+  // unchanged; Superior+ eva items are untested. Experimental transcendence
+  // CRIT/EVA adds are additive decimals on top (0 unless opted in).
+  const crit = b.crit * q + transcCrit;
+  const eva = b.eva * q + transcEva;
 
   let raw =
     (0.8 * dispAtk + 1.2 * dispDef + 5 * dispHp) *

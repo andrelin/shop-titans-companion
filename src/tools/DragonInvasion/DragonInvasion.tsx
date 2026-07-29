@@ -181,6 +181,9 @@ export function DragonInvasion({ data }: { data: GameData }) {
     "enchanted",
   );
   const [topPerCategory, setTopPerCategory] = useState<number>(20);
+  // EXPERIMENTAL: apply the first N transcendence upgrades to every item that
+  // has them (0 = off). The AP math is UNVERIFIED — a loud warning shows when on.
+  const [transcendenceLevel, setTranscendenceLevel] = useState<number>(0);
 
   // One row per (blueprint, selected quality). Sorted in the QUALITY_ORDER
   // sequence so Common rows precede Superior etc. when other keys tie.
@@ -209,6 +212,8 @@ export function DragonInvasion({ data }: { data: GameData }) {
           includeAirshipUpgrade,
           includeStarforgedStatBoosts: starforged,
           maxEnchantTier,
+          // EXPERIMENTAL / unverified — off (0) unless the player opts in.
+          transcendenceLevel,
         } as const;
         const basePower = computePower(bp, { ...opts, enchanted: false });
         const enchantedPower = computePower(bp, { ...opts, enchanted: true });
@@ -234,6 +239,7 @@ export function DragonInvasion({ data }: { data: GameData }) {
     starforgedUnlocked,
     maxEnchantTier,
     rankedMode,
+    transcendenceLevel,
   ]);
 
   // Bucket rows by category, with each category sorted by ranked power so we
@@ -263,13 +269,10 @@ export function DragonInvasion({ data }: { data: GameData }) {
       category: cat,
       rows: ranked.get(cat)!.filter((r) => {
         if (r.bp.tier > maxTier) return false;
-        if (
-          q &&
-          !r.bp.name.toLowerCase().includes(q) &&
-          !r.bp.type.toLowerCase().includes(q)
-        )
-          return false;
-        return true;
+        return !(q &&
+            !r.bp.name.toLowerCase().includes(q) &&
+            !r.bp.type.toLowerCase().includes(q));
+
       }),
     }));
   }, [ranked, categoryFilter, maxTier, search]);
@@ -473,8 +476,36 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 : "or mark items with the ★ star as you unlock them"}
             </span>
           )}
+          <label
+            className="toggle"
+            title="EXPERIMENTAL and UNVERIFIED. Applies the first N Transcendence upgrades (flat stat adds + a +10% base boost) to every item that has them. The airship-power math is NOT yet confirmed against in-game readings — treat these numbers as rough estimates only."
+          >
+            <span>🧪 Transcendence (experimental):</span>
+            <select
+              value={transcendenceLevel}
+              onChange={(e) => setTranscendenceLevel(Number(e.target.value))}
+              aria-label="Experimental transcendence level"
+            >
+              <option value={0}>Off</option>
+              <option value={1}>Level 1</option>
+              <option value={2}>Level 2</option>
+              <option value={3}>Level 3</option>
+            </select>
+          </label>
         </div>
       </div>
+
+      {transcendenceLevel > 0 && (
+        <div className="experimental-banner" role="status">
+          <strong>⚠ Experimental:</strong> AP now includes an{" "}
+          <strong>unverified</strong> estimate of Transcendence level{" "}
+          {transcendenceLevel} (first {transcendenceLevel} upgrade
+          {transcendenceLevel === 1 ? "" : "s"} on every item that has them).
+          These numbers are <strong>not calibrated against in-game readings</strong>{" "}
+          and may be wrong — feedback welcome. Set to “Off” for the verified
+          numbers.
+        </div>
+      )}
 
       <ExplainPanel blueprints={data.blueprints} />
 
@@ -1173,6 +1204,32 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
             </li>
           ))}
         </ul>
+
+        <h3>13. Transcendence (experimental, unverified)</h3>
+        <p>
+          Transcendence is a late-game path that unlocks up to three upgrade
+          slots per item with Transcendence Seals — typically two flat stat adds
+          (e.g. <code>ATK +160</code>, <code>HP +50</code>) and a{" "}
+          <code>+10% Base ATK, DEF and HP</code> boost. Turning on the{" "}
+          <strong>🧪 Transcendence</strong> control applies the first N of those
+          slots to every item that has them.
+        </p>
+        <p>
+          <strong>
+            These numbers are an unverified estimate and may be wrong.
+          </strong>{" "}
+          Unlike the rest of this model, the transcendence AP interaction has{" "}
+          <em>not</em> been calibrated against in-game readings yet, so the
+          feature is off by default and clearly flagged when on. The current
+          guesses: flat adds are treated as base-stat increases (applied after
+          quality scaling, uncapped, and able to add a stat the item doesn't
+          natively have), CRIT/EVA adds are additive percentages, and the{" "}
+          <code>+10% Base</code> slot — like a Starforged boost — multiplies the
+          base + enchant + flat-add total. Whether flat adds should really be
+          scaled by those percentages is itself unconfirmed. Once a real reading
+          pins the true behaviour these estimates (and this note) will be
+          corrected.
+        </p>
 
         <h3>Data sources</h3>
         <p>
