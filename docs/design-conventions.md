@@ -13,6 +13,7 @@ surface in the path's colour, not only the marker.
 | Path | Theme colour | In-game look | In app |
 | --- | --- | --- | --- |
 | **Starforged** | iridescent / **rainbow** | rainbow stars, holographic accents | `.sf-star.on` — a pink→purple→blue→green→gold gradient clipped to the star |
+| **Starforged (roster-only)** | **muted silver** | — | `.sf-star.no-boost.on` — plain `var(--muted)` star + a `.sf-noboost-note` "no DI boost" tag; for items that can be Starforged in-game but whose milestones boost shop economy (Surcharge/Value) or other events (Bonus Favor) rather than base stats, so marking them changes no airship power |
 | **Ascension** | **gold / amber** | gold borders, gold-tinted bg, gold stars | not surfaced yet; use gold if added |
 | **Transcendence** | **blue** | blue borders, blue-tinted bg, blue stars | `.transc-seal` / `.transc-select` in `#4a90e2` |
 

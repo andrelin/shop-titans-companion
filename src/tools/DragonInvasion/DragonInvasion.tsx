@@ -95,6 +95,13 @@ export function DragonInvasion({ data }: { data: GameData }) {
   // what they can actually craft.
   const [maxEnchantTier, setMaxEnchantTier] = useState<number>(MAX_ENCHANT_TIER);
   const [categoryFilter, setCategoryFilter] = useState<"All" | Category>("All");
+  // Filter to the items the player has personally marked as an investment:
+  // Starforged unlocked (★) and/or given a ✦ transcendence level. "all" shows
+  // everything; the others narrow to the per-item marks (independent of the
+  // global +25% Starforged / ✦ override toggles — those don't mark items).
+  const [investmentFilter, setInvestmentFilter] = useState<
+    "all" | "either" | "starforged" | "transcended"
+  >("all");
   // Default the upper bound to whatever the latest tier in the data is, so
   // new tiers don't get silently hidden when the game adds them.
   const dataMaxTier = useMemo(
@@ -218,13 +225,31 @@ export function DragonInvasion({ data }: { data: GameData }) {
       category: cat,
       rows: ranked.get(cat)!.filter((r) => {
         if (r.bp.tier > maxTier) return false;
+        // Investment filter: narrow to items the player has personally marked
+        // (★ Starforged and/or a ✦ transcendence level). Independent of the
+        // global override toggles — those apply a boost but don't mark items.
+        if (investmentFilter !== "all") {
+          const isSf = starforgedUnlocked.has(r.bp.name);
+          const isTr = (transcendenceLevels[r.bp.name] ?? 0) > 0;
+          if (investmentFilter === "starforged" && !isSf) return false;
+          if (investmentFilter === "transcended" && !isTr) return false;
+          if (investmentFilter === "either" && !isSf && !isTr) return false;
+        }
         return !(q &&
             !r.bp.name.toLowerCase().includes(q) &&
             !r.bp.type.toLowerCase().includes(q));
 
       }),
     }));
-  }, [ranked, categoryFilter, maxTier, search]);
+  }, [
+    ranked,
+    categoryFilter,
+    maxTier,
+    search,
+    investmentFilter,
+    starforgedUnlocked,
+    transcendenceLevels,
+  ]);
 
   const setSortKey = (key: SortKey) => {
     setSort((s) =>
@@ -324,6 +349,26 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 {c}
               </option>
             ))}
+          </select>
+
+          <select
+            value={investmentFilter}
+            onChange={(e) =>
+              setInvestmentFilter(
+                e.target.value as
+                  | "all"
+                  | "either"
+                  | "starforged"
+                  | "transcended",
+              )
+            }
+            aria-label="Filter by items you've marked"
+            title="Narrow to the items you've marked as an investment — Starforged (★) and/or given a ✦ transcendence level. Based on your per-item marks, not the global override toggles."
+          >
+            <option value="all">All items</option>
+            <option value="either">★ / ✦ marked (either)</option>
+            <option value="starforged">★ Starforged marked</option>
+            <option value="transcended">✦ Transcended marked</option>
           </select>
 
           <select
@@ -546,6 +591,19 @@ export function DragonInvasion({ data }: { data: GameData }) {
                 <tbody>
                   {visible.map((r) => {
                     const rec = recommendEnchant(r.bp, maxEnchantTier);
+                    // Starforged marking splits into two ideas: an item can be
+                    // Starforged in-game (has milestones) vs. its milestones
+                    // actually boost base stats (affects AP). Roster-only marks
+                    // (markable, but no AP change) get a muted star + a note.
+                    const sfCanMark = r.bp.starforgedMilestones.length > 0;
+                    const sfHasStatBoost = !!r.bp.starforgedStatBoosts;
+                    const sfMarked = starforgedUnlocked.has(r.bp.name);
+                    // The global toggle only governs stat-boosting items; a
+                    // no-boost item is never forced by it, so its ★ stays a
+                    // hand-toggle even when the global switch is on.
+                    const sfGloballyForced =
+                      includeStarforgedStatBoosts && sfHasStatBoost;
+                    const sfFilled = sfMarked || sfGloballyForced;
                     const rankClass =
                       r.categoryRank === 1
                         ? "rank rank-1"
@@ -563,27 +621,41 @@ export function DragonInvasion({ data }: { data: GameData }) {
                         <td className="item-name">
                           <span className="item-name-text">
                             {r.bp.name}
-                            {r.bp.starforgedStatBoosts ? (
-                              <button
-                                type="button"
-                                className={`sf-star${r.starforged ? " on" : ""}`}
-                                disabled={includeStarforgedStatBoosts}
-                                onClick={() => toggleStarforged(r.bp.name)}
-                                aria-label={
-                                  r.starforged
-                                    ? "Starforged unlocked"
-                                    : "Mark Starforged unlocked"
-                                }
-                                title={
-                                  includeStarforgedStatBoosts
-                                    ? "Starforged is applied to every item via the global toggle. Turn that off to pick per item."
-                                    : starforgedUnlocked.has(r.bp.name)
-                                      ? "Starforged unlocked — this item's AP includes +25% base ATK/DEF/HP. Click to remove."
-                                      : "Mark this item's Starforged milestone unlocked, so its AP includes the +25% boost."
-                                }
-                              >
-                                {r.starforged ? "★" : "☆"}
-                              </button>
+                            {sfCanMark ? (
+                              <>
+                                <button
+                                  type="button"
+                                  className={`sf-star${sfFilled ? " on" : ""}${
+                                    sfHasStatBoost ? "" : " no-boost"
+                                  }`}
+                                  disabled={sfGloballyForced}
+                                  onClick={() => toggleStarforged(r.bp.name)}
+                                  aria-label={
+                                    sfFilled ? "Starforged marked" : "Mark Starforged"
+                                  }
+                                  title={
+                                    sfGloballyForced
+                                      ? "Starforged is applied to every stat-boosting item via the global toggle. Turn that off to pick per item."
+                                      : !sfHasStatBoost
+                                        ? sfMarked
+                                          ? "Marked Starforged (roster only). This item's Starforged milestones boost your shop economy (Surcharge / Value) or other events (Bonus Favor for King's Caprice), not base stats — so it adds no Dragon Invasion airship power. Click to unmark."
+                                          : "Mark Starforged for your roster. Note: this item's Starforged milestones boost your shop economy (Surcharge / Value) or other events (Bonus Favor), not base stats — so marking it won't change its Dragon Invasion airship power."
+                                        : sfMarked
+                                          ? "Starforged unlocked — this item's AP includes +25% base ATK/DEF/HP. Click to remove."
+                                          : "Mark this item's Starforged milestone unlocked, so its AP includes the +25% boost."
+                                  }
+                                >
+                                  {sfFilled ? "★" : "☆"}
+                                </button>
+                                {sfMarked && !sfHasStatBoost ? (
+                                  <span
+                                    className="sf-noboost-note"
+                                    title="Starforged in-game — its milestones boost your shop economy (Surcharge / Value) or other events (Bonus Favor for King's Caprice), not base stats — so no Dragon Invasion airship power here."
+                                  >
+                                    no DI boost
+                                  </span>
+                                ) : null}
+                              </>
                             ) : null}
                             {r.bp.transcendence &&
                             r.bp.transcendence.length > 0 ? (
@@ -1120,6 +1192,21 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           items you've actually unlocked (saved in your browser). Either way,
           rows with the boost applied are highlighted, and items without the
           milestone are unaffected.
+        </p>
+        <p>
+          Not every Starforged item gets the stat boost, though. Some recipes'
+          Starforged milestones pay off <em>elsewhere</em> — your shop economy
+          (Surcharge Value, Value Increase, Multicraft Chance) or another event
+          (Bonus Favor is worth more in King's Caprice) — with no{" "}
+          <em>+25% Base ATK/DEF/HP</em> among them (the Pearlescent Helmet is
+          one). Those are still real upgrades, just not for Dragon Invasion,
+          whose ranking only cares about airship power. You can still{" "}
+          <strong>mark them Starforged</strong> for
+          your own roster tracking: the star shows in a muted silver with a{" "}
+          <em>no DI boost</em> note, and — because their milestones don't touch
+          base stats — marking them <strong>does not change their airship
+          power</strong> here. So a marked item whose score doesn't move isn't a
+          bug; its Starforged milestones just pay off in a different event.
         </p>
         <p>
           This boost applies to the <strong>base stats plus the enchant

@@ -594,6 +594,27 @@ td.num.enchanted {
 .sf-star:disabled {
   cursor: default;
 }
+/* Roster-only mark: the item can be Starforged in-game but its milestones
+   don't boost base stats, so marking it changes nothing about airship power.
+   A muted silver star (not the iridescent gradient) keeps it visibly distinct
+   from a score-affecting Starforged, so a marked-but-unchanged score doesn't
+   read as a bug. */
+.sf-star.no-boost.on {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  color: var(--muted);
+}
+/* Small "no AP boost" tag shown next to a roster-only mark, so it's explicit
+   why the score didn't move. */
+.sf-noboost-note {
+  margin-left: 5px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
 
 /* Rows whose AP includes the +25% Starforged boost get a faint lift plus an
    iridescent left accent, echoing the in-game Starforged border. */
