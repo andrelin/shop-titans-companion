@@ -33,6 +33,29 @@ Picks the best quest to run for a given goal: gold per energy, XP per energy, dr
 ### Hero Gear Loadout and Talent Point Planner
 Lets a player pin a hero and see the best craftable gear loadout for current quest content, including talent point allocations and ascension-aware stat targets. Consumes Heroes, Hero Levels, Blueprints, Enchantments, Slots, and Talent Points. Solves the "what do I equip this hero with" question that today requires cross-referencing community guides per hero.
 
+### Best-in-Slot (BiS) Heroes — personalized to your actual items
+A per-slot best-in-slot gear list by hero class, like
+[ST Central Hub's BiS Heroes tool](https://stcentral-hub.github.io/tools/bis-heroes/) — but ranked against the player's *actual* item states,
+not a one-size-fits-all curated list.
+The differentiator: it consumes the per-item **Starforged (★)** and **Transcendence (✦)** marks we already track in `st-settings`
+(the same marks the Dragon Invasion ranker uses), so the recommendation reflects the upgrades the player has really unlocked
+rather than assuming everyone has everything maxed.
+User selects a hero **class** (and skill/promotion variant, e.g. Sword Master vs Warlord); the tool outputs the best item per equipment slot
+(weapon, body, helmet, gloves, boots, shield/cloak, accessories), with the recommended element + spirit enchant and quality.
+
+**Key design fork — a different power model.** BiS ranks on **combat stats** (ATK/DEF/HP against a hero's stat thresholds and skill compatibility),
+which is *not* our Dragon Invasion airship-power metric — it reuses the shared data layer (blueprints, enchant tables, quality scaling, the
+Starforged/✦ stat math) but needs its own ranking function, not `computePower`.
+ST Central's version leans on **curated stat-threshold rules and hero-skill-compatibility caveats** ("don't follow blindly if your hero's weapon
+skill differs") rather than a pure computed score, so part of the work is deciding how much to compute vs. encode as curated rules.
+
+Consumes Heroes, Hero Classes/Skills, Blueprints, Enchantments, Slots, and the user's Starforged/✦ marks.
+**Open data questions:** whether hero class → slot → stat-threshold rules and skill-compatibility data live in the canonical sheet or need manual
+encoding; and whether we vendor the official **Fan Kit** icons (class/element/spirit/item art, as ST Central does under `/fankit/…`) into
+`public/` for an icon-rich UI — CSP-clean and offline, matching our committed-data approach (check the fankit license first).
+Overlaps with, but is distinct from, the **Hero Gear Loadout Planner** above (that pins one hero for current quest content and adds talent points;
+this is a browse-by-class BiS reference personalized to owned upgrades) — worth deciding whether they merge or ship separately.
+
 ### Champion Ascension Planner
 Projects the cost in tokens, gold, and time to take each champion to the next ascension and ranks champions by post-ascension utility for the player's current content. Consumes Champions, Skills, and Hero Levels. Ascension is expensive and irreversible-feeling, so a "should I ascend this one next" tool has real payoff.
 
