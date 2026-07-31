@@ -186,6 +186,35 @@ footer {
   gap: 8px;
 }
 
+/* About & legal disclaimer — collapsed by default on its own full-width row so
+   it doesn't crowd the synced-data line. */
+.about-legal {
+  flex-basis: 100%;
+  order: 3;
+  margin-top: 4px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 10px;
+}
+.about-legal > summary {
+  cursor: pointer;
+  user-select: none;
+  color: var(--muted-2);
+}
+.about-legal > summary:hover {
+  color: var(--muted);
+}
+.about-body {
+  margin-top: 10px;
+  max-width: 760px;
+  line-height: 1.6;
+}
+.about-body p {
+  margin: 0 0 10px;
+}
+.about-body p:last-child {
+  margin-bottom: 0;
+}
+
 .banner {
   background: linear-gradient(180deg, #2a221a 0%, #211a14 100%);
   border: 1px solid #5a4222;

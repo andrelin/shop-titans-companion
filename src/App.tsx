@@ -91,6 +91,51 @@ export function App() {
             Source spreadsheet
           </a>
         </span>
+        <details className="about-legal">
+          <summary>About &amp; legal</summary>
+          <div className="about-body">
+            <p>
+              A fan-made companion for <strong>Shop Titans</strong>. This site
+              is{" "}
+              <strong>
+                not endorsed, sponsored, or commissioned by Kabam Games, Inc.
+              </strong>{" "}
+              Shop Titans and its assets are © Kabam Games, Inc. This is a free,
+              non-commercial community project.
+            </p>
+            <p>
+              <strong>Attribution.</strong> Game data is synced from the
+              community-maintained{" "}
+              <a
+                href="https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Shop Titans data spreadsheet
+              </a>
+              . Item, affinity and type icons (where shown) are{" "}
+              <strong>Shop Titans Fan Kit</strong> assets by Kabam Games, Inc.
+              Avatar: The Last Airbender™, Ghostbusters™ and Jumanji™ assets and
+              names from Shop Titans collaborations are used under fair use for
+              this community fan tool; all rights reserved to their respective
+              owners.
+            </p>
+            <p>
+              <strong>Privacy &amp; data collection.</strong> This site does not
+              collect or track any data beyond what GitHub Pages logs. When you
+              visit a GitHub Pages site your IP address is logged for security
+              purposes, whether or not you are signed into GitHub — see the{" "}
+              <a
+                href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub Privacy Statement
+              </a>
+              .
+            </p>
+          </div>
+        </details>
       </footer>
     </div>
   );
