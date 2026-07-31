@@ -1,5 +1,11 @@
-// Dragon Invasion airship categories — the four slots items compete for. Shared
-// by every event tool so the bucketing never drifts between them.
+// Dragon Invasion airship categories — the four slots items compete for.
+//
+// NOTE: these four are DI-SPECIFIC. The base game groups gear into just three
+// categories — Weapons, Armor, Accessories — but Dragon Invasion splits Armor
+// into "Body Armor" (chest pieces) and "Misc Armor" (helmets / footwear /
+// gloves) so items compete in tighter slots. A future non-DI tool that wants the
+// game's native three should merge Body Armor + Misc Armor back into "Armor";
+// don't assume this four-way split is universal.
 
 export type Category =
   | "Weapons"
