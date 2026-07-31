@@ -137,6 +137,17 @@ export function App() {
               owners.
             </p>
             <p>
+              <strong>Thanks to ST Central.</strong> This tool leans heavily on
+              the community knowledge and theorycrafting at{" "}
+              <a href="https://st-central.net/" target="_blank" rel="noreferrer">
+                ST Central
+              </a>
+              : the airship-power formula is calibrated against their
+              displayed-stat reference, and much of the game-mechanics
+              understanding behind this tool comes from their guides. Their site
+              content is licensed CC BY-NC-ND 4.0.
+            </p>
+            <p>
               <strong>Privacy &amp; data collection.</strong> This site does not
               collect or track any data beyond what GitHub Pages logs. When you
               visit a GitHub Pages site your IP address is logged for security
