@@ -39,5 +39,5 @@ Detailed designs live in the linked plan docs.
 
 ## Parked
 
-- **Item images** (task): the site's icons key off the game's internal item `uid`, which isn't in the community sheet — needs a
+- **Item images** (task): the site's icons key off the game's internal item `uid`, which isn't in the official sheet — needs a
   separate uid source. Low priority.

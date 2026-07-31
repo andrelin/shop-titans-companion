@@ -13,7 +13,7 @@ export const QUALITY_ORDER: Quality[] = [
 // Multipliers taken from the Dragon Invasion reference sheet's Key.
 // Applied to base item stats. For crit/eva items the compounding makes
 // final airship power slightly higher than the linear scaling — we accept
-// that approximation, matching how the community sheet ranks items.
+// that approximation, matching how the official sheet ranks items.
 export const QUALITY_MULTIPLIER: Record<Quality, number> = {
   Common: 1,
   Superior: 1.25,

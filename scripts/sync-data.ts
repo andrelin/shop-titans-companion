@@ -1,11 +1,12 @@
 /**
- * Sync game data from the canonical Shop Titans community spreadsheet.
+ * Sync game data from the official Shop Titans spreadsheet (maintained by Kabam).
  *
  * Downloads the Blueprints and Enchantments tabs as CSV, parses them, and
  * writes typed JSON into `data/`. Run via `npm run sync`. A GitHub Action runs
  * this on a schedule and commits any diff.
  *
- * Source workbook: https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c
+ * Source workbook: https://playshoptitans.com/spreadsheet
+ * (redirects to https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c)
  */
 import { parse } from "csv-parse/sync";
 import { realpathSync } from "node:fs";

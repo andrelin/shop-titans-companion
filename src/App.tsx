@@ -84,7 +84,7 @@ export function App() {
         </span>
         <span>
           <a
-            href="https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c"
+            href="https://playshoptitans.com/spreadsheet"
             target="_blank"
             rel="noreferrer"
           >
@@ -104,16 +104,32 @@ export function App() {
               non-commercial community project.
             </p>
             <p>
-              <strong>Attribution.</strong> Game data is synced from the
-              community-maintained{" "}
+              <strong>License.</strong> This project's own source code and
+              content are open source under the{" "}
               <a
-                href="https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c"
+                href="https://github.com/andrelin/shop-titans-companion/blob/main/LICENSE"
+                target="_blank"
+                rel="noreferrer"
+              >
+                MIT License
+              </a>{" "}
+              — free to use, modify and share, with no added restrictions of our
+              own. The Shop Titans game data, Fan Kit assets and collab
+              trademarks below are not ours to license and remain with their
+              respective owners.
+            </p>
+            <p>
+              <strong>Attribution.</strong> Game data is synced from the
+              official{" "}
+              <a
+                href="https://playshoptitans.com/spreadsheet"
                 target="_blank"
                 rel="noreferrer"
               >
                 Shop Titans data spreadsheet
-              </a>
-              . Item, affinity and type icons (where shown) are{" "}
+              </a>{" "}
+              (maintained by Kabam). Item, affinity and type icons (where shown)
+              are{" "}
               <strong>Shop Titans Fan Kit</strong> assets by Kabam Games, Inc.
               Avatar: The Last Airbender™, Ghostbusters™ and Jumanji™ assets and
               names from Shop Titans collaborations are used under fair use for

@@ -1311,14 +1311,15 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
         <h3>Data sources</h3>
         <p>
           Blueprints, enchant names, and affinities are synced daily from the
-          community-maintained{" "}
+          official{" "}
           <a
-            href="https://docs.google.com/spreadsheets/d/1WLa7X8h3O0-aGKxeAlCL7bnN8-FhGd3t7pz2RCzSg8c"
+            href="https://playshoptitans.com/spreadsheet"
             target="_blank"
             rel="noreferrer"
           >
             Shop Titans data spreadsheet
-          </a>
+          </a>{" "}
+          (maintained by Kabam)
           . The base airship power formula above is verified against{" "}
           <a
             href="https://st-central.net/displayed-stat-calculations/"
