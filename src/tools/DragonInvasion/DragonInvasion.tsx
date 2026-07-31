@@ -13,6 +13,7 @@ import {
 import {
   CATEGORY_ORDER,
   categoryOf,
+  contributesToAirshipPower,
   type Category,
 } from "../../data/categories";
 import { acquisitionBadge } from "../../data/acquisition";
@@ -144,9 +145,11 @@ export function DragonInvasion({ data }: { data: GameData }) {
     const out: Row[] = [];
     for (const bp of data.blueprints) {
       if (bp.atk === 0 && bp.def === 0 && bp.hp === 0) continue;
-      // Familiars don't contribute to airship power in-game, despite the
-      // canonical sheet listing AP values for them — exclude from rankings.
-      if (bp.type === "Familiar") continue;
+      // Familiars and Aurasongs are Champion-only — they can't be donated to the
+      // airship, so they never contribute to Dragon Invasion power (which is why
+      // they're absent from ST Central's DI list too). The canonical sheet still
+      // lists AP values for them, so exclude them from the rankings explicitly.
+      if (!contributesToAirshipPower(bp.type)) continue;
       // The +25% Starforged boost applies to this item if it has the milestone
       // and either the global switch is on or the player marked it unlocked.
       const starforged =
@@ -1239,11 +1242,14 @@ function ExplainPanel({ blueprints }: { blueprints: Blueprint[] }) {
           can be enchanted for further gain.
         </p>
 
-        <h3>10. Familiars</h3>
+        <h3>10. Familiars and Aurasongs</h3>
         <p>
-          The canonical data sheet lists airship-power values for familiars,
-          but in-game familiars don't actually contribute to the airship. The
-          ranker excludes them from every category.
+          The canonical data sheet lists airship-power values for{" "}
+          <strong>Familiars</strong> and <strong>Aurasongs</strong>, but both are{" "}
+          <em>Champion-only</em> — they can't be donated to the airship, so
+          neither contributes to Dragon Invasion power (they're absent from the
+          community DI gear list for the same reason). The ranker excludes both
+          from every category.
         </p>
 
         <h3>11. Top N per category</h3>

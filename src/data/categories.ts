@@ -23,7 +23,6 @@ export const TYPE_TO_CATEGORY: Record<string, Category> = {
   Crossbow: "Weapons",
   Gun: "Weapons",
   Instrument: "Weapons",
-  Aurasong: "Weapons",
   "Dual Wield": "Weapons",
   // Body Armor (chest pieces)
   "Heavy Armor": "Body Armor",
@@ -45,6 +44,7 @@ export const TYPE_TO_CATEGORY: Record<string, Category> = {
   Ring: "Accessories",
   Spell: "Accessories",
   Familiar: "Accessories",
+  Aurasong: "Accessories",
   Quiver: "Accessories",
   Potion: "Accessories",
   "Herbal Medicine": "Accessories",
@@ -61,4 +61,15 @@ export const CATEGORY_ORDER: Category[] = [
 
 export function categoryOf(type: string): Category {
   return TYPE_TO_CATEGORY[type] ?? "Other";
+}
+
+// Item types that exist as gear slots but never contribute to airship power:
+// they can only be equipped by Champions and cannot be donated to the airship,
+// so they don't compete in Dragon Invasion (and are absent from ST Central's DI
+// list for the same reason). The canonical sheet still lists AP values for them,
+// so any airship-power tool must exclude them explicitly.
+export const AIRSHIP_EXCLUDED_TYPES = new Set(["Familiar", "Aurasong"]);
+
+export function contributesToAirshipPower(type: string): boolean {
+  return !AIRSHIP_EXCLUDED_TYPES.has(type);
 }
