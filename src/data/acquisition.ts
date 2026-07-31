@@ -51,7 +51,7 @@ export function acquisitionBadge(
   return {
     state: "premium",
     cls: "bonus-chip bonus-premium",
-    label: "💎 premium",
+    label: "💎 Premium",
     title: bp.antiqueFrom
       ? `Premium item — obtained from ${source}. Not freely craftable; enters the Antiques store on ${bp.antiqueFrom}.`
       : `Premium item — obtained from ${source}. Not freely craftable.`,
