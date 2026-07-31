@@ -39,5 +39,8 @@ Detailed designs live in the linked plan docs.
 
 ## Parked
 
-- **Item images** (task): the site's icons key off the game's internal item `uid`, which isn't in the official sheet — needs a
-  separate uid source. Low priority.
+- **Fan Kit icons + Kabam permission** (parked, deferred 2026-07-31): a full game-icon layer (Fan Kit item / affinity / type /
+  chest art, etc.) is finished on the un-deployed `fankit-icons` branch but intentionally **not shipped**. Before deploying it,
+  seek Kabam's OK to use the Fan Kit + game data in this free, non-commercial fan tool — Kabam's ToS reserves rights, and the
+  Fan Kit README asks for permission before redistributing assets. `main` stays text-only, sourced from the official public
+  spreadsheet, until then. The item→icon mapping is a hand-maintained factual list; we no longer scrape any third-party site.
