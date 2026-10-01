@@ -67,16 +67,16 @@ const COL = {
   hp: 46,
   eva: 47,
   crit: 48,
-  elementalAffinity: 50,
-  spiritAffinity: 51,
-  builtInElement: 52,
-  builtInSpirit: 53,
-  craftingUpgrade: [55, 57, 59, 61, 63] as const,
-  starforgedMilestone: [66, 68, 70, 72, 74] as const,
-  ascensionUpgrade: [77, 79, 81] as const,
-  transcendenceUpgrade: [83, 85, 87] as const,
-  transcendenceSeals: [84, 86, 88] as const,
-  antiqueFrom: 95,
+  elementalAffinity: 51,
+  spiritAffinity: 52,
+  builtInElement: 53,
+  builtInSpirit: 54,
+  craftingUpgrade: [56, 58, 60, 62, 64] as const,
+  starforgedMilestone: [67, 69, 71, 73, 75] as const,
+  ascensionUpgrade: [78, 80, 82] as const,
+  transcendenceUpgrade: [84, 86, 88] as const,
+  transcendenceSeals: [85, 87, 89] as const,
+  antiqueFrom: 96,
 } as const;
 
 // A premium (not freely craftable) item: its Unlock Prerequisite names a
@@ -265,7 +265,7 @@ function parseBlueprints(rows: string[][]): ParsedBlueprint[] {
     [COL.elementalAffinity, "Elemental Affinity"],
     [COL.transcendenceUpgrade[0], "Transcendence Upgrade 1"],
     [COL.unlockPrerequisite, "Unlock Prerequisite"],
-    [COL.antiqueFrom, "Available as an Antique starting on (UTC)"],
+    [COL.antiqueFrom, "Is Antique starting on (UTC)"],
   ];
   for (const [i, expected] of checks) {
     const got = (header[i] ?? "").trim();

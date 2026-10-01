@@ -264,6 +264,14 @@
     "hp": 33
   },
   {
+    "name": "Fresh Spirit",
+    "type": "Spirit",
+    "tier": 4,
+    "atk": 0,
+    "def": 0,
+    "hp": 0
+  },
+  {
     "name": "Ram Spirit",
     "type": "Spirit",
     "tier": 4,
@@ -440,6 +448,14 @@
     "hp": 10
   },
   {
+    "name": "Mundra's Spirit",
+    "type": "Spirit",
+    "tier": 9,
+    "atk": 50,
+    "def": 33,
+    "hp": 10
+  },
+  {
     "name": "Tiger Spirit",
     "type": "Spirit",
     "tier": 9,
@@ -528,6 +544,14 @@
     "hp": 21
   },
   {
+    "name": "Spirit Spirit",
+    "type": "Spirit",
+    "tier": 13,
+    "atk": 131,
+    "def": 87,
+    "hp": 26
+  },
+  {
     "name": "Behemoth Spirit",
     "type": "Spirit",
     "tier": 14,
@@ -582,5 +606,13 @@
     "atk": 164,
     "def": 109,
     "hp": 33
+  },
+  {
+    "name": "Tomb-Bound Spirit",
+    "type": "Spirit",
+    "tier": 16,
+    "atk": 200,
+    "def": 133,
+    "hp": 40
   }
 ]

@@ -3484,6 +3484,79 @@
     "premium": true
   },
   {
+    "name": "Eclipsed Hookblade",
+    "type": "Sword",
+    "tier": 16,
+    "airshipPower": 1356,
+    "atk": 1420,
+    "def": 0,
+    "hp": 44,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light",
+      "Dark"
+    ],
+    "spiritAffinity": [
+      "Spirit Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-12 Ether Spent",
+      "x1.25 Value Increase",
+      "-45 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-2 Paramount Gem Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 142,
+        "raw": "ATK +142"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 44,
+        "raw": "HP +44"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "antiqueFrom": "February 17, 2027",
+    "premium": true
+  },
+  {
     "name": "Wood Axe",
     "type": "Axe",
     "tier": 1,
@@ -10327,6 +10400,77 @@
     "premium": true
   },
   {
+    "name": "Solaryn Sunslicer",
+    "type": "Dagger",
+    "tier": 16,
+    "airshipPower": 2128,
+    "atk": 1330,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.1,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "x1.25 Value Increase",
+      "-41 Steel Spent",
+      "-13 Jewels Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Paramount Gem Spent",
+      "-4 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 133,
+        "raw": "ATK +133"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "crit",
+        "amount": 0.02,
+        "raw": "CRIT +2%"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Solaryn Superior Pack",
+    "antiqueFrom": "February 28, 2027",
+    "premium": true
+  },
+  {
     "name": "Cudgel",
     "type": "Mace",
     "tier": 1,
@@ -13800,6 +13944,79 @@
     ],
     "unlockPrerequisite": "Pearlescent Chest",
     "antiqueFrom": "December 9, 2026",
+    "premium": true
+  },
+  {
+    "name": "Draftmaker",
+    "type": "Mace",
+    "tier": 16,
+    "airshipPower": 1596,
+    "atk": 1330,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.05,
+    "elementalAffinity": [
+      "Earth"
+    ],
+    "spiritAffinity": [
+      "Scholar Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-113 Wood Spent",
+      "-25% Craft Time Reduction",
+      "x1.25 Value Increase",
+      "-33 Ironwood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Hybridized Vine Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 133,
+        "raw": "ATK +133"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "crit",
+        "amount": 0.02,
+        "raw": "CRIT +2%"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Back to School 2026 Mega Pack",
+    "antiqueFrom": "March 7, 2027",
     "premium": true
   },
   {
@@ -20454,6 +20671,74 @@
     ],
     "unlockPrerequisite": "Lucky Pack",
     "antiqueFrom": "December 16, 2026",
+    "premium": true
+  },
+  {
+    "name": "Pearlescent Bow",
+    "type": "Bow",
+    "tier": 16,
+    "airshipPower": 1136,
+    "atk": 1420,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Gold"
+    ],
+    "spiritAffinity": [
+      "Ancestor Tradition"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-100 Iron Spent",
+      "-27 Steel Spent",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "x1.25 Value Increase",
+      "+20% Bonus Favor",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-1 Precious Pearl Spent",
+      "-3 Essence Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 142,
+        "raw": "ATK +142"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 44,
+        "raw": "HP +44"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Pearlescent Chest",
+    "antiqueFrom": "March 3, 2027",
     "premium": true
   },
   {
@@ -28156,6 +28441,77 @@
     "premium": true
   },
   {
+    "name": "Soulflame Thrower",
+    "type": "Crossbow",
+    "tier": 16,
+    "airshipPower": 1355,
+    "atk": 1600,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark"
+    ],
+    "spiritAffinity": [
+      "Spirit Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-45 Oils Spent",
+      "x1.25 Value Increase",
+      "-12 Ether Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Hybridized Vine Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 160,
+        "raw": "ATK +160"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "other",
+        "raw": "Mana Shield +5"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Reaper Superior Pack",
+    "antiqueFrom": "February 14, 2027",
+    "premium": true
+  },
+  {
     "name": "Pellet Gun",
     "type": "Gun",
     "tier": 1,
@@ -30610,6 +30966,148 @@
     "premium": true
   },
   {
+    "name": "Water Gun",
+    "type": "Gun",
+    "tier": 16,
+    "airshipPower": 1704,
+    "atk": 1780,
+    "def": 0,
+    "hp": 56,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "All"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-13 Jewels Spent",
+      "x1.25 Value Increase",
+      "-138 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-2 Kingtoplasm Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 178,
+        "raw": "ATK +178"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 55,
+        "raw": "HP +55"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "antiqueFrom": "January 26, 2027",
+    "premium": true
+  },
+  {
+    "name": "Solaryn Trifuser",
+    "type": "Gun",
+    "tier": 16,
+    "airshipPower": 2136,
+    "atk": 1780,
+    "def": 0,
+    "hp": 0,
+    "eva": 0.05,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light",
+      "Earth"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-138 Iron Spent",
+      "x1.25 Value Increase",
+      "-36 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-2 Alien Bulb Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 178,
+        "raw": "ATK +178"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "eva",
+        "amount": 0.02,
+        "raw": "EVA +2%"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Solaryn Superior Pack",
+    "antiqueFrom": "February 28, 2027",
+    "premium": true
+  },
+  {
     "name": "Triangle",
     "type": "Instrument",
     "tier": 3,
@@ -32175,6 +32673,146 @@
     "premium": true
   },
   {
+    "name": "Alien Bell-Beacon",
+    "type": "Instrument",
+    "tier": 16,
+    "airshipPower": 2058,
+    "atk": 1870,
+    "def": 468,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-40 Steel Spent",
+      "x1.25 Value Increase",
+      "-138 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Paramount Gem Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 187,
+        "raw": "ATK +187"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 150,
+        "raw": "DEF +150"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Meteor Zone Superior Pack",
+    "antiqueFrom": "January 31, 2027",
+    "premium": true
+  },
+  {
+    "name": "Drum of Everwar",
+    "type": "Instrument",
+    "tier": 16,
+    "airshipPower": 1536,
+    "atk": 1920,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Tomb-Born Malevolence"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-140 Leather Spent",
+      "x1.25 Value Increase",
+      "-15 Jewels Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Wing Nexus Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 192,
+        "raw": "ATK +192"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 60,
+        "raw": "HP +60"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Tomb-Bound Chest",
+    "antiqueFrom": "March 9, 2027",
+    "premium": true
+  },
+  {
     "name": "Twin Khopesh",
     "type": "Dual Wield",
     "tier": 5,
@@ -32315,7 +32953,7 @@
     "builtInElement": [],
     "builtInSpirit": [],
     "craftingUpgrades": [
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "-1 Swift Blade Spent",
       "Blueprint: Roland's Own",
       "x1.25 Value Increase",
@@ -32379,7 +33017,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-50 Iron Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "Blueprint: Radiant & Midnight",
       "Quality Chance x2"
@@ -32450,7 +33088,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-47 Wood Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "-19 Ironwood Spent",
       "Quality Chance x2"
@@ -32522,7 +33160,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-7 Jewels Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "Blueprint: Jagged Duo",
       "Quality Chance x2"
@@ -32593,7 +33231,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-80 Iron Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "Blueprint: Silken Assailants",
       "Quality Chance x2"
@@ -32663,7 +33301,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-93 Iron Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "Blueprint: Slice & Dice",
       "Quality Chance x2"
@@ -32731,7 +33369,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-107 Iron Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "Blueprint: Crystal Destroyers",
       "Quality Chance x2"
@@ -32813,7 +33451,7 @@
     ],
     "ascensionUpgrades": [
       "-17 Jewels Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "+10% Multicraft Chance"
     ],
     "hasAirshipPowerUpgrade": false,
@@ -32868,8 +33506,8 @@
     "builtInElement": [],
     "builtInSpirit": [],
     "craftingUpgrades": [
-      "-2 Essence Spent",
-      "-2 Essence Spent",
+      "-3 Essence Spent",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "Blueprint: Nook & Cranny",
       "Quality Chance x2"
@@ -32941,7 +33579,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-12 Jewels Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "-127 Iron Spent",
       "Quality Chance x2"
@@ -33004,7 +33642,7 @@
     "builtInElement": [],
     "builtInSpirit": [],
     "craftingUpgrades": [
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "-1 Mysterious Fossil Spent",
       "x1.25 Value Increase",
       "Blueprint: Dying Stars",
@@ -33078,7 +33716,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-36 Steel Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "-1 Divine Spark Spent",
       "Quality Chance x2"
@@ -33148,7 +33786,7 @@
     "builtInElement": [],
     "builtInSpirit": [],
     "craftingUpgrades": [
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "-105 Iron Spent",
       "x1.25 Value Increase",
       "-1 Ancient Amber Spent",
@@ -33223,7 +33861,7 @@
     "builtInSpirit": [],
     "craftingUpgrades": [
       "-105 Iron Spent",
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "x1.25 Value Increase",
       "-3 Raw Obsidian Spent",
       "Quality Chance x2"
@@ -33294,7 +33932,7 @@
     "builtInElement": [],
     "builtInSpirit": [],
     "craftingUpgrades": [
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "-50 Steel Spent",
       "x1.25 Value Increase",
       "-138 Iron Spent",
@@ -33365,7 +34003,7 @@
     "builtInElement": [],
     "builtInSpirit": [],
     "craftingUpgrades": [
-      "-25% Craft Time Reduction",
+      "-40% Craft Time Reduction",
       "-138 Wood Spent",
       "x1.25 Value Increase",
       "-50 Ironwood Spent",
@@ -34521,6 +35159,897 @@
     "premium": true
   },
   {
+    "name": "Aperture Catalyst",
+    "type": "Catalyst",
+    "tier": 16,
+    "airshipPower": 2136,
+    "atk": 1780,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0.05,
+    "elementalAffinity": [
+      "Light",
+      "Dark"
+    ],
+    "spiritAffinity": [
+      "Spirit Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-13 Ether Spent",
+      "x1.25 Value Increase",
+      "-45 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Claw Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 178,
+        "raw": "ATK +178"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "crit",
+        "amount": 0.02,
+        "raw": "CRIT +2%"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Content Pass: Soular Harmony",
+    "antiqueFrom": "February 15, 2027",
+    "premium": true
+  },
+  {
+    "name": "Robust Extinctor",
+    "type": "Scythe",
+    "tier": 6,
+    "airshipPower": 224,
+    "atk": 280,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Dinosaur Senses"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-24 Wood Spent",
+      "Blueprint: Graceful Equity",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-5 Ironwood Spent",
+      "-1 Bronze Fang Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 28,
+        "raw": "ATK +28"
+      },
+      {
+        "slot": 2,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 9,
+        "raw": "HP +9"
+      },
+      {
+        "slot": 3,
+        "seals": 25,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Graceful Equity",
+    "type": "Scythe",
+    "tier": 7,
+    "airshipPower": 312,
+    "atk": 390,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Gold"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-43 Wood Spent",
+      "Blueprint: Bone Contraption",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-9 Ironwood Spent",
+      "-1 Silk Scarab Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 30,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 39,
+        "raw": "ATK +39"
+      },
+      {
+        "slot": 2,
+        "seals": 30,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 12,
+        "raw": "HP +12"
+      },
+      {
+        "slot": 3,
+        "seals": 30,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Bone Contraption",
+    "type": "Scythe",
+    "tier": 8,
+    "airshipPower": 368,
+    "atk": 460,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-55 Wood Spent",
+      "-25% Craft Time Reduction",
+      "x1.25 Value Increase",
+      "Blueprint: Faustian Bargain",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Ancient Marble Spent",
+      "-11 Ironwood Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 35,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 46,
+        "raw": "ATK +46"
+      },
+      {
+        "slot": 2,
+        "seals": 35,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 14,
+        "raw": "HP +14"
+      },
+      {
+        "slot": 3,
+        "seals": 35,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Faustian Bargain",
+    "type": "Scythe",
+    "tier": 9,
+    "airshipPower": 432,
+    "atk": 540,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-67 Wood Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Frostlethal",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-15 Ironwood Spent",
+      "-2 Star Metal Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 40,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 54,
+        "raw": "ATK +54"
+      },
+      {
+        "slot": 2,
+        "seals": 40,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 17,
+        "raw": "HP +17"
+      },
+      {
+        "slot": 3,
+        "seals": 40,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Ripley's Scythe",
+    "type": "Scythe",
+    "tier": 9,
+    "airshipPower": 456,
+    "atk": 540,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-15 Ironwood Spent",
+      "x1.25 Value Increase",
+      "-67 Wood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Spooky Ectoplasm Spent",
+      "-3 Ether Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 40,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 54,
+        "raw": "ATK +54"
+      },
+      {
+        "slot": 2,
+        "seals": 40,
+        "kind": "other",
+        "raw": "Mana Shield +2"
+      },
+      {
+        "slot": 3,
+        "seals": 40,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "antiqueFrom": "February 7, 2027",
+    "premium": true
+  },
+  {
+    "name": "Frostlethal",
+    "type": "Scythe",
+    "tier": 10,
+    "airshipPower": 496,
+    "atk": 620,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Water"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-80 Wood Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Scythingale",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-18 Ironwood Spent",
+      "-1 Crystal Lullaby Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 45,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 62,
+        "raw": "ATK +62"
+      },
+      {
+        "slot": 2,
+        "seals": 45,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 19,
+        "raw": "HP +19"
+      },
+      {
+        "slot": 3,
+        "seals": 45,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Scythingale",
+    "type": "Scythe",
+    "tier": 11,
+    "airshipPower": 640,
+    "atk": 800,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Air"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-21 Ironwood Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Slim Reaper",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-93 Wood Spent",
+      "-1 Grim Talon Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 60,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 80,
+        "raw": "ATK +80"
+      },
+      {
+        "slot": 2,
+        "seals": 60,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 25,
+        "raw": "HP +25"
+      },
+      {
+        "slot": 3,
+        "seals": 60,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Slim Reaper",
+    "type": "Scythe",
+    "tier": 12,
+    "airshipPower": 808,
+    "atk": 1010,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-107 Wood Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Void Accomplice",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Raw Obsidian Spent",
+      "-25 Ironwood Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 80,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 101,
+        "raw": "ATK +101"
+      },
+      {
+        "slot": 2,
+        "seals": 80,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 31,
+        "raw": "HP +31"
+      },
+      {
+        "slot": 3,
+        "seals": 80,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Void Accomplice",
+    "type": "Scythe",
+    "tier": 13,
+    "airshipPower": 1032,
+    "atk": 1290,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-38 Ironwood Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Art of Regicide",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-11 Ether Spent",
+      "-2 Zirconia Eggshell Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 100,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 129,
+        "raw": "ATK +129"
+      },
+      {
+        "slot": 2,
+        "seals": 100,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 40,
+        "raw": "HP +40"
+      },
+      {
+        "slot": 3,
+        "seals": 100,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Art of Regicide",
+    "type": "Scythe",
+    "tier": 14,
+    "airshipPower": 1280,
+    "atk": 1600,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-43 Ironwood Spent",
+      "-25% Craft Time Reduction",
+      "x1.25 Value Increase",
+      "Blueprint: Jade Faucheur",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-11 Jewels Spent",
+      "-2 Demigod Pinion Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 120,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 160,
+        "raw": "ATK +160"
+      },
+      {
+        "slot": 2,
+        "seals": 120,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 50,
+        "raw": "HP +50"
+      },
+      {
+        "slot": 3,
+        "seals": 120,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Jade Faucheur",
+    "type": "Scythe",
+    "tier": 15,
+    "airshipPower": 1488,
+    "atk": 1860,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-133 Wood Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Esper Intemporal",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Mysterious Fossil Spent",
+      "-38 Ironwood Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 130,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 186,
+        "raw": "ATK +186"
+      },
+      {
+        "slot": 2,
+        "seals": 130,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 58,
+        "raw": "HP +58"
+      },
+      {
+        "slot": 3,
+        "seals": 130,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Esper Intemporal",
+    "type": "Scythe",
+    "tier": 16,
+    "airshipPower": 1568,
+    "atk": 1960,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-113 Iron Spent",
+      "x1.25 Value Increase",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-33 Steel Spent",
+      "-1 Hybridized Vine Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 196,
+        "raw": "ATK +196"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 61,
+        "raw": "HP +61"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
     "name": "Mintyleaf Herb",
     "type": "Herbal Medicine",
     "tier": 1,
@@ -35475,6 +37004,74 @@
     "premium": true
   },
   {
+    "name": "Shrumyurnip Bundle",
+    "type": "Herbal Medicine",
+    "tier": 7,
+    "airshipPower": 174,
+    "atk": 105,
+    "def": 0,
+    "hp": 18,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-34 Herbs Spent",
+      "-3 Glow Shroom Spent",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Glow Shroom Spent",
+      "+10% Multicraft Chance",
+      "-9 Oils Spent"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 30,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 11,
+        "raw": "ATK +11"
+      },
+      {
+        "slot": 2,
+        "seals": 30,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 9,
+        "raw": "HP +9"
+      },
+      {
+        "slot": 3,
+        "seals": 30,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "antiqueFrom": "January 24, 2027",
+    "premium": true
+  },
+  {
     "name": "Blooming Wildwood",
     "type": "Herbal Medicine",
     "tier": 7,
@@ -35541,6 +37138,7 @@
         "raw": "+10% Base ATK, DEF and HP"
       }
     ],
+    "unlockPrerequisite": "Meteor Zone Mega Pack",
     "antiqueFrom": "December 9, 2025",
     "premium": true
   },
@@ -37690,6 +39288,79 @@
     "premium": true
   },
   {
+    "name": "Pencil Blossom",
+    "type": "Herbal Medicine",
+    "tier": 16,
+    "airshipPower": 814,
+    "atk": 499,
+    "def": 0,
+    "hp": 83,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Earth"
+    ],
+    "spiritAffinity": [
+      "Scholar Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-100 Wood Spent",
+      "x1.25 Value Increase",
+      "-15 Ether Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Claw Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 50,
+        "raw": "ATK +50"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 42,
+        "raw": "HP +42"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Back to School 2026 Superior Pack",
+    "antiqueFrom": "March 14, 2027",
+    "premium": true
+  },
+  {
     "name": "Warm Tea",
     "type": "Potion",
     "tier": 1,
@@ -38383,6 +40054,72 @@
         "raw": "+10% Base ATK, DEF and HP"
       }
     ]
+  },
+  {
+    "name": "Safety Glue",
+    "type": "Potion",
+    "tier": 6,
+    "airshipPower": 206,
+    "atk": 0,
+    "def": 55,
+    "hp": 28,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Horse Endurance"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-23 Herbs Spent",
+      "x1.25 Value Increase",
+      "-1 White Sand Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-6 Oils Spent",
+      "+10% Multicraft Chance",
+      "-1 White Sand Spent"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 7,
+        "raw": "HP +7"
+      },
+      {
+        "slot": 2,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 14,
+        "raw": "ATK +14"
+      },
+      {
+        "slot": 3,
+        "seals": 25,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Back to School 2026 Mega Pack",
+    "antiqueFrom": "March 7, 2027",
+    "premium": true
   },
   {
     "name": "Zesty Granita",
@@ -39341,6 +41078,76 @@
     ],
     "unlockPrerequisite": "Worker Duo Superior Pack",
     "antiqueFrom": "January 11, 2021",
+    "premium": true
+  },
+  {
+    "name": "Icey Slushie",
+    "type": "Potion",
+    "tier": 9,
+    "airshipPower": 375,
+    "atk": 0,
+    "def": 0,
+    "hp": 50,
+    "eva": 0.05,
+    "crit": 0,
+    "elementalAffinity": [
+      "All"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-15 Oils Spent",
+      "x1.25 Value Increase",
+      "-55 Herbs Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Chronos Crystal Spent",
+      "-4 Ether Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 40,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 13,
+        "raw": "HP +13"
+      },
+      {
+        "slot": 2,
+        "seals": 40,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 25,
+        "raw": "ATK +25"
+      },
+      {
+        "slot": 3,
+        "seals": 40,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "antiqueFrom": "January 26, 2027",
     "premium": true
   },
   {
@@ -43298,6 +45105,77 @@
     "premium": true
   },
   {
+    "name": "Curious Abacus",
+    "type": "Spell",
+    "tier": 10,
+    "airshipPower": 876,
+    "atk": 730,
+    "def": 0,
+    "hp": 0,
+    "eva": 0.05,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Scholar Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-17 Steel Spent",
+      "x1.25 Value Increase",
+      "-60 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-5 Ether Spent",
+      "+10% Multicraft Chance",
+      "-1 Crystal Lullaby Spent"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 45,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 73,
+        "raw": "ATK +73"
+      },
+      {
+        "slot": 2,
+        "seals": 45,
+        "kind": "stat",
+        "stat": "eva",
+        "amount": 0.02,
+        "raw": "EVA +2%"
+      },
+      {
+        "slot": 3,
+        "seals": 45,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Back to School 2026 Mega Pack",
+    "antiqueFrom": "March 7, 2027",
+    "premium": true
+  },
+  {
     "name": "Celestial Choir",
     "type": "Spell",
     "tier": 11,
@@ -44961,6 +46839,77 @@
       }
     ],
     "unlockPrerequisite": "Otherworldly Chest",
+    "premium": true
+  },
+  {
+    "name": "Tome of Souls Lost",
+    "type": "Spell",
+    "tier": 16,
+    "airshipPower": 1905,
+    "atk": 2250,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark"
+    ],
+    "spiritAffinity": [
+      "Spirit Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-13 Ether Spent",
+      "x1.25 Value Increase",
+      "-150 Herbs Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-4 Stardust Spent",
+      "-1 Paramount Gem Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 225,
+        "raw": "ATK +225"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "other",
+        "raw": "Mana Shield +7"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Reaper Superior Pack",
+    "antiqueFrom": "February 14, 2027",
     "premium": true
   },
   {
@@ -47404,6 +49353,75 @@
     "premium": true
   },
   {
+    "name": "Xzyurnip Carapace",
+    "type": "Heavy Armor",
+    "tier": 13,
+    "airshipPower": 795,
+    "atk": 0,
+    "def": 525,
+    "hp": 33,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-91 Iron Spent",
+      "x1.25 Value Increase",
+      "-38 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Essence Spent",
+      "-1 Outsider's Claw Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 100,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 131,
+        "raw": "DEF +131"
+      },
+      {
+        "slot": 2,
+        "seals": 100,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 79,
+        "raw": "HP +79"
+      },
+      {
+        "slot": 3,
+        "seals": 100,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Meteor Zone Mega Pack",
+    "antiqueFrom": "January 24, 2027",
+    "premium": true
+  },
+  {
     "name": "Cobalt Plate Armor",
     "type": "Heavy Armor",
     "tier": 14,
@@ -49004,6 +51022,72 @@
     ],
     "unlockPrerequisite": "Halloween Pack",
     "antiqueFrom": "April 25, 2020",
+    "premium": true
+  },
+  {
+    "name": "Solaryn Worker Wear",
+    "type": "Light Armor",
+    "tier": 6,
+    "airshipPower": 173,
+    "atk": 0,
+    "def": 115,
+    "hp": 7,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-11 Iron Spent",
+      "x1.25 Value Increase",
+      "-23 Leather Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-6 Fabric Spent",
+      "+10% Multicraft Chance",
+      "-1 Living Root Spent"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 29,
+        "raw": "DEF +29"
+      },
+      {
+        "slot": 2,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 12,
+        "raw": "HP +12"
+      },
+      {
+        "slot": 3,
+        "seals": 25,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Solaryn Mega Pack",
+    "antiqueFrom": "February 21, 2027",
     "premium": true
   },
   {
@@ -54856,6 +56940,77 @@
     ],
     "unlockPrerequisite": "Lethal Petal Mega Pack",
     "antiqueFrom": "December 27, 2026",
+    "premium": true
+  },
+  {
+    "name": "Reaper's Robes",
+    "type": "Clothes",
+    "tier": 16,
+    "airshipPower": 861,
+    "atk": 0,
+    "def": 665,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark"
+    ],
+    "spiritAffinity": [
+      "Spirit Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-100 Leather Spent",
+      "x1.25 Value Increase",
+      "-36 Fabric Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Eye Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 166,
+        "raw": "DEF +166"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "other",
+        "raw": "Mana Shield +5"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Reaper Mega Pack",
+    "antiqueFrom": "February 7, 2027",
     "premium": true
   },
   {
@@ -62729,6 +64884,70 @@
     "premium": true
   },
   {
+    "name": "Soulhost Hat",
+    "type": "Magician Hat",
+    "tier": 6,
+    "airshipPower": 135,
+    "atk": 0,
+    "def": 105,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-6 Herbs Spent",
+      "x1.25 Value Increase",
+      "-23 Leather Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-1 White Sand Spent",
+      "-6 Fabric Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 26,
+        "raw": "DEF +26"
+      },
+      {
+        "slot": 2,
+        "seals": 25,
+        "kind": "other",
+        "raw": "Mana Shield +1"
+      },
+      {
+        "slot": 3,
+        "seals": 25,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Reaper Mega Pack",
+    "antiqueFrom": "February 7, 2027",
+    "premium": true
+  },
+  {
     "name": "Tactician Hat",
     "type": "Magician Hat",
     "tier": 7,
@@ -65373,6 +67592,745 @@
     ],
     "unlockPrerequisite": "Collection Book",
     "antiqueFrom": "December 13, 2026",
+    "premium": true
+  },
+  {
+    "name": "Autumnal Mask",
+    "type": "Mask",
+    "tier": 6,
+    "airshipPower": 96,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Earth"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-28 Herbs Spent",
+      "Blueprint: Stern Sentinel",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-7 Ironwood Spent",
+      "-1 Bronze Fang Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 25,
+        "kind": "other",
+        "raw": "Mana Shield +8"
+      },
+      {
+        "slot": 2,
+        "seals": 25,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 6,
+        "raw": "HP +6"
+      },
+      {
+        "slot": 3,
+        "seals": 25,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Stern Sentinel",
+    "type": "Mask",
+    "tier": 7,
+    "airshipPower": 129,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-31 Iron Spent",
+      "Blueprint: Mask of Glass",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "x1.25 Value Increase",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-1 Silk Scarab Spent",
+      "-8 Steel Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 30,
+        "kind": "other",
+        "raw": "Mana Shield +11"
+      },
+      {
+        "slot": 2,
+        "seals": 30,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 16,
+        "raw": "DEF +16"
+      },
+      {
+        "slot": 3,
+        "seals": 30,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Mask of Glass",
+    "type": "Mask",
+    "tier": 8,
+    "airshipPower": 162,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-55 Iron Spent",
+      "Blueprint: Sightless Seer",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "DEF +20"
+    ],
+    "ascensionUpgrades": [
+      "-14 Steel Spent",
+      "-1 Chronos Crystal Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 35,
+        "kind": "other",
+        "raw": "Mana Shield +14"
+      },
+      {
+        "slot": 2,
+        "seals": 35,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 20,
+        "raw": "DEF +20"
+      },
+      {
+        "slot": 3,
+        "seals": 35,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Sightless Seer",
+    "type": "Mask",
+    "tier": 9,
+    "airshipPower": 186,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-67 Iron Spent",
+      "Blueprint: Gleeful Oni Mask",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "ATK +12"
+    ],
+    "ascensionUpgrades": [
+      "-2 Ancient Marble Spent",
+      "-19 Steel Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 40,
+        "kind": "other",
+        "raw": "Mana Shield +16"
+      },
+      {
+        "slot": 2,
+        "seals": 40,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 12,
+        "raw": "ATK +12"
+      },
+      {
+        "slot": 3,
+        "seals": 40,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Gleeful Oni Mask",
+    "type": "Mask",
+    "tier": 10,
+    "airshipPower": 216,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-80 Wood Spent",
+      "Blueprint: Facade of Glib Lies",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "HP +13"
+    ],
+    "ascensionUpgrades": [
+      "-23 Ironwood Spent",
+      "-1 Precious Shell Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 45,
+        "kind": "other",
+        "raw": "Mana Shield +18"
+      },
+      {
+        "slot": 2,
+        "seals": 45,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 13,
+        "raw": "HP +13"
+      },
+      {
+        "slot": 3,
+        "seals": 45,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Facade of Glib Lies",
+    "type": "Mask",
+    "tier": 11,
+    "airshipPower": 279,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Air"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-93 Leather Spent",
+      "Blueprint: Forgewraith",
+      "x1.25 Value Increase",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "DEF +35"
+    ],
+    "ascensionUpgrades": [
+      "-27 Fabric Spent",
+      "-1 Boreal Gale Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 60,
+        "kind": "other",
+        "raw": "Mana Shield +23"
+      },
+      {
+        "slot": 2,
+        "seals": 60,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 35,
+        "raw": "DEF +35"
+      },
+      {
+        "slot": 3,
+        "seals": 60,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Forgewraith",
+    "type": "Mask",
+    "tier": 12,
+    "airshipPower": 354,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Fire"
+    ],
+    "spiritAffinity": [
+      "Tarrasque Terror"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-107 Iron Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Kitsune's Mad Eyes",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "HP +22"
+    ],
+    "ascensionUpgrades": [
+      "-1 Magma Core Spent",
+      "-31 Steel Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 80,
+        "kind": "other",
+        "raw": "Mana Shield +29"
+      },
+      {
+        "slot": 2,
+        "seals": 80,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 22,
+        "raw": "HP +22"
+      },
+      {
+        "slot": 3,
+        "seals": 80,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Kitsune's Mad Eyes",
+    "type": "Mask",
+    "tier": 13,
+    "airshipPower": 450,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Wolf Ferocity"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-121 Leather Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Gaze of the Godless",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "DEF +56"
+    ],
+    "ascensionUpgrades": [
+      "-38 Fabric Spent",
+      "-1 All-Seeing Eye Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 100,
+        "kind": "other",
+        "raw": "Mana Shield +38"
+      },
+      {
+        "slot": 2,
+        "seals": 100,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 56,
+        "raw": "DEF +56"
+      },
+      {
+        "slot": 3,
+        "seals": 100,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Gaze of the Godless",
+    "type": "Mask",
+    "tier": 14,
+    "airshipPower": 558,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-127 Iron Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Tricera Face",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "DEF +69"
+    ],
+    "ascensionUpgrades": [
+      "-1 Heaven's Crest Spent",
+      "-43 Steel Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 120,
+        "kind": "other",
+        "raw": "Mana Shield +47"
+      },
+      {
+        "slot": 2,
+        "seals": 120,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 69,
+        "raw": "DEF +69"
+      },
+      {
+        "slot": 3,
+        "seals": 120,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Tricera Face",
+    "type": "Mask",
+    "tier": 15,
+    "airshipPower": 645,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Dinosaur Senses"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-133 Leather Spent",
+      "x1.25 Value Increase",
+      "Blueprint: Visage Unto Infinity",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "ATK +40"
+    ],
+    "ascensionUpgrades": [
+      "-17 Jewels Spent",
+      "-1 Dinosaur Leather Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 130,
+        "kind": "other",
+        "raw": "Mana Shield +54"
+      },
+      {
+        "slot": 2,
+        "seals": 130,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 40,
+        "raw": "ATK +40"
+      },
+      {
+        "slot": 3,
+        "seals": 130,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Visage Unto Infinity",
+    "type": "Mask",
+    "tier": 16,
+    "airshipPower": 684,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-50 Steel Spent",
+      "x1.25 Value Increase",
+      "-18 Ether Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "DEF +85"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Paramount Gem Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "other",
+        "raw": "Mana Shield +57"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 85,
+        "raw": "DEF +85"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "The Reaper Pack",
+    "premium": true
+  },
+  {
+    "name": "Fairlyn's Soulsight",
+    "type": "Mask",
+    "tier": 16,
+    "airshipPower": 937,
+    "atk": 0,
+    "def": 211,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Dark"
+    ],
+    "spiritAffinity": [
+      "Spirit Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-50 Fabric Spent",
+      "x1.25 Value Increase",
+      "-18 Jewels Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "DEF +85"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Paramount Gem Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "other",
+        "raw": "Mana Shield +57"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 85,
+        "raw": "DEF +85"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      }
+    ],
+    "unlockPrerequisite": "Crystalline Power Pack",
+    "antiqueFrom": "March 10, 2027",
     "premium": true
   },
   {
@@ -68565,6 +71523,75 @@
         "raw": "+10% Base ATK, DEF and HP"
       }
     ]
+  },
+  {
+    "name": "Xzyurnip Foragers",
+    "type": "Gauntlets",
+    "tier": 16,
+    "airshipPower": 940,
+    "atk": 177,
+    "def": 665,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-45 Steel Spent",
+      "x1.25 Value Increase",
+      "-125 Iron Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Claw Spent",
+      "-3 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 166,
+        "raw": "DEF +166"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 100,
+        "raw": "HP +100"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Meteor Zone Mega Pack",
+    "antiqueFrom": "January 24, 2027",
+    "premium": true
   },
   {
     "name": "Leather Gloves",
@@ -74957,6 +77984,146 @@
     ]
   },
   {
+    "name": "Xzyurnip Tentalons",
+    "type": "Heavy Footwear",
+    "tier": 16,
+    "airshipPower": 1057,
+    "atk": 189,
+    "def": 755,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-100 Iron Spent",
+      "x1.25 Value Increase",
+      "-45 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Xzyur Claw Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 189,
+        "raw": "DEF +189"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 113,
+        "raw": "HP +113"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Meteor Zone Superior Pack",
+    "antiqueFrom": "January 31, 2027",
+    "premium": true
+  },
+  {
+    "name": "Death Battleboots",
+    "type": "Heavy Footwear",
+    "tier": 16,
+    "airshipPower": 930,
+    "atk": 0,
+    "def": 775,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [
+      "Tomb-Born Malevolence"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-17 Jewels Spent",
+      "x1.25 Value Increase",
+      "-37 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Claw Spent",
+      "-4 Stardust Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 194,
+        "raw": "DEF +194"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 116,
+        "raw": "HP +116"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Tomb-Bound Chest",
+    "antiqueFrom": "March 9, 2027",
+    "premium": true
+  },
+  {
     "name": "Leather Boots",
     "type": "Light Footwear",
     "tier": 1,
@@ -77054,6 +80221,80 @@
     ],
     "unlockPrerequisite": "Opulent Chest",
     "antiqueFrom": "March 30, 2022",
+    "premium": true
+  },
+  {
+    "name": "Eclipsed Pair",
+    "type": "Light Footwear",
+    "tier": 11,
+    "airshipPower": 409,
+    "atk": 0,
+    "def": 270,
+    "hp": 17,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light",
+      "Dark"
+    ],
+    "spiritAffinity": [
+      "Spirit Spirit"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-20 Fabric Spent",
+      "x1.25 Value Increase",
+      "-68 Leather Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-1 Grim Talon Spent",
+      "-6 Ether Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 60,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 68,
+        "raw": "DEF +68"
+      },
+      {
+        "slot": 2,
+        "seals": 60,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 27,
+        "raw": "HP +27"
+      },
+      {
+        "slot": 3,
+        "seals": 60,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Content Pass: Soular Harmony",
+    "antiqueFrom": "February 15, 2027",
     "premium": true
   },
   {
@@ -80496,6 +83737,77 @@
     ],
     "unlockPrerequisite": "Snow Day Mega Pack",
     "antiqueFrom": "May 29, 2022",
+    "premium": true
+  },
+  {
+    "name": "Solaryn Panel",
+    "type": "Shield",
+    "tier": 11,
+    "airshipPower": 414,
+    "atk": 0,
+    "def": 320,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-21 Ironwood Spent",
+      "x1.25 Value Increase",
+      "-71 Wood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-6 Ether Spent",
+      "-1 Zirconia Eggshell Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 60,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 80,
+        "raw": "DEF +80"
+      },
+      {
+        "slot": 2,
+        "seals": 60,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 32,
+        "raw": "DEF +32"
+      },
+      {
+        "slot": 3,
+        "seals": 60,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Solaryn Mega Pack",
+    "antiqueFrom": "February 21, 2027",
     "premium": true
   },
   {
@@ -86353,6 +89665,74 @@
     ],
     "unlockPrerequisite": "Anniversary 2026 Super Offer",
     "antiqueFrom": "December 16, 2026",
+    "premium": true
+  },
+  {
+    "name": "Pearlescent Idol",
+    "type": "Idol",
+    "tier": 16,
+    "airshipPower": 1033,
+    "atk": 0,
+    "def": 423,
+    "hp": 105,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Gold"
+    ],
+    "spiritAffinity": [
+      "Ancestor Tradition"
+    ],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-100 Iron Spent",
+      "x1.25 Value Increase",
+      "-36 Steel Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+10% Surcharge Value",
+      "x1.25 Value Increase",
+      "+20% Bonus Favor",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-3 Essence Spent",
+      "-1 Precious Pearl Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 42,
+        "raw": "DEF +42"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "hp",
+        "amount": 26,
+        "raw": "HP +26"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Pearlescent Chest",
+    "antiqueFrom": "February 3, 2027",
     "premium": true
   },
   {
@@ -97518,6 +100898,78 @@
     "premium": true
   },
   {
+    "name": "Solaryn Hot Pot",
+    "type": "Meal",
+    "tier": 16,
+    "airshipPower": 1040,
+    "atk": 400,
+    "def": 600,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [
+      "Light",
+      "Earth"
+    ],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-20% Craft Time Reduction",
+      "-158 Herbs Spent",
+      "x1.25 Value Increase",
+      "-46 Oils Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "+20% Surcharge Value",
+      "-10% Surcharge Cost",
+      "+10% Multicraft Chance",
+      "x1.25 Value Increase",
+      "+25% Base ATK, DEF and HP"
+    ],
+    "ascensionUpgrades": [
+      "-3 Stardust Spent",
+      "-1 Hybridized Vine Spent",
+      "+10% Multicraft Chance"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "starforgedStatBoosts": {
+      "atk": 0.25,
+      "def": 0.25,
+      "hp": 0.25
+    },
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "atk",
+        "amount": 40,
+        "raw": "ATK +40"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "stat",
+        "stat": "def",
+        "amount": 60,
+        "raw": "DEF +60"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "pctBase",
+        "pct": 0.1,
+        "raw": "+10% Base ATK, DEF and HP"
+      }
+    ],
+    "unlockPrerequisite": "Solaryn Mega Pack",
+    "antiqueFrom": "February 21, 2027",
+    "premium": true
+  },
+  {
     "name": "Cookie Plate",
     "type": "Dessert",
     "tier": 3,
@@ -103144,6 +106596,62 @@
     "premium": true
   },
   {
+    "name": "Fresh Spirit",
+    "type": "Enchantment",
+    "tier": 4,
+    "airshipPower": 0,
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-25% Craft Time Reduction",
+      "-20% Herbs Spent",
+      "-20% Herbs Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "-20% Herbs Spent",
+      "-20% Oils Spent",
+      "x5 Research Scrolls",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-3 Precious Gem Spent",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 15,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      },
+      {
+        "slot": 2,
+        "seals": 15,
+        "kind": "other",
+        "raw": "-20% Craft Time Reduction"
+      },
+      {
+        "slot": 3,
+        "seals": 15,
+        "kind": "other",
+        "raw": "Quality Chance x2"
+      }
+    ]
+  },
+  {
     "name": "Ram Spirit",
     "type": "Enchantment",
     "tier": 4,
@@ -104388,6 +107896,62 @@
     ]
   },
   {
+    "name": "Mundra's Spirit",
+    "type": "Enchantment",
+    "tier": 9,
+    "airshipPower": 130,
+    "atk": 50,
+    "def": 33,
+    "hp": 10,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-25% Craft Time Reduction",
+      "-43 Wood Spent",
+      "-1 Elven Wood Spent",
+      "-11 Ironwood Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "-20% Wood Spent",
+      "-20% Ironwood Spent",
+      "x5 Research Scrolls",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "+10% Multicraft Chance",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 40,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      },
+      {
+        "slot": 2,
+        "seals": 40,
+        "kind": "other",
+        "raw": "-20% Craft Time Reduction"
+      },
+      {
+        "slot": 3,
+        "seals": 40,
+        "kind": "other",
+        "raw": "Quality Chance x2"
+      }
+    ]
+  },
+  {
     "name": "Tiger Spirit",
     "type": "Enchantment",
     "tier": 9,
@@ -105019,6 +108583,64 @@
     "premium": true
   },
   {
+    "name": "Spirit Spirit",
+    "type": "Enchantment",
+    "tier": 13,
+    "airshipPower": 339,
+    "atk": 131,
+    "def": 87,
+    "hp": 26,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-175 Herbs Spent",
+      "-56 Oils Spent",
+      "-21 Jewels Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "-20% Herbs Spent",
+      "-20% Oils Spent",
+      "x5 Research Scrolls",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-1 Ghastly Pennant Spent",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 100,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      },
+      {
+        "slot": 2,
+        "seals": 100,
+        "kind": "other",
+        "raw": "-20% Craft Time Reduction"
+      },
+      {
+        "slot": 3,
+        "seals": 100,
+        "kind": "other",
+        "raw": "Quality Chance x2"
+      }
+    ],
+    "antiqueFrom": "February 9, 2027",
+    "premium": true
+  },
+  {
     "name": "Behemoth Spirit",
     "type": "Enchantment",
     "tier": 14,
@@ -105411,6 +109033,64 @@
     ],
     "unlockPrerequisite": "Platinum Chest",
     "antiqueFrom": "July 16, 2025",
+    "premium": true
+  },
+  {
+    "name": "Tomb-Bound Spirit",
+    "type": "Enchantment",
+    "tier": 16,
+    "airshipPower": 520,
+    "atk": 200,
+    "def": 133,
+    "hp": 40,
+    "eva": 0,
+    "crit": 0,
+    "elementalAffinity": [],
+    "spiritAffinity": [],
+    "builtInElement": [],
+    "builtInSpirit": [],
+    "craftingUpgrades": [
+      "-30% Craft Time Reduction",
+      "-200 Iron Spent",
+      "-72 Steel Spent",
+      "-3 Stardust Spent",
+      "Quality Chance x2"
+    ],
+    "starforgedMilestones": [
+      "-20% Iron Spent",
+      "-20% Steel Spent",
+      "x5 Research Scrolls",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "ascensionUpgrades": [
+      "-1 Xzyur Claw Spent",
+      "+10% Multicraft Chance",
+      "Quality Chance x2"
+    ],
+    "hasAirshipPowerUpgrade": false,
+    "airshipPowerUpgradeBonus": 0,
+    "transcendence": [
+      {
+        "slot": 1,
+        "seals": 140,
+        "kind": "other",
+        "raw": "+10% Multicraft Chance"
+      },
+      {
+        "slot": 2,
+        "seals": 140,
+        "kind": "other",
+        "raw": "-20% Craft Time Reduction"
+      },
+      {
+        "slot": 3,
+        "seals": 140,
+        "kind": "other",
+        "raw": "Quality Chance x2"
+      }
+    ],
+    "antiqueFrom": "December 15, 2026",
     "premium": true
   }
 ]
