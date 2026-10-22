@@ -1,6 +1,4 @@
 {
-  "extends": [
-    "github>statens-pensjonskasse/renovate-presets:daily-automerge-all",
-    "github>statens-pensjonskasse/renovate-presets:renovate-comments(\\.yaml$,(\\.yml$))"
-  ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>andrelin/dotfiles//renovate/daily-automerge-all"]
 }
