@@ -608,6 +608,14 @@
     "hp": 33
   },
   {
+    "name": "Scholar Spirit",
+    "type": "Spirit",
+    "tier": 14,
+    "atk": 168,
+    "def": 112,
+    "hp": 34
+  },
+  {
     "name": "Tomb-Bound Spirit",
     "type": "Spirit",
     "tier": 16,

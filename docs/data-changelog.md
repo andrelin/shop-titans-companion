@@ -6,6 +6,58 @@ Only power-ranker-relevant fields are summarised here — see the git history of
 
 <!-- entries -->
 
+## 2026-11-10 — v26.11.0
+
+- Sheet version: v26.9.1 → v26.11.0
+- Blueprints: 1626 → 1671 (+45)
+
+### Added (45)
+- Battle Dadao (Sword T6)
+- Grim & Grin (Axe T16)
+- Drill Breaker (Mace T12)
+- Fangtian Ji (Spear T11)
+- Ornate Kaiyuan (Bow T16)
+- Yawning Devourer (Staff T10)
+- Grimar's Starcaller (Wand T16)
+- Strings of Misery (Instrument T11)
+- MorphRanger Flute (Instrument T16)
+- Kamaitachi Reflection (Dual Wield T12)
+- Feasters of Unlight (Dual Wield T16)
+- Impish Sicklescythe (Scythe T13)
+- Stallion Scythe (Scythe T16)
+- Donovan's Experiment (Potion T5)
+- Kappa Cup (Potion T16)
+- Interstellar Destination (Spell T7)
+- Pearlescent Missive (Spell T16)
+- General Brigandine (Heavy Armor T16)
+- MorphRanger Suit (Heavy Armor T16)
+- Horseman Armor (Light Armor T16)
+- Space Pirate Jacket (Light Armor T16)
+- Archwizard Attire (Clothes T11)
+- Robes of the Underking (Clothes T16)
+- MorphRanger Helm (Helmet T10)
+- Umra's Helm (Helmet T16)
+- Stahl's Turban (Rogue Hat T6)
+- Mothman Cowl (Rogue Hat T16)
+- Space Pirate Helmet (Rogue Hat T16)
+- MorphRanger Gauntlets (Gauntlets T16)
+- Revenant Claws (Gloves T16)
+- Tombreavers (Gloves T16)
+- MorphRanger Boots (Heavy Footwear T13)
+- Spell Reflector (Shield T8)
+- Crystalline Aegis (Shield T16)
+- Radiance in Darkness (Shield T16)
+- Master-Fletched Arrows (Quiver T16)
+- Pearlescent Quiver (Quiver T16)
+- Space Pirate Cape (Cloak T16)
+- Ominous Pumpkin (Idol T12)
+- Beastman's Band (Ring T16)
+- Sagittarius Emblem (Amulet T16)
+- Cyberdragon X (Familiar T16)
+- Horse Forage (Meal T11)
+- Aura of Learning (Aurasong T16)
+- Scholar Spirit (Enchantment T14)
+
 ## 2026-10-01 — v26.9.1
 
 - Sheet version: v26.7.0 → v26.9.1
